@@ -254,7 +254,14 @@ main{max-width:1500px;margin:0 auto;padding:18px;display:grid;grid-template-colu
     const active=state.companies.filter(c=>!c.delisted),count=Math.random()<.22?3:(Math.random()<.65?1:2);
     for(let i=0;i<count;i++){const c=pick(active);if(Math.random()<.52)emitClueNews(c);else emitPublicNews(c);}
     for(const b of state.bots){if(Math.random()<.72)botTrade(b);updateFomo(b);}updateFomo(state.player);
-    for(const c of state.companies)c.changePct=c.previousClose?(c.price/c.previousClose-1)*100:0;
+    // News and theme shocks can move prices after updateCompany() records the day's history.
+    // Replace today's last observation with the final close so return calculations match displayed prices.
+    for(const c of state.companies){
+      if(!Array.isArray(c.history)||!c.history.length)c.history=[c.price];
+      else c.history[c.history.length-1]=c.price;
+      if(c.history.length>400)c.history=c.history.slice(-400);
+      c.changePct=c.previousClose?(c.price/c.previousClose-1)*100:0;
+    }
     if(state.day>=getTotalDays())state.status='finished';saveState();
   }
   function trade(side,ticker,quantity) {
@@ -304,7 +311,7 @@ main{max-width:1500px;margin:0 auto;padding:18px;display:grid;grid-template-colu
     if(!c){$('stockDetails').innerHTML='<div class="empty">Choose a company or fund from the market table.</div>';$('selectedHeading').textContent='STOCK DETAILS';$('selectedTheme').textContent='Select a ticker';return;}
     const qty=currentState.player.holdings[c.ticker]||0, histReturn=c.price/(c.initialPrice||c.price)-1;
     $('selectedHeading').textContent=`${c.ticker} · ${c.name}`;$('selectedTheme').textContent=c.isFund?'FUND · '+c.themeName:c.themeName;
-    const returns=[['5D',5],['20D',20],['60D',60],['120D',120],['180D',180],['1Y',252]].map(([label,n])=>{const r=periodReturn(c.history,n);return `<div class="return-card"><div class="muted">${label} RETURN</div><strong class="${r===null?'muted':r>=0?'positive':'negative'}">${r===null?'N/A':pct(r)}</strong></div>`;}).join('');
+    const returns=[['10D',10],['20D',20],['60D',60],['180D',180],['1Y',252]].map(([label,n])=>{const r=periodReturn(c.history,n);return `<div class="return-card"><div class="muted">${label} RETURN</div><strong class="${r===null?'muted':r>=0?'positive':'negative'}">${r===null?'N/A':pct(r)}</strong></div>`;}).join('');
     const detailsText=c.isFund?`Diversified fictional fund focused on ${c.themeName.toLowerCase()}. Its price follows a simulated fund-level return process; it is not a real ETF.`:`A fictional ${c.themeName.toLowerCase()} company focused on ${c.tag}. Company quality, research progress, industry sentiment and random market events affect its simulated price.`;
     $('stockDetails').innerHTML=`<div class="stock-title"><div><div class="ticker-large">${c.ticker}${c.isFund?' · FUND / ETF-LIKE BASKET':' / '+escapeHtml(c.themeName)}</div><h2>${escapeHtml(c.name)}</h2><div class="stock-price">${money(c.price)}</div><div class="${c.changePct>=0?'positive':'negative'}">${c.changePct>=0?'+':''}${c.changePct.toFixed(2)}% today · ${pct(histReturn)} since market opened</div></div><div style="min-width:110px;width:25%;height:82px">${miniChart(c.history.slice(-60),220,76)}</div></div>
     <div style="margin-top:12px;padding:12px;background:#17243a;border:1px solid #2a3a55;border-radius:10px"><div class="tag">${c.isFund?'Fund overview':'Company & sector overview'}</div><p style="margin:8px 0 0;color:#c3d0e5">${escapeHtml(detailsText)}</p><div class="muted" style="font-size:11px;margin-top:7px">Outlook: ${c.quality>.72?'Strong':c.quality>.48?'Average':'Weak'} · Research progress: ${(c.researchProgress*100).toFixed(0)}% · ${c.delisted?'Delisted':'Trading'}</div></div>
