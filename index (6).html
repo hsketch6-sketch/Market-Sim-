@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Market Sim — Extended Exchange</title>
+<style>
+:root{--bg:#0b1020;--panel:#111a2d;--panel2:#172238;--line:#273650;--text:#e9f0fc;--muted:#92a4c1;--green:#35d39a;--red:#ff6d83;--blue:#7ca7ff;--gold:#f4c96b;--radius:14px}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#152441 0%,var(--bg) 52%);color:var(--text);font:14px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}button,input,select{font:inherit}button{border:1px solid #385071;background:#213653;color:var(--text);padding:9px 12px;border-radius:9px;cursor:pointer}button:hover{filter:brightness(1.13)}button:disabled{opacity:.45;cursor:not-allowed}.primary{background:#3267c8;border-color:#4e83e4}.sell{background:#53283b;border-color:#8b405c}.muted{color:var(--muted)}.positive{color:var(--green)}.negative{color:var(--red)}.gold{color:var(--gold)}
+.headline-bar{max-width:1500px;margin:12px auto 0;padding:0 18px}.headline-inner{display:flex;align-items:center;gap:12px;background:linear-gradient(90deg,#1b3150,#142239);border:1px solid #344b6c;border-radius:12px;padding:12px 15px}.headline-label{flex:none;font-size:10px;font-weight:900;letter-spacing:.12em;color:var(--gold)}.headline-text{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.headline-date{margin-left:auto;flex:none;color:var(--muted);font-size:11px}.detail-chart{height:260px;width:100%;margin-top:12px;background:#0d1728;border:1px solid #273650;border-radius:12px;padding:8px}.detail-chart svg{width:100%;height:100%;display:block}.chart-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}.chart-controls label{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px}.chart-controls input{accent-color:#7ca7ff}.returns-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}.return-card{background:#17243a;border:1px solid #2a3a55;border-radius:9px;padding:9px}.return-card .muted{font-size:10px}.return-card strong{display:block;font-size:15px;margin-top:3px}.fund-label{font-size:9px;border:1px solid #7b6bb5;color:#d2c5ff;border-radius:999px;padding:2px 6px;margin-left:4px}.headline-bar{position:relative}header{position:sticky;top:0;z-index:10;background:#0b1020eF;border-bottom:1px solid var(--line);backdrop-filter:blur(12px);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.04em}.logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#79a7ff,#41d5a2);display:grid;place-items:center;color:#07111d;font-weight:900}.header-right{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.pill{border:1px solid var(--line);background:var(--panel);padding:6px 10px;border-radius:999px;color:var(--muted)}
+main{max-width:1500px;margin:0 auto;padding:18px;display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px}.left,.right{display:flex;flex-direction:column;gap:16px}.panel{background:linear-gradient(180deg,#121d32f5,#10182af5);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:0 12px 28px #0002}.panel-head{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px}.panel-head h2,.panel-head h3{margin:0;font-size:14px;letter-spacing:.02em}.panel-body{padding:15px}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.metric{background:#17243a;border:1px solid #283a57;border-radius:12px;padding:13px}.metric .label{font-size:11px;color:var(--muted);margin-bottom:7px}.metric .value{font-size:21px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.metric .sub{font-size:11px;color:var(--muted);margin-top:5px}.layout-market{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.toolbar input,.toolbar select,.trade-form input,.join-box input{background:#0c1424;color:var(--text);border:1px solid #30425f;border-radius:8px;padding:9px 10px;outline:none}.toolbar input{min-width:170px}.table-wrap{overflow:auto;max-height:510px}table{width:100%;border-collapse:collapse;white-space:nowrap}th{text-align:left;color:var(--muted);font-size:11px;font-weight:600;background:#111b2e;position:sticky;top:0;z-index:1}td,th{padding:11px 13px;border-bottom:1px solid #223149}tbody tr{cursor:pointer}tbody tr:hover{background:#1c2a43}tbody tr.selected{background:#1b3150}.ticker{font-weight:800;letter-spacing:.03em}.company-name{font-size:11px;color:var(--muted);max-width:190px;overflow:hidden;text-overflow:ellipsis}.tag{font-size:10px;border:1px solid #334761;border-radius:999px;padding:3px 7px;color:#bdd0ed}.price{font-variant-numeric:tabular-nums;font-weight:700}.chart-area{height:80px;margin-top:8px}.chart-area svg{width:100%;height:100%;overflow:visible}.stock-title{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.stock-title h2{margin:0;font-size:22px}.stock-title .ticker-large{font-size:12px;color:var(--muted);font-weight:700}.stock-price{font-size:28px;font-weight:800;margin-top:7px}.trade-form{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.trade-form input{width:100%;grid-column:1/-1}.trade-form button{width:100%}.fomo-bar{height:8px;background:#29354b;border-radius:999px;overflow:hidden;margin:8px 0}.fomo-fill{height:100%;background:linear-gradient(90deg,#58d6a3,#f2c36c,#ff6d83);width:0%;transition:width .3s}.news-list{display:flex;flex-direction:column;gap:9px;max-height:680px;overflow:auto}.news-item{padding:11px;border:1px solid #273650;border-radius:11px;background:#131f33}.news-top{display:flex;justify-content:space-between;gap:10px;align-items:center}.news-type{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.news-item h4{margin:5px 0 4px;font-size:13px}.news-item p{margin:0;color:#c3d0e5;font-size:12px}.news-item .clue{color:#91a6c5;font-size:11px;margin-top:7px}.dot{width:7px;height:7px;display:inline-block;border-radius:50%;margin-right:5px;background:var(--blue)}.dot.positive{background:var(--green)}.dot.negative{background:var(--red)}.dot.neutral{background:var(--blue)}.leader-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #233149}.rank{width:23px;color:var(--muted);font-size:12px}.leader-info{flex:1;min-width:0}.leader-name{font-weight:700;overflow:hidden;text-overflow:ellipsis}.leader-sub{font-size:11px;color:var(--muted)}.leader-val{text-align:right;font-variant-numeric:tabular-nums}.theme-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}.theme-card{background:#17243a;border:1px solid #2a3a55;border-radius:10px;padding:10px}.theme-name{font-size:11px;color:#d6e3f8}.theme-meter{height:5px;background:#293750;border-radius:99px;overflow:hidden;margin-top:8px}.theme-meter span{display:block;height:100%;background:var(--blue)}.join-overlay{position:fixed;inset:0;background:#050914eF;z-index:30;display:grid;place-items:center;padding:20px}.join-box{width:min(440px,100%);background:#121d32;border:1px solid #344966;border-radius:18px;padding:26px;box-shadow:0 25px 90px #0008}.join-box h1{font-size:25px;margin:0 0 8px}.join-box p{color:var(--muted);margin:0 0 18px}.join-box input{width:100%;margin:0 0 10px}.join-box button{width:100%;padding:11px}.notice{font-size:11px;color:var(--muted);margin-top:12px}.toast{position:fixed;right:20px;bottom:20px;z-index:40;max-width:360px;background:#17243a;border:1px solid #405777;border-radius:10px;padding:12px 15px;box-shadow:0 10px 40px #0006;display:none}.footer-note{color:#7386a4;font-size:11px;padding:0 2px 6px}.empty{padding:28px;text-align:center;color:var(--muted)}
+@media(max-width:1050px){main{grid-template-columns:1fr}.right{display:grid;grid-template-columns:1fr 1fr}.news-panel{grid-column:1/-1}.news-list{max-height:450px}}@media(max-width:680px){.headline-bar{padding:0 10px}.headline-inner{padding:10px;gap:8px}.headline-label{font-size:9px}.headline-text{font-size:12px}.headline-date{display:none}.detail-chart{height:210px}.returns-grid{grid-template-columns:repeat(2,minmax(0,1fr))}header{padding:10px 12px;align-items:flex-start}.header-right{gap:6px;justify-content:flex-end}.pill{font-size:11px}main{padding:10px;gap:10px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.metric .value{font-size:18px}.right{display:flex}.panel-body{padding:12px}.panel-head{padding:12px}.company-name{max-width:120px}.table-wrap{max-height:420px}td,th{padding:10px 9px}.toolbar{width:100%}.toolbar input{flex:1;min-width:120px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="logo">M</div><div>MARKET SIM <span class="muted" style="font-weight:500">/ 30 YEAR EXCHANGE</span></div></div>
+  <div class="header-right"><span id="dayPill" class="pill">Day 0 / 7,560</span><span id="datePill" class="pill">2000-01-03</span><span id="userPill" class="pill">Guest</span></div>
+</header>
+<div class="headline-bar"><div class="headline-inner"><span class="headline-label">LATEST HEADLINE</span><span class="headline-text" id="headlineText">The fictional market is preparing to open.</span><span class="headline-date" id="headlineDate">Day 0</span></div></div>
+<main>
+  <section class="left">
+    <div class="metrics">
+      <div class="metric"><div class="label">PORTFOLIO VALUE</div><div class="value" id="portfolioValue">—</div><div class="sub" id="portfolioSub">Initial capital $100,000</div></div>
+      <div class="metric"><div class="label">TOTAL RETURN</div><div class="value" id="totalReturn">—</div><div class="sub">Compared with your starting value</div></div>
+      <div class="metric"><div class="label">AVAILABLE CASH</div><div class="value" id="cashValue">—</div><div class="sub" id="holdingCount">No positions</div></div>
+      <div class="metric"><div class="label">FOMO METER</div><div class="value" id="fomoValue">0 / 100</div><div class="fomo-bar"><div class="fomo-fill" id="fomoFill"></div></div><div class="sub" id="fomoSub">Buy normally</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>GLOBAL MARKET</h2><div class="toolbar"><input id="searchBox" placeholder="Search ticker / company" aria-label="Search stocks"><select id="themeFilter" aria-label="Filter by theme"><option value="all">All themes</option></select><select id="sortSelect" aria-label="Sort stocks"><option value="ticker">Ticker</option><option value="change">Daily change</option><option value="price">Price</option><option value="return">History return</option></select></div></div>
+      <div class="table-wrap"><table><thead><tr><th>TICKER / COMPANY</th><th>THEME</th><th>PRICE</th><th>DAY %</th><th>60D TREND</th></tr></thead><tbody id="stockRows"></tbody></table></div>
+      <div class="panel-body muted" style="font-size:11px">Select a row to inspect the company and place a simulated order. All companies and prices are fictional.</div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>FUNDS & ETF-LIKE BASKETS</h2><span class="muted" style="font-size:11px">Fictional diversified funds</span></div>
+      <div class="panel-body muted" style="font-size:12px">Funds are tradable simulated baskets with their own prices and histories. Select a fund below to inspect it and trade it like a stock.</div>
+      <div class="table-wrap" style="max-height:220px"><table><thead><tr><th>FUND</th><th>FOCUS</th><th>PRICE</th><th>DAY %</th><th>60D CHART</th></tr></thead><tbody id="fundRows"></tbody></table></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2 id="selectedHeading">STOCK DETAILS</h2><span class="tag" id="selectedTheme">Select a ticker</span></div>
+      <div class="panel-body" id="stockDetails"><div class="empty">Choose a company from the market table.</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>YOUR PORTFOLIO</h2><span class="muted" id="positionSummary">0 positions</span></div>
+      <div class="table-wrap" style="max-height:280px"><table><thead><tr><th>TICKER</th><th>SHARES</th><th>MARKET VALUE</th><th>WEIGHT</th><th></th></tr></thead><tbody id="holdingRows"></tbody></table></div>
+    </div>
+    <div class="footer-note">Educational simulation only · No real securities, brokerage, or real-money trading.</div>
+  </section>
+  <aside class="right">
+    <div class="panel">
+      <div class="panel-head"><h3>MARKET CLOCK</h3><span class="tag" id="marketStatus">RUNNING</span></div>
+      <div class="panel-body"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><div><div class="muted" style="font-size:11px">SIMULATED YEAR</div><div style="font-size:28px;font-weight:800" id="yearValue">1 <span class="muted" style="font-size:13px">/ 30</span></div></div><div style="display:flex;gap:7px;flex-wrap:wrap"><button class="primary" id="advanceBtn">Advance 1 day ▶</button><button id="extendBtn" title="Add 10 simulated years">+10 Years</button><button id="resetBtn" title="Restart the market while carrying your cash">Reset (Keep Cash)</button><button class="sell" id="hardResetBtn" title="Erase this market and restore the original starting cash">Hard Reset</button></div></div><div style="height:8px;background:#273650;border-radius:99px;overflow:hidden;margin-top:14px"><div id="yearProgress" style="height:100%;background:linear-gradient(90deg,#7ca7ff,#35d39a);width:0%"></div></div><p class="muted" style="font-size:11px;margin:9px 0 0">Use +10 Years to extend the simulation. Reset (Keep Cash) starts a fresh market while carrying your cash; Hard Reset erases progress and restores the original starting capital.</p></div>
+    </div>
+    <div class="panel"><div class="panel-head"><h3>THEME PULSE</h3><span class="muted" style="font-size:11px">Shared market</span></div><div class="panel-body"><div class="theme-list" id="themeList"></div></div></div>
+    <div class="panel"><div class="panel-head"><h3>LEADERBOARD</h3><span class="muted" style="font-size:11px">Top 25</span></div><div class="panel-body" id="leaderboard"><div class="empty">Join the market to begin.</div></div></div>
+    <div class="panel news-panel"><div class="panel-head"><h3>LIVE NEWSWIRE</h3><span class="tag" id="newsCount">0 stories</span></div><div class="panel-body"><div class="news-list" id="newsList"></div></div></div>
+  </aside>
+</main>
+<div class="join-overlay" id="joinOverlay"><div class="join-box"><div class="logo" style="margin-bottom:16px">M</div><h1>Enter the market.</h1><p>Start a fictional stock market that unfolds over 30 simulated years. Your market is saved in this browser.</p><form id="joinForm"><input id="nickname" maxlength="24" placeholder="Choose a nickname" autocomplete="nickname" required><button class="primary" type="submit">Join simulation</button></form><div class="notice">No account, server, or external API required. This GitHub Pages version saves progress only in this browser; it does not share a live market with other visitors.</div></div></div>
+<div class="toast" id="toast"></div>
+<script>
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const STORE_KEY = 'marketSimGitHubPagesV1';
+  const START_CASH = 100000, COMPANY_COUNT = 100, DAYS_PER_YEAR = 252, DEFAULT_TOTAL_YEARS = 30;
+  const getTotalYears = () => Math.max(DEFAULT_TOTAL_YEARS, Number(state?.totalYears) || DEFAULT_TOTAL_YEARS);
+  const getTotalDays = () => DAYS_PER_YEAR * getTotalYears();
+  const THEMES = [
+  { id: 'semiconductor', name: 'Semiconductor & AI', weight: 1.15, tags: ['chip design', 'advanced packaging', 'AI accelerator', 'yield improvement', 'foundry capacity'] },
+  { id: 'software', name: 'Software & Cloud', weight: 1.00, tags: ['cloud platform', 'subscription software', 'enterprise security', 'data platform', 'developer tools'] },
+  { id: 'ev', name: 'EV & Batteries', weight: 1.00, tags: ['battery chemistry', 'charging network', 'electric drivetrain', 'battery recycling', 'vehicle software'] },
+  { id: 'biotech', name: 'Biotech & Healthcare', weight: 1.10, tags: ['clinical research', 'diagnostic platform', 'drug discovery', 'medical devices', 'clinical trial operations'] },
+  { id: 'energy', name: 'Energy & Power', weight: 0.95, tags: ['grid storage', 'power equipment', 'renewable generation', 'grid modernization', 'energy management'] },
+  { id: 'robotics', name: 'Robotics & Automation', weight: 1.05, tags: ['industrial robotics', 'machine vision', 'factory automation', 'precision motion', 'warehouse systems'] },
+  { id: 'finance', name: 'Financial Services', weight: 0.90, tags: ['payment systems', 'fraud detection', 'credit analytics', 'digital banking', 'risk management'] },
+  { id: 'consumer', name: 'Consumer & Retail', weight: 0.85, tags: ['direct-to-consumer', 'inventory analytics', 'brand expansion', 'retail logistics', 'customer loyalty'] },
+  { id: 'aerospace', name: 'Industrial & Aerospace', weight: 1.00, tags: ['flight systems', 'advanced materials', 'industrial components', 'defense electronics', 'maintenance services'] },
+  { id: 'telecom', name: 'Telecom & Infrastructure', weight: 0.90, tags: ['fiber networks', 'data centers', 'network equipment', 'edge computing', 'infrastructure software'] }
+];
+  const NEWS_B = [
+  { theme: 'ALL', text: '{company} increases its internal research budget for {tag}.', clue: 'More resources may improve future products, but spending alone does not guarantee success.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} posts several specialist roles related to {tag}.', clue: 'Hiring can be an early signal of expansion; it can also reflect staff turnover.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} begins recruiting a senior technical leader.', clue: 'Leadership changes may affect execution over the coming quarters.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} forms a small internal team to assess {tag}.', clue: 'An exploratory team is not the same as a successful project.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} adjusts the timeline for a next-generation product.', clue: 'A changed timeline can signal either caution or a more ambitious scope.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} is reviewing equipment options for {tag}.', clue: 'Supplier reviews can precede investment, but may not lead to an order.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} begins a new supplier quality assessment.', clue: 'Quality work can reduce future defects; it may also reveal existing problems.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} studies a possible long-term supply agreement.', clue: 'A study is preliminary and does not mean a contract has been signed.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} expands pilot testing with a small group of customers.', clue: 'Pilot feedback can foreshadow adoption, but pilots often fail to scale.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} starts validating a product for a potential large customer.', clue: 'Validation is an important hurdle, not a confirmed sale.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} reviews the feasibility of a new production line.', clue: 'A feasibility review may precede capex or end with no investment.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} allocates engineering time to improve production yield.', clue: 'Better yield could lower unit costs if the work succeeds.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} evaluates a second source for a key component.', clue: 'A second source may reduce supply risk, but qualification takes time.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} increases internal testing of a new prototype.', clue: 'More testing can mean progress or that unresolved issues remain.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} begins preparations for a regulatory or standards review.', clue: 'Preparation is not approval; the outcome remains uncertain.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} reviews customer demand in a new region.', clue: 'Market research may lead to expansion or a decision not to enter.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} considers adding distribution partners.', clue: 'Distribution can widen reach, but partners may demand lower margins.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} starts a cost-efficiency project across several teams.', clue: 'Savings may improve margins, although implementation can be disruptive.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} reviews working-capital needs for the next product cycle.', clue: 'This may anticipate growth or point to cash-flow pressure.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} reassigns staff to a strategic project involving {tag}.', clue: 'Resource shifts suggest priorities, not necessarily project quality.', effect: 'neutral' },
+  { theme: 'semiconductor', text: '{company} increases experiments on advanced packaging and chip yield.', clue: 'Packaging and yield improvements can matter greatly, but results are uncertain.', effect: 'neutral' },
+  { theme: 'semiconductor', text: '{company} is quietly recruiting engineers with accelerator-design experience.', clue: 'Specialist hiring may be an early clue to a future product cycle.', effect: 'neutral' },
+  { theme: 'semiconductor', text: '{company} requests quotes for additional wafer-testing equipment.', clue: 'Quotes are not purchase orders; demand expectations may be changing.', effect: 'neutral' },
+  { theme: 'software', text: '{company} tests a new enterprise pricing model with selected clients.', clue: 'Pricing tests can lift revenue per client or increase churn.', effect: 'neutral' },
+  { theme: 'software', text: '{company} is assessing whether to expand its security engineering group.', clue: 'Security investment may support retention, but adds cost first.', effect: 'neutral' },
+  { theme: 'ev', text: '{company} begins a battery durability study with an external lab.', clue: 'Durability is important, but study results are not yet known.', effect: 'neutral' },
+  { theme: 'ev', text: '{company} reviews long-term sourcing options for battery materials.', clue: 'Supply planning may reduce risk or expose higher future costs.', effect: 'neutral' },
+  { theme: 'biotech', text: '{company} adds clinical operations staff for an ongoing program.', clue: 'More staff may indicate preparation for a larger trial; success is not assured.', effect: 'neutral' },
+  { theme: 'biotech', text: '{company} schedules additional analysis of early trial data.', clue: 'Additional analysis can clarify results but may reveal weak efficacy.', effect: 'neutral' },
+  { theme: 'energy', text: '{company} studies a grid-storage demonstration project.', clue: 'A demonstration can unlock future contracts, but economics must work.', effect: 'neutral' },
+  { theme: 'energy', text: '{company} reviews component lead times for power equipment.', clue: 'Long lead times may indicate demand strength or supply constraints.', effect: 'neutral' },
+  { theme: 'robotics', text: '{company} runs extended reliability tests on a new automation unit.', clue: 'Reliability improvements can aid adoption; failed tests can delay launch.', effect: 'neutral' },
+  { theme: 'robotics', text: '{company} recruits machine-vision engineers for a new project.', clue: 'Hiring hints at product direction, not the eventual commercial result.', effect: 'neutral' },
+  { theme: 'finance', text: '{company} pilots a revised fraud-detection model.', clue: 'Better detection may reduce losses, but false positives can hurt customers.', effect: 'neutral' },
+  { theme: 'finance', text: '{company} reviews lending criteria after a change in customer behavior.', clue: 'Tighter criteria can lower risk but also reduce loan growth.', effect: 'neutral' },
+  { theme: 'consumer', text: '{company} tests a new loyalty program in a limited region.', clue: 'Retention may improve, though rewards can reduce margins.', effect: 'neutral' },
+  { theme: 'consumer', text: '{company} adjusts inventory targets ahead of a seasonal period.', clue: 'Lower inventory can improve cash flow or cause stockouts.', effect: 'neutral' },
+  { theme: 'aerospace', text: '{company} reviews certification documentation for a component.', clue: 'Certification progress can precede sales, but review can take longer than expected.', effect: 'neutral' },
+  { theme: 'aerospace', text: '{company} evaluates an alternative material for a critical part.', clue: 'A lighter or cheaper material may help if reliability requirements are met.', effect: 'neutral' },
+  { theme: 'telecom', text: '{company} tests network equipment under higher traffic loads.', clue: 'Successful tests can support future deployments; failures may delay them.', effect: 'neutral' },
+  { theme: 'telecom', text: '{company} reviews capacity plans for a data-center region.', clue: 'Capacity planning may reflect demand expectations, but capex is costly.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} delays a non-core project while reviewing priorities.', clue: 'This may improve focus or signal budget pressure.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} asks a small group of customers to test a revised product.', clue: 'Customer feedback may be promising or disappointing.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} reviews a possible partnership with an industry supplier.', clue: 'Talks may create options but can end without an agreement.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} updates its internal forecast for component availability.', clue: 'Availability changes can affect delivery timing and costs.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} is reorganizing teams around a long-term product roadmap.', clue: 'A clearer roadmap may help execution, but reorganization has risks.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} studies whether a current product can serve a new customer segment.', clue: 'A new segment can expand demand, but the fit is unproven.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} increases internal audits of production and service quality.', clue: 'Quality focus may prevent future problems or uncover existing ones.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} is reviewing the staffing plan for next year.', clue: 'A hiring plan is an intention, not proof of future growth.', effect: 'neutral' },
+  { theme: 'ALL', text: '{company} requests a revised proposal from a potential equipment vendor.', clue: 'Vendor negotiations may precede investment or be abandoned.', effect: 'neutral' }
+];
+  const NEWS_A = [
+  { theme: 'ALL', text: '{company} shares jump sharply over the past month.', move: 0.025, tone: 'positive', category: 'price' },
+  { theme: 'ALL', text: '{company} shares fall sharply after a volatile week.', move: -0.035, tone: 'negative', category: 'price' },
+  { theme: 'ALL', text: 'Trading volume in {ticker} rises well above its recent average.', move: 0.008, tone: 'mixed', category: 'price' },
+  { theme: 'ALL', text: '{ticker} breaks above its recent trading range.', move: 0.018, tone: 'positive', category: 'price' },
+  { theme: 'ALL', text: '{ticker} falls below a price level watched by traders.', move: -0.018, tone: 'negative', category: 'price' },
+  { theme: 'ALL', text: 'Analysts debate whether {ticker} has run too far, too fast.', move: -0.004, tone: 'mixed', category: 'price' },
+  { theme: 'ALL', text: '{company} reports quarterly revenue above expectations.', move: 0.035, tone: 'positive', category: 'earnings' },
+  { theme: 'ALL', text: '{company} reports quarterly revenue below expectations.', move: -0.04, tone: 'negative', category: 'earnings' },
+  { theme: 'ALL', text: '{company} reports stronger-than-expected operating profit.', move: 0.04, tone: 'positive', category: 'earnings' },
+  { theme: 'ALL', text: '{company} reports weaker operating margins.', move: -0.035, tone: 'negative', category: 'earnings' },
+  { theme: 'ALL', text: '{company} raises its forward outlook.', move: 0.045, tone: 'positive', category: 'guidance' },
+  { theme: 'ALL', text: '{company} lowers its forward outlook.', move: -0.05, tone: 'negative', category: 'guidance' },
+  { theme: 'ALL', text: '{company} announces a new product launch.', move: 0.022, tone: 'positive', category: 'product' },
+  { theme: 'ALL', text: '{company} publicly demonstrates a technology milestone.', move: 0.025, tone: 'positive', category: 'product' },
+  { theme: 'ALL', text: '{company} announces a major customer contract.', move: 0.05, tone: 'positive', category: 'contract' },
+  { theme: 'ALL', text: '{company} loses a significant customer contract.', move: -0.055, tone: 'negative', category: 'contract' },
+  { theme: 'ALL', text: '{company} confirms a large new order.', move: 0.035, tone: 'positive', category: 'contract' },
+  { theme: 'ALL', text: '{company} postpones a planned facility expansion.', move: -0.022, tone: 'negative', category: 'operations' },
+  { theme: 'ALL', text: '{company} begins construction on a new facility.', move: 0.018, tone: 'positive', category: 'operations' },
+  { theme: 'ALL', text: '{company} announces an acquisition.', move: 0.012, tone: 'mixed', category: 'corporate' },
+  { theme: 'ALL', text: '{company} ends merger discussions without a deal.', move: -0.018, tone: 'negative', category: 'corporate' },
+  { theme: 'ALL', text: '{company} increases its dividend.', move: 0.018, tone: 'positive', category: 'capital' },
+  { theme: 'ALL', text: '{company} cuts its dividend to preserve cash.', move: -0.04, tone: 'negative', category: 'capital' },
+  { theme: 'ALL', text: '{company} announces a share repurchase program.', move: 0.02, tone: 'positive', category: 'capital' },
+  { theme: 'ALL', text: '{company} announces a new share issuance.', move: -0.025, tone: 'negative', category: 'capital' },
+  { theme: 'ALL', text: '{company} replaces its chief executive.', move: -0.008, tone: 'mixed', category: 'management' },
+  { theme: 'ALL', text: '{company} announces the departure of a senior executive.', move: -0.02, tone: 'negative', category: 'management' },
+  { theme: 'ALL', text: '{company} launches a restructuring program.', move: -0.012, tone: 'mixed', category: 'management' },
+  { theme: 'ALL', text: '{company} reports a product-quality issue.', move: -0.04, tone: 'negative', category: 'risk' },
+  { theme: 'ALL', text: '{company} recalls a product batch for additional checks.', move: -0.05, tone: 'negative', category: 'risk' },
+  { theme: 'ALL', text: 'Regulators open an inquiry involving {company}.', move: -0.04, tone: 'negative', category: 'risk' },
+  { theme: 'ALL', text: '{company} receives a key regulatory approval.', move: 0.05, tone: 'positive', category: 'regulatory' },
+  { theme: 'ALL', text: '{company} receives an unfavorable legal ruling.', move: -0.035, tone: 'negative', category: 'legal' },
+  { theme: 'ALL', text: 'Industry demand forecasts are raised for {themeName}.', move: 0.018, tone: 'positive', category: 'theme' },
+  { theme: 'ALL', text: 'Industry demand forecasts are cut for {themeName}.', move: -0.022, tone: 'negative', category: 'theme' },
+  { theme: 'ALL', text: 'Input costs rise across the {themeName} sector.', move: -0.015, tone: 'negative', category: 'theme' },
+  { theme: 'ALL', text: 'A competitor announces a product that could pressure {company}.', move: -0.02, tone: 'negative', category: 'competition' },
+  { theme: 'ALL', text: '{company} announces an international expansion.', move: 0.022, tone: 'positive', category: 'strategy' },
+  { theme: 'ALL', text: '{company} abandons a costly non-core initiative.', move: 0.012, tone: 'mixed', category: 'strategy' },
+  { theme: 'ALL', text: 'Credit analysts revise their view of {company}.', move: -0.012, tone: 'mixed', category: 'credit' },
+  { theme: 'ALL', text: '{company} announces a strategic partnership.', move: 0.025, tone: 'positive', category: 'corporate' },
+  { theme: 'ALL', text: '{company} misses a major product delivery deadline.', move: -0.03, tone: 'negative', category: 'operations' },
+  { theme: 'ALL', text: '{company} announces better-than-expected customer retention.', move: 0.025, tone: 'positive', category: 'operations' },
+  { theme: 'ALL', text: '{company} reports a rise in customer cancellations.', move: -0.03, tone: 'negative', category: 'operations' },
+  { theme: 'ALL', text: '{company} announces an unexpected cash-flow shortfall.', move: -0.045, tone: 'negative', category: 'finance' },
+  { theme: 'ALL', text: '{company} reports a stronger cash position than expected.', move: 0.02, tone: 'positive', category: 'finance' },
+  { theme: 'ALL', text: 'A broad market risk-off move weighs on {company}.', move: -0.02, tone: 'negative', category: 'macro' },
+  { theme: 'ALL', text: 'Investor appetite improves across the {themeName} sector.', move: 0.015, tone: 'positive', category: 'theme' },
+  { theme: 'ALL', text: 'Investor appetite weakens across the {themeName} sector.', move: -0.018, tone: 'negative', category: 'theme' },
+  { theme: 'ALL', text: '{company} announces a material write-down.', move: -0.045, tone: 'negative', category: 'finance' }
+];
+  let state = null, currentState = null, selectedTicker = '', busy = false, toastTimer = null;
+  const money = n => '$' + Number(n || 0).toLocaleString('en-US', {maximumFractionDigits:2, minimumFractionDigits:2});
+  const pct = n => (n >= 0 ? '+' : '') + (n * 100).toFixed(2) + '%';
+  const clamp = (v,lo,hi) => Math.max(lo,Math.min(hi,v));
+  const rand = (a,b) => a + Math.random()*(b-a);
+  const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+  const escapeHtml = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function toast(message) { const el=$('toast'); el.textContent=message; el.style.display='block'; clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.style.display='none',3300); }
+  function tickerFor(n) { let s=''; n+=1; while(n>0){n--;s=String.fromCharCode(65+n%26)+s;n=Math.floor(n/26);} return s; }
+  function dateForDay(day) { const d=new Date(Date.UTC(2000,0,3)); let left=day; while(left>0){d.setUTCDate(d.getUTCDate()+1);const w=d.getUTCDay();if(w!==0&&w!==6)left--;} return d.toISOString().slice(0,10); }
+  function createCompany(i) {
+    const theme=THEMES[i%THEMES.length];
+    const nameSeeds=['Aster','Bluepeak','Cinder','Dovetail','Everline','Foxbridge','Glimmer','Harbor','Ionworks','Juniper','Keystone','Lattice','Mosaic','Northstar','Orbit','Pioneer','Quartz','Redwood','Silverpath','Tandem'];
+    const suffixes=['Systems','Technologies','Labs','Industries','Networks','Group','Dynamics','Works','Holdings','Solutions'];
+    const price=Math.round(rand(12,180)*100)/100;
+    return {ticker:tickerFor(i),name:`${nameSeeds[i%nameSeeds.length]} ${suffixes[Math.floor(i/nameSeeds.length)%suffixes.length]}`,themeId:theme.id,themeName:theme.name,tag:pick(theme.tags),price,initialPrice:price,previousClose:price,history:[price],quality:rand(.25,.85),cashHealth:rand(.35,.95),growth:rand(-.015,.035),volatility:rand(.012,.035),researchProgress:rand(.1,.55),projectStage:0,projectSuccessChance:rand(.2,.7),nextMilestoneDay:Math.floor(rand(60,420)),delisted:false,lastNewsDay:-999,changePct:0};
+  }
+  function createFund(i) {
+    const defs = [
+      {ticker:'MKT',name:'Atlas Total Market Fund',themeId:'software',themeName:'Broad Market',tag:'diversified large-cap basket',growth:.012,volatility:.010,quality:.62,cashHealth:.90},
+      {ticker:'TECH',name:'Northstar Technology Fund',themeId:'software',themeName:'Technology Basket',tag:'software and cloud basket',growth:.020,volatility:.015,quality:.68,cashHealth:.88},
+      {ticker:'CHIP',name:'Frontier Semiconductor Fund',themeId:'semiconductor',themeName:'Semiconductor Basket',tag:'semiconductor and AI basket',growth:.026,volatility:.023,quality:.65,cashHealth:.86},
+      {ticker:'HEAL',name:'Evergreen Healthcare Fund',themeId:'biotech',themeName:'Healthcare Basket',tag:'biotech and healthcare basket',growth:.014,volatility:.012,quality:.66,cashHealth:.91},
+      {ticker:'CLEAN',name:'Horizon Clean Energy Fund',themeId:'energy',themeName:'Clean Energy Basket',tag:'energy transition basket',growth:.018,volatility:.020,quality:.58,cashHealth:.84}
+    ];
+    const d=defs[i]; return {ticker:d.ticker,name:d.name,themeId:d.themeId,themeName:d.themeName,tag:d.tag,isFund:true,price:100,initialPrice:100,previousClose:100,history:[100],quality:d.quality,cashHealth:d.cashHealth,growth:d.growth,volatility:d.volatility,researchProgress:.35,projectStage:0,projectSuccessChance:.35,nextMilestoneDay:Math.floor(rand(120,420)),delisted:false,lastNewsDay:-999,changePct:0};
+  }
+  function createAccount(name,isBot=false,i=0,startingCash=START_CASH) { return {id:isBot?`bot-${i+1}`:'player',name,cash:startingCash,holdings:{},fomo:0,initialValue:startingCash,trades:0,isBot}; }
+  function createInitialState(name,startingCash=START_CASH) {
+    const companies=[...Array.from({length:COMPANY_COUNT},(_,i)=>createCompany(i)),...Array.from({length:5},(_,i)=>createFund(i))];
+    const themeSentiment=Object.fromEntries(THEMES.map(t=>[t.id,0]));
+    return {version:1,day:0,year:1,totalYears:DEFAULT_TOTAL_YEARS,companies,player:createAccount(name||'Investor',false,0,startingCash),bots:Array.from({length:12},(_,i)=>createAccount(`Market Bot ${String(i+1).padStart(2,'0')}`,true,i)),news:[{id:1,day:0,ticker:null,kind:'system',tone:'neutral',title:'Market opens',text:'The fictional market is open. Prices, companies, and events are generated inside this browser.',clue:'Early-stage companies may offer growth, but uncertainty is high.'}],themeSentiment,themeMomentum:Object.fromEntries(THEMES.map(t=>[t.id,0])),status:'running'};
+  }
+  function saveState() { try { localStorage.setItem(STORE_KEY,JSON.stringify(state)); } catch(e) { toast('브라우저 저장 공간에 저장하지 못했습니다.'); } }
+  function loadState() { try { const s=JSON.parse(localStorage.getItem(STORE_KEY)||'null'); if(s&&s.version===1&&Array.isArray(s.companies)&&s.player&&Array.isArray(s.bots)){if(!Number.isFinite(s.totalYears)||s.totalYears<DEFAULT_TOTAL_YEARS)s.totalYears=DEFAULT_TOTAL_YEARS;for(const c of s.companies){if(!Array.isArray(c.history)||!c.history.length)c.history=[c.price||1];if(c.history.length>400)c.history=c.history.slice(-400);}for(let i=0;i<5;i++){const d=createFund(i);if(!s.companies.some(c=>c.ticker===d.ticker))s.companies.push(d);}return s;} } catch(e){} return null; }
+  function portfolioValue(account) { return account.cash+Object.entries(account.holdings).reduce((sum,[ticker,qty])=>{const c=state.companies.find(x=>x.ticker===ticker);return sum+(c&&!c.delisted?c.price*qty:0);},0); }
+  function averageCompanyReturn() { const a=state.companies.filter(c=>!c.delisted);return a.length?a.reduce((s,c)=>s+c.price/(c.initialPrice||c.price)-1,0)/a.length:0; }
+  function updateFomo(account) { const ret=portfolioValue(account)/account.initialValue-1, gap=averageCompanyReturn()-ret; if(gap>.02)account.fomo=clamp(account.fomo+Math.min(1.2,(gap-.02)*1.5),0,100);else if(gap<-.02)account.fomo=clamp(account.fomo-Math.min(1,(-gap-.02)*1.2),0,100); }
+  function formatTemplate(text,c) { return text.replaceAll('{company}',c.name).replaceAll('{ticker}',c.ticker).replaceAll('{tag}',c.tag).replaceAll('{themeName}',c.themeName); }
+  function addNews(item) { item.id=`${state.day}-${Math.random().toString(36).slice(2)}`;item.day=state.day;state.news.unshift(item);if(state.news.length>160)state.news.length=160; }
+  function themeShock(themeId,shock,sourceTicker,label) { state.themeSentiment[themeId]=clamp((state.themeSentiment[themeId]||0)+shock,-.12,.12);state.themeMomentum[themeId]=clamp((state.themeMomentum[themeId]||0)+shock*.45,-.08,.08);for(const c of state.companies){if(c.delisted||c.themeId!==themeId||c.ticker===sourceTicker)continue;c.price=Math.max(.5,c.price*(1+shock*rand(.08,.38)));} }
+  function emitClueNews(c) {
+    const eligible=NEWS_B.filter(n=>n.theme==='ALL'||n.theme===c.themeId);const t=pick(eligible);
+    addNews({ticker:c.ticker,kind:'clue',tone:'neutral',title:`Research note · ${c.ticker}`,text:formatTemplate(t.text,c),clue:t.clue,themeId:c.themeId});c.lastNewsDay=state.day;
+    const r=Math.random();if(r<.18)c.researchProgress=clamp(c.researchProgress+rand(.04,.12),0,1);else if(r<.27)c.projectSuccessChance=clamp(c.projectSuccessChance+rand(.02,.08),.05,.9);else if(r<.37)c.cashHealth=clamp(c.cashHealth-rand(.01,.06),.05,1);else if(r<.47)c.projectSuccessChance=clamp(c.projectSuccessChance-rand(.03,.1),.05,.9);
+  }
+  function emitPublicNews(c) {
+    const t=pick(NEWS_A), move=t.move*rand(.7,1.25);c.price=Math.max(.5,c.price*(1+move));let tm=0;if(t.category==='theme')tm=move*1.1;else if(t.tone==='positive')tm=move*.12;else if(t.tone==='negative')tm=move*.10;if(tm)themeShock(c.themeId,tm,c.ticker,`${c.themeName}: ${t.tone} news`);
+    addNews({ticker:c.ticker,kind:'public',tone:t.tone,title:`Market news · ${c.ticker}`,text:formatTemplate(t.text,c),clue:'Public information may already be partly reflected in the price. Compare it with expectations and company fundamentals.',themeId:c.themeId});c.lastNewsDay=state.day;
+  }
+  function updateCompany(c) {
+    if(c.delisted)return;c.previousClose=c.price;
+    const sentiment=state.themeSentiment[c.themeId]||0,momentum=state.themeMomentum[c.themeId]||0;
+    const drift=c.growth/DAYS_PER_YEAR+(c.quality-.5)*.00018+(c.researchProgress-.4)*.00025+sentiment*.018+momentum*.008;
+    c.price=Math.max(.5,Math.round(c.price*(1+clamp(drift+rand(-c.volatility,c.volatility),-.18,.18))*100)/100);
+    c.researchProgress=clamp(c.researchProgress+rand(-.002,.006),0,1);c.cashHealth=clamp(c.cashHealth+rand(-.002,.0015)+(c.quality-.5)*.0003,0,1);
+    if(state.day>=c.nextMilestoneDay){
+      if(Math.random()<c.projectSuccessChance*(.4+c.researchProgress*.7)){c.projectStage++;c.quality=clamp(c.quality+rand(.02,.08),0,1);c.growth=clamp(c.growth+rand(.002,.012),-.04,.08);c.price=Math.max(.5,c.price*(1+rand(.03,.11)));addNews({ticker:c.ticker,kind:'reveal',tone:'positive',title:`Milestone reached · ${c.ticker}`,text:`${c.name} completes a meaningful internal milestone in ${c.tag}.`,clue:'A previously uncertain project has made progress. Future commercial success is still not guaranteed.',themeId:c.themeId});themeShock(c.themeId,rand(.002,.009),c.ticker,null);}
+      else if(Math.random()<.34){c.quality=clamp(c.quality-rand(.02,.08),0,1);c.growth=clamp(c.growth-rand(.002,.012),-.04,.08);c.price=Math.max(.5,c.price*(1-rand(.04,.14)));addNews({ticker:c.ticker,kind:'reveal',tone:'negative',title:`Project setback · ${c.ticker}`,text:`${c.name} encounters a setback in ${c.tag}.`,clue:'Earlier clues were not guarantees; execution risk has materialized.',themeId:c.themeId});themeShock(c.themeId,-rand(.001,.006),c.ticker,null);}
+      c.nextMilestoneDay+=Math.floor(rand(90,360));
+    }
+    if(c.cashHealth<.12&&c.price<3&&Math.random()<.012){c.delisted=true;c.price=0;addNews({ticker:c.ticker,kind:'delisting',tone:'negative',title:`Trading suspended · ${c.ticker}`,text:`${c.name} enters a fictional insolvency process and is delisted.`,clue:'Delisted shares are treated as having no recoverable value in this simplified simulation.',themeId:c.themeId});}
+    c.history.push(c.price);if(c.history.length>400)c.history.shift();
+  }
+  function botTrade(bot) { const active=state.companies.filter(c=>!c.delisted);if(!active.length)return;const c=pick(active),qty=Math.max(1,Math.floor(rand(1,12))),gross=c.price*qty,held=bot.holdings[c.ticker]||0;if(Math.random()<.55&&bot.cash>gross*1.001){bot.cash-=gross*1.001;bot.holdings[c.ticker]=held+qty;bot.trades++;}else if(held>0){const n=Math.min(held,qty);bot.cash+=gross/qty*n*.999;bot.holdings[c.ticker]=held-n;if(!bot.holdings[c.ticker])delete bot.holdings[c.ticker];bot.trades++;} }
+  function advanceOneDay() {
+    if(state.day>=getTotalDays()){state.status='finished';return;}
+    state.day++;state.year=Math.min(getTotalYears(),Math.floor((state.day-1)/DAYS_PER_YEAR)+1);
+    for(const t of THEMES){state.themeSentiment[t.id]*=.965;state.themeMomentum[t.id]*=.93;}
+    for(const c of state.companies)updateCompany(c);
+    const active=state.companies.filter(c=>!c.delisted),count=Math.random()<.22?3:(Math.random()<.65?1:2);
+    for(let i=0;i<count;i++){const c=pick(active);if(Math.random()<.52)emitClueNews(c);else emitPublicNews(c);}
+    for(const b of state.bots){if(Math.random()<.72)botTrade(b);updateFomo(b);}updateFomo(state.player);
+    // News and theme shocks can move prices after updateCompany() records the day's history.
+    // Replace today's last observation with the final close so return calculations match displayed prices.
+    for(const c of state.companies){
+      if(!Array.isArray(c.history)||!c.history.length)c.history=[c.price];
+      else c.history[c.history.length-1]=c.price;
+      if(c.history.length>400)c.history=c.history.slice(-400);
+      c.changePct=c.previousClose?(c.price/c.previousClose-1)*100:0;
+    }
+    if(state.day>=getTotalDays())state.status='finished';saveState();
+  }
+  function trade(side,ticker,quantity) {
+    const c=state.companies.find(x=>x.ticker===ticker);if(!c||c.delisted)throw new Error('해당 주식은 거래할 수 없습니다.');
+    if(!Number.isInteger(quantity)||quantity<1||quantity>100000)throw new Error('수량은 1~100,000주 정수여야 합니다.');
+    const p=state.player,held=p.holdings[ticker]||0;
+    if(side==='buy'){
+      if(p.fomo>=100){const h=c.history,old=h[Math.max(0,h.length-6)]||c.price;if(c.price/old-1<.08)throw new Error('FOMO가 100입니다. 최근 5거래일에 8% 이상 상승한 주식만 매수할 수 있습니다.');}
+      const gross=c.price*quantity,total=gross*1.001;if(p.cash+1e-8<total)throw new Error('현금이 부족합니다.');p.cash-=total;p.holdings[ticker]=held+quantity;
+    } else if(side==='sell') {if(held<quantity)throw new Error('보유 수량이 부족합니다.');p.cash+=c.price*quantity*.999;p.holdings[ticker]=held-quantity;if(!p.holdings[ticker])delete p.holdings[ticker];} else throw new Error('거래 방향이 올바르지 않습니다.');
+    p.trades++;saveState();return `${ticker} ${quantity}주 ${side==='buy'?'매수':'매도'} 완료`;
+  }
+  function miniChart(history,width=130,height=30) {if(!history||history.length<2)return '<span class="muted">—</span>';const min=Math.min(...history),max=Math.max(...history),range=max-min||1;const pts=history.map((v,i)=>`${i/(history.length-1)*width},${height-((v-min)/range)*(height-4)-2}`).join(' ');return `<svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="${history.at(-1)>=history[0]?'#35d39a':'#ff6d83'}" stroke-width="1.8" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round"/></svg>`;}
+  function buildPublicData() {
+    const companies=state.companies.map(c=>({...c,changePct:c.previousClose?(c.price/c.previousClose-1)*100:0,history:c.history.slice(-400),qualityLabel:c.quality>.72?'Strong':c.quality>.48?'Average':'Weak'}));
+    const accountValue=a=>portfolioValue(a), leaderboard=[state.player,...state.bots].map(p=>({id:p.id,name:p.name,value:accountValue(p),returnPct:accountValue(p)/p.initialValue-1,isBot:p.isBot})).sort((a,b)=>b.value-a.value).slice(0,25);
+    const themes=THEMES.map(t=>({...t,sentiment:state.themeSentiment[t.id]||0}));
+    return {market:{day:state.day,totalDays:getTotalDays(),year:state.year,totalYears:getTotalYears(),date:dateForDay(state.day),status:state.status,activeCompanies:state.companies.filter(c=>!c.delisted).length,averageCompanyReturn:averageCompanyReturn(),themes},companies,news:state.news.slice(0,80),leaderboard,player:{...state.player, value:portfolioValue(state.player),returnPct:portfolioValue(state.player)/state.player.initialValue-1}};
+  }
+  function render(data) {
+    currentState=data;const m=data.market,p=data.player;
+    $('dayPill').textContent=`Day ${m.day.toLocaleString()} / ${m.totalDays.toLocaleString()}`;$('datePill').textContent=m.date;$('userPill').textContent=p.name;
+    $('portfolioValue').textContent=money(p.value);$('portfolioSub').textContent=`Initial capital ${money(p.initialValue)}`;$('totalReturn').textContent=pct(p.returnPct);$('totalReturn').className='value '+(p.returnPct>=0?'positive':'negative');$('cashValue').textContent=money(p.cash);
+    const hc=Object.keys(p.holdings).length;$('holdingCount').textContent=`${hc} open position${hc===1?'':'s'} · ${p.trades} trades`;$('fomoValue').textContent=`${Math.round(p.fomo)} / 100`;$('fomoFill').style.width=`${p.fomo}%`;$('fomoSub').textContent=p.fomo>=100?'Restricted: buy recent surges only':p.fomo>=70?'High urgency — check your reasoning':p.fomo>=35?'Moderate pressure':'Buy normally';
+    $('yearValue').innerHTML=`${m.year} <span class="muted" style="font-size:13px">/ ${m.totalYears}</span>`;$('yearProgress').style.width=`${m.day/m.totalDays*100}%`;$('marketStatus').textContent=m.status.toUpperCase();$('advanceBtn').disabled=busy||m.status==='finished';$('extendBtn').disabled=busy;$('joinOverlay').style.display='none';const headline=data.news[0];$('headlineText').textContent=headline?`${headline.title||'Market update'} — ${headline.text||''}`:'The fictional market is preparing to open.';$('headlineDate').textContent=headline?`Day ${headline.day}`:'Day 0';renderThemeFilter(m.themes);renderStocks();renderFunds();renderDetails();renderHoldings();renderThemes(m.themes);renderLeaderboard(data.leaderboard);renderNews(data.news);
+  }
+  function renderThemeFilter(themes) {const el=$('themeFilter');if(el.options.length>1)return;for(const t of themes){const o=document.createElement('option');o.value=t.id;o.textContent=t.name;el.appendChild(o);}}
+  function filteredCompanies() {const q=$('searchBox').value.trim().toLowerCase(),theme=$('themeFilter').value,sort=$('sortSelect').value;let list=currentState.companies.filter(c=>(!q||c.ticker.toLowerCase().includes(q)||c.name.toLowerCase().includes(q))&&(theme==='all'||c.themeId===theme));if(sort==='change')list.sort((a,b)=>b.changePct-a.changePct);else if(sort==='price')list.sort((a,b)=>b.price-a.price);else if(sort==='return')list.sort((a,b)=>(b.price/b.initialPrice-1)-(a.price/a.initialPrice-1));else list.sort((a,b)=>a.ticker.localeCompare(b.ticker));return list;}
+  function renderStocks() {const rows=filteredCompanies();$('stockRows').innerHTML=rows.map(c=>`<tr data-ticker="${c.ticker}" class="${selectedTicker===c.ticker?'selected':''}"><td><div class="ticker">${c.ticker}${c.isFund?' <span class="fund-label">FUND</span>':''}${c.delisted?' · DELISTED':''}</div><div class="company-name">${escapeHtml(c.name)}</div></td><td><span class="tag">${escapeHtml(c.themeName)}</span></td><td class="price">${money(c.price)}</td><td class="${c.changePct>=0?'positive':'negative'}">${c.changePct>=0?'+':''}${c.changePct.toFixed(2)}%</td><td style="width:140px"><div style="width:120px;height:28px">${miniChart(c.history,120,28)}</div></td></tr>`).join('')||'<tr><td colspan="5" class="empty">No matching stocks.</td></tr>'; $('stockRows').querySelectorAll('tr[data-ticker]').forEach(tr=>tr.addEventListener('click',()=>{selectedTicker=tr.dataset.ticker;renderStocks();renderFunds();renderDetails();}));}
+
+  function renderFunds() {const funds=currentState.companies.filter(c=>c.isFund);$('fundRows').innerHTML=funds.map(c=>`<tr data-ticker="${c.ticker}" class="${selectedTicker===c.ticker?'selected':''}"><td><div class="ticker">${c.ticker}</div><div class="company-name">${escapeHtml(c.name)}</div></td><td>${escapeHtml(c.themeName)}</td><td class="price">${money(c.price)}</td><td class="${c.changePct>=0?'positive':'negative'}">${c.changePct>=0?'+':''}${c.changePct.toFixed(2)}%</td><td style="width:100px"><div style="width:90px;height:25px">${miniChart(c.history.slice(-60),90,25)}</div></td></tr>`).join('');$('fundRows').querySelectorAll('tr[data-ticker]').forEach(tr=>tr.addEventListener('click',()=>{selectedTicker=tr.dataset.ticker;renderStocks();renderFunds();renderDetails();}));}
+  function movingAverage(values,period) {return values.map((_,i)=>i+1<period?null:values.slice(i-period+1,i+1).reduce((a,b)=>a+b,0)/period);}
+  function detailChart(history,days,show20,show60,show120) {
+    const vals=(history||[]).slice(-days);if(vals.length<2)return '<div class="empty">More trading days are needed to draw a chart.</div>';
+    const ma20=movingAverage(vals,20),ma60=movingAverage(vals,60),ma120=movingAverage(vals,120);
+    const all=vals.concat(show20?ma20.filter(Number.isFinite):[],show60?ma60.filter(Number.isFinite):[],show120?ma120.filter(Number.isFinite):[]).filter(Number.isFinite);
+    let min=Math.min(...all),max=Math.max(...all);if(max===min){max+=1;min-=1;}const w=900,h=260,pad=32;
+    const x=i=>pad+i/(vals.length-1)*(w-pad*2),y=v=>pad+(max-v)/(max-min)*(h-pad*2);
+    const line=(arr,color,width=2)=>{const pts=arr.map((v,i)=>v==null?'':`${x(i).toFixed(1)},${y(v).toFixed(1)}`).filter(Boolean).join(' ');return `<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="${width}" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/>`;};
+    let grid='';for(let i=0;i<5;i++){const gy=pad+i*(h-pad*2)/4;grid+=`<line x1="${pad}" y1="${gy}" x2="${w-pad}" y2="${gy}" stroke="#253650" stroke-width="1"/>`;const val=max-i*(max-min)/4;grid+=`<text x="${pad-5}" y="${gy-4}" text-anchor="end" font-size="11" fill="#92a4c1">${val.toFixed(1)}</text>`;}
+    return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img" aria-label="Stock price chart">${grid}${line(vals,vals.at(-1)>=vals[0]?'#35d39a':'#ff6d83',2.2)}${show20?line(ma20,'#f4c96b',1.5):''}${show60?line(ma60,'#7ca7ff',1.5):''}${show120?line(ma120,'#d28bff',1.5):''}<text x="${pad}" y="${h-6}" fill="#92a4c1" font-size="11">${vals.length} trading days · latest ${money(vals.at(-1))}</text></svg>`;
+  }
+  function periodReturn(history,period) {if(!history||history.length<=period)return null;const old=history[history.length-1-period];return old>0?history[history.length-1]/old-1:null;}
+
+  function renderDetails() {
+    const c=currentState&&currentState.companies.find(x=>x.ticker===selectedTicker);
+    if(!c){$('stockDetails').innerHTML='<div class="empty">Choose a company or fund from the market table.</div>';$('selectedHeading').textContent='STOCK DETAILS';$('selectedTheme').textContent='Select a ticker';return;}
+    const qty=currentState.player.holdings[c.ticker]||0, histReturn=c.price/(c.initialPrice||c.price)-1;
+    $('selectedHeading').textContent=`${c.ticker} · ${c.name}`;$('selectedTheme').textContent=c.isFund?'FUND · '+c.themeName:c.themeName;
+    const returns=[['10D',10],['20D',20],['60D',60],['180D',180],['1Y',252]].map(([label,n])=>{const r=periodReturn(c.history,n);return `<div class="return-card"><div class="muted">${label} RETURN</div><strong class="${r===null?'muted':r>=0?'positive':'negative'}">${r===null?'N/A':pct(r)}</strong></div>`;}).join('');
+    const detailsText=c.isFund?`Diversified fictional fund focused on ${c.themeName.toLowerCase()}. Its price follows a simulated fund-level return process; it is not a real ETF.`:`A fictional ${c.themeName.toLowerCase()} company focused on ${c.tag}. Company quality, research progress, industry sentiment and random market events affect its simulated price.`;
+    $('stockDetails').innerHTML=`<div class="stock-title"><div><div class="ticker-large">${c.ticker}${c.isFund?' · FUND / ETF-LIKE BASKET':' / '+escapeHtml(c.themeName)}</div><h2>${escapeHtml(c.name)}</h2><div class="stock-price">${money(c.price)}</div><div class="${c.changePct>=0?'positive':'negative'}">${c.changePct>=0?'+':''}${c.changePct.toFixed(2)}% today · ${pct(histReturn)} since market opened</div></div><div style="min-width:110px;width:25%;height:82px">${miniChart(c.history.slice(-60),220,76)}</div></div>
+    <div style="margin-top:12px;padding:12px;background:#17243a;border:1px solid #2a3a55;border-radius:10px"><div class="tag">${c.isFund?'Fund overview':'Company & sector overview'}</div><p style="margin:8px 0 0;color:#c3d0e5">${escapeHtml(detailsText)}</p><div class="muted" style="font-size:11px;margin-top:7px">Outlook: ${c.quality>.72?'Strong':c.quality>.48?'Average':'Weak'} · Research progress: ${(c.researchProgress*100).toFixed(0)}% · ${c.delisted?'Delisted':'Trading'}</div></div>
+    <div class="returns-grid">${returns}</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-top:15px"><strong>RECENT PRICE CHART</strong><select id="chartRange" aria-label="Chart range" style="background:#0c1424;color:var(--text);border:1px solid #30425f;border-radius:8px;padding:7px"><option value="60">60 trading days</option><option value="120">120 trading days</option><option value="252" selected>1 year</option><option value="400">400 trading days</option></select></div>
+    <div class="chart-controls"><label><input type="checkbox" id="ma20" checked> MA 20</label><label><input type="checkbox" id="ma60" checked> MA 60</label><label><input type="checkbox" id="ma120"> MA 120</label><span class="muted" style="font-size:10px">Moving averages are optional overlays.</span></div><div class="detail-chart" id="detailChart">${detailChart(c.history,252,true,true,false)}</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"><span class="tag">Theme: ${escapeHtml(c.themeName)}</span><span class="tag">Your shares: ${qty.toLocaleString()}</span><span class="tag">Fee: 0.10%</span></div>
+    <form class="trade-form" id="tradeForm"><input type="number" id="tradeQty" min="1" max="100000" step="1" value="10" required aria-label="Quantity"><button type="submit" class="primary" ${c.delisted?'disabled':''}>Buy</button><button type="button" class="sell" id="sellBtn" ${c.delisted||qty===0?'disabled':''}>Sell</button></form>
+    <div class="toolbar" style="margin-top:9px"><button type="button" data-buy-pct="25" ${c.delisted?'disabled':''}>Buy 25% cash</button><button type="button" data-buy-pct="50" ${c.delisted?'disabled':''}>Buy 50%</button><button type="button" data-buy-pct="100" ${c.delisted?'disabled':''}>Buy All</button><button type="button" class="sell" data-sell-pct="50" ${c.delisted||qty===0?'disabled':''}>Sell 50%</button><button type="button" class="sell" data-sell-pct="100" ${c.delisted||qty===0?'disabled':''}>Sell All</button></div>
+    <div class="muted" style="font-size:11px;margin-top:8px">Estimated order value: <span id="orderEstimate">${money(c.price*10)}</span> · Cash includes transaction fees when buying. No short selling.</div><div class="notice">Fictional market data. All fundamentals, funds and prices are simulated and do not represent real securities.</div>`;
+    const qi=$('tradeQty');qi.addEventListener('input',()=>{$('orderEstimate').textContent=money(c.price*Math.max(0,Number(qi.value)||0));});$('tradeForm').addEventListener('submit',e=>{e.preventDefault();doTrade('buy',c.ticker,Number(qi.value));});$('sellBtn').addEventListener('click',()=>doTrade('sell',c.ticker,Number(qi.value)));
+    const refreshChart=()=>{$('detailChart').innerHTML=detailChart(c.history,Number($('chartRange').value),$('ma20').checked,$('ma60').checked,$('ma120').checked);};['chartRange','ma20','ma60','ma120'].forEach(id=>$(id).addEventListener('change',refreshChart));
+    document.querySelectorAll('[data-buy-pct]').forEach(btn=>btn.addEventListener('click',()=>{const frac=Number(btn.dataset.buyPct)/100;const q=Math.floor(currentState.player.cash*frac/(c.price*1.001));if(q<1){toast('선택한 현금 비율로는 1주도 매수할 수 없습니다.');return;}doTrade('buy',c.ticker,q);}));
+    document.querySelectorAll('[data-sell-pct]').forEach(btn=>btn.addEventListener('click',()=>{const held=currentState.player.holdings[c.ticker]||0;const q=Number(btn.dataset.sellPct)===100?held:Math.max(1,Math.floor(held*Number(btn.dataset.sellPct)/100));if(q<1){toast('매도할 주식이 없습니다.');return;}doTrade('sell',c.ticker,q);}));
+  }
+  function renderHoldings() {const p=currentState.player,rows=Object.entries(p.holdings).map(([ticker,qty])=>({c:currentState.companies.find(c=>c.ticker===ticker),qty})).filter(x=>x.c).sort((a,b)=>b.c.price*b.qty-a.c.price*a.qty);$('positionSummary').textContent=`${rows.length} position${rows.length===1?'':'s'}`;$('holdingRows').innerHTML=rows.map(({c,qty})=>{const value=c.price*qty;return `<tr><td><span class="ticker">${c.ticker}</span><div class="company-name">${escapeHtml(c.name)}</div></td><td>${qty.toLocaleString()}</td><td class="price">${money(value)}</td><td>${(value/Math.max(1,p.value)*100).toFixed(1)}%</td><td><button data-sell="${c.ticker}" class="sell" style="padding:5px 8px">Sell</button></td></tr>`;}).join('')||'<tr><td colspan="5" class="empty">No holdings yet. Select a stock to place an order.</td></tr>'; $('holdingRows').querySelectorAll('button[data-sell]').forEach(btn=>btn.addEventListener('click',()=>{selectedTicker=btn.dataset.sell;renderStocks();renderDetails();const q=currentState.player.holdings[selectedTicker]||1;doTrade('sell',selectedTicker,q);}));}
+  function renderThemes(themes) {$('themeList').innerHTML=themes.map(t=>{const val=t.sentiment||0,w=Math.min(100,Math.abs(val)*900);return `<div class="theme-card"><div class="theme-name">${escapeHtml(t.name)}</div><div class="${val>=0?'positive':'negative'}" style="font-size:12px;margin-top:4px">${val>=0?'+':''}${(val*100).toFixed(2)} sentiment</div><div class="theme-meter"><span style="width:${w}%;background:${val>=0?'#35d39a':'#ff6d83'}"></span></div></div>`;}).join('');}
+  function renderLeaderboard(rows) {$('leaderboard').innerHTML=rows.map((r,i)=>`<div class="leader-row"><div class="rank">${String(i+1).padStart(2,'0')}</div><div class="leader-info"><div class="leader-name">${escapeHtml(r.name)} ${r.isBot?'<span class="tag">BOT</span>':''}</div><div class="leader-sub">${r.isBot?'Baseline investor':'You · this browser'}</div></div><div class="leader-val"><div style="font-weight:750">${money(r.value)}</div><div class="${r.returnPct>=0?'positive':'negative'}" style="font-size:11px">${pct(r.returnPct)}</div></div></div>`).join('')||'<div class="empty">No investors yet.</div>';}
+  function renderNews(items) {$('newsCount').textContent=`${items.length} stories`;$('newsList').innerHTML=items.map(n=>`<article class="news-item"><div class="news-top"><span class="news-type ${n.tone==='positive'?'positive':n.tone==='negative'?'negative':'muted'}"><span class="dot ${n.tone||'neutral'}"></span>${escapeHtml(n.kind||'news')}</span><span class="muted" style="font-size:10px">Day ${n.day}</span></div><h4>${escapeHtml(n.title||'Market update')}</h4><p>${escapeHtml(n.text||'')}</p>${n.clue?`<div class="clue">CLUE: ${escapeHtml(n.clue)}</div>`:''}</article>`).join('');}
+  function doTrade(side,ticker,quantity) {if(busy)return;try{const msg=trade(side,ticker,quantity);render(buildPublicData());toast(msg);}catch(e){toast(e.message);}}
+  $('joinForm').addEventListener('submit',e=>{e.preventDefault();const name=$('nickname').value.trim().slice(0,24);if(!name){toast('닉네임을 입력해주세요.');return;}state=createInitialState(name,Number(window.__carryCash)||START_CASH);window.__carryCash=null;selectedTicker='A';saveState();render(buildPublicData());toast(`${name}님, 시장에 입장했습니다.`);});
+  $('advanceBtn').addEventListener('click',()=>{if(busy||!state||state.status==='finished')return;busy=true;$('advanceBtn').disabled=true;try{advanceOneDay();render(buildPublicData());}catch(e){console.error(e);toast('하루 진행 중 오류가 발생했습니다. 저장된 상태를 유지했습니다.');}finally{busy=false;if(currentState)$('advanceBtn').disabled=currentState.market.status==='finished';}});
+  $('resetBtn').addEventListener('click',()=>{if(!state)return;if(!confirm(`새 시장을 시작하고 보유 주식/진행 상황은 초기화하되, 현재 현금 ${money(state.player.cash)}을 새 시작 자금으로 유지할까요?`))return;const cash=Math.max(0,Number(state.player.cash)||0),name=state.player.name;state=createInitialState(name,cash);selectedTicker='A';saveState();render(buildPublicData());toast(`새 시장 시작: ${money(cash)} 현금을 유지했습니다.`);});
+  $('hardResetBtn').addEventListener('click',()=>{if(!confirm('하드 리셋: 이 브라우저의 시장 기록과 포트폴리오를 모두 삭제하고 $100,000으로 되돌릴까요? 이 작업은 되돌릴 수 없습니다.'))return;localStorage.removeItem(STORE_KEY);state=null;currentState=null;selectedTicker='';window.__carryCash=null;$('joinOverlay').style.display='grid';$('nickname').value='';toast('하드 리셋 완료. 새 시장은 $100,000으로 시작합니다.');});
+  $('extendBtn').addEventListener('click',()=>{if(!state)return;const old=getTotalYears();state.totalYears=old+10;if(state.status==='finished')state.status='running';saveState();render(buildPublicData());toast(`시뮬레이션 기간을 ${state.totalYears}년으로 연장했습니다.`);});
+  $('searchBox').addEventListener('input',()=>currentState&&renderStocks());$('themeFilter').addEventListener('change',()=>currentState&&renderStocks());$('sortSelect').addEventListener('change',()=>currentState&&renderStocks());
+  state=loadState();if(state){selectedTicker=state.companies[0]?.ticker||'A';saveState();render(buildPublicData());}else{$('joinOverlay').style.display='grid';}
+})();
+</script>
+</body>
+</html>
