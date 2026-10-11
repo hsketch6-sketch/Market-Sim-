@@ -26,6 +26,7 @@ body { margin: 0; padding: 20px; }
 main { max-width: 1600px; margin: auto; }
 h1 { margin-bottom: 4px; }
 h2 { margin-top: 0; }
+h3 { margin-bottom: 10px; }
 p { line-height: 1.55; }
 .muted { color: var(--muted); }
 .positive { color: var(--green); }
@@ -53,12 +54,11 @@ button {
   background: var(--blue);
 }
 button:hover:not(:disabled) { filter: brightness(1.15); }
-button:disabled { opacity: .5; cursor: not-allowed; }
+button:disabled { opacity: .45; cursor: not-allowed; }
 input:focus, select:focus, button:focus-visible {
   outline: 2px solid #7bb7ff;
   outline-offset: 2px;
 }
-
 .stats {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -75,12 +75,13 @@ input:focus, select:focus, button:focus-visible {
   font-size: clamp(17px, 2vw, 25px);
   overflow-wrap: anywhere;
 }
-.toolbar, .filters {
+.toolbar, .filters, .button-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 9px;
 }
+.toolbar button { flex: 0 0 auto; }
 .layout {
   display: grid;
   grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
@@ -127,8 +128,10 @@ tr.selected-row { background: #203b5d; }
   padding: 10px;
   border-radius: 7px;
   overflow-wrap: anywhere;
+  min-width: 0;
 }
 .detail-item strong { display: block; margin-top: 4px; }
+.detail-label { color: var(--muted); font-size: 12px; }
 .trade-controls {
   display: flex;
   flex-wrap: wrap;
@@ -140,7 +143,53 @@ tr.selected-row { background: #203b5d; }
 #quantity { width: 130px; }
 .buy-button { background: #16784f; }
 .sell-button { background: #a53a4d; }
-
+.quick-trades {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+.quick-trade-box {
+  background: var(--dark);
+  border-radius: 9px;
+  padding: 12px;
+  min-width: 0;
+}
+.quick-trade-box h3 { font-size: 14px; }
+.quick-trade-box .button-row { gap: 6px; }
+.quick-trade-box button { flex: 1 1 65px; padding: 9px 6px; font-size: 12px; }
+.sell-quick { background: #783344; }
+.theme-panel {
+  margin-top: 16px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: #101c2e;
+}
+.theme-panel p { margin: 7px 0; }
+.theme-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.theme-tag {
+  border: 1px solid #405574;
+  border-radius: 20px;
+  padding: 5px 9px;
+  background: #1b2c45;
+  font-size: 12px;
+}
+.related-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+  margin-top: 10px;
+}
+.related-company {
+  width: 100%;
+  text-align: left;
+  background: #1b2c45;
+  padding: 9px;
+  overflow-wrap: anywhere;
+}
+.related-company span { display: block; }
+.related-company small { color: var(--muted); }
 .leader-row {
   display: flex;
   justify-content: space-between;
@@ -158,8 +207,6 @@ tr.selected-row { background: #203b5d; }
   border: 1px dashed var(--border);
   border-radius: 8px;
 }
-
-/* Wide news panel */
 #newsSection { padding: 20px; }
 .news-heading {
   display: flex;
@@ -208,8 +255,6 @@ tr.selected-row { background: #203b5d; }
   color: var(--muted);
 }
 footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
-
-/* First-time nickname screen */
 #nameOverlay {
   position: fixed;
   inset: 0;
@@ -244,18 +289,18 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
   body { padding: 9px; }
   section { padding: 12px; }
   .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .toolbar button { flex: 1; }
+  .toolbar button { flex: 1 1 40%; }
   #newsSection { padding: 12px; }
   .news { padding: 12px; }
   th, td { padding: 8px; font-size: 13px; }
   .leader-value { font-size: 13px; }
+  .quick-trades, .related-list { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- First-time nickname setup -->
 <div id="nameOverlay">
   <div class="name-card">
     <p class="muted">MARKET SIM / PLAYER SETUP</p>
@@ -266,14 +311,8 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
     </p>
     <form id="nameForm">
       <label for="nickname">Player Nickname</label>
-      <input
-        id="nickname"
-        type="text"
-        maxlength="20"
-        autocomplete="nickname"
-        placeholder="Enter your nickname"
-        required
-      >
+      <input id="nickname" type="text" maxlength="20"
+        autocomplete="nickname" placeholder="Enter your nickname" required>
       <div id="nameError" class="name-error"></div>
       <button type="submit">Enter the Market →</button>
     </form>
@@ -287,7 +326,7 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
   <header>
     <h1>Market Sim <span style="color:#7bb7ff">/</span> 30 Year Exchange</h1>
     <p class="muted">
-      100 Fictional Companies · Market News · Long-Term Investing
+      100 Fictional Companies · Financial Analysis · Market News · Long-Term Investing
     </p>
   </header>
 
@@ -295,7 +334,7 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
     <strong>Notice:</strong>
     <p class="muted">
       This version stores data in your browser. Different visitors do not share
-      the same market or player data in real time.
+      the same market or player data in real time. All company fundamentals are fictional.
     </p>
     <p>Player: <strong id="playerName">—</strong></p>
   </section>
@@ -326,12 +365,24 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
   </section>
 
   <section>
+    <h2>Time Controls</h2>
     <div class="toolbar">
-      <button id="nextDay">Next Trading Day ▶</button>
+      <button id="nextDay">Next Day ▶</button>
+      <button class="advance-button" data-days="7">+7 Days</button>
+      <button class="advance-button" data-days="30">+30 Days</button>
+      <button class="advance-button" data-days="50">+50 Days</button>
+      <button class="advance-button" data-days="100">+100 Days</button>
+      <label class="muted" for="customDays">Custom days</label>
+      <input id="customDays" type="number" min="1" max="7560" value="50" style="width:100px">
+      <button id="advanceCustom">Advance</button>
       <button id="auto">Start Auto Advance</button>
       <button id="save">Save Game</button>
       <button id="reset">Reset Game</button>
     </div>
+    <p class="muted">
+      Every skipped day still processes price changes, company news, financial updates,
+      and bot trades. Time controls count simulated trading days.
+    </p>
   </section>
 
   <div class="layout">
@@ -392,8 +443,8 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
   </section>
 
   <footer>
-    Fictional simulation only. Not connected to real securities, companies,
-    or financial market data.
+    Fictional simulation only. Not connected to real securities,
+    companies, or financial market data.
   </footer>
 </main>
 
@@ -405,6 +456,7 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
   const TOTAL_DAYS = 7560;
   const START_CASH = 100000;
   const FEE = 0.001;
+  const QUARTER_DAYS = 63;
 
   const THEMES = [
     ['ai', 'Semiconductor & AI'],
@@ -419,7 +471,59 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
     ['telecom', 'Telecom & Infrastructure']
   ];
 
-  // News text is Korean; the rest of the interface remains English.
+  const THEME_INFO = {
+    ai: {
+      description: '칩 설계, 반도체 제조, AI 연산, 데이터센터 하드웨어를 다루는 산업입니다.',
+      drivers: 'AI 투자, 반도체 수요, 생산능력, 기술 경쟁력',
+      risks: '반도체 경기 순환, 높은 설비투자, 기술 변화, 고객 집중'
+    },
+    software: {
+      description: '기업용 소프트웨어, 클라우드 서비스, 구독형 플랫폼을 제공하는 산업입니다.',
+      drivers: '구독 매출, 고객 유지율, 클라우드 전환, 반복 매출',
+      risks: '경쟁 심화, 고객 이탈, 높은 밸류에이션, 보안 문제'
+    },
+    ev: {
+      description: '전기차, 배터리, 충전 기술과 전동화 공급망에 집중하는 산업입니다.',
+      drivers: '전기차 보급, 배터리 원가, 생산 효율, 충전 인프라',
+      risks: '가격 경쟁, 원자재 가격, 보조금 변화, 과잉 생산'
+    },
+    health: {
+      description: '바이오 기술, 의료기기, 치료제 개발 및 의료 서비스를 다루는 산업입니다.',
+      drivers: '임상 성과, 신제품, 특허, 의료 수요',
+      risks: '임상 실패, 규제, 특허 만료, 연구개발 비용'
+    },
+    energy: {
+      description: '전력, 에너지 생산, 발전 설비와 에너지 공급망을 다루는 산업입니다.',
+      drivers: '에너지 수요, 전력 가격, 발전 효율, 인프라 투자',
+      risks: '원자재 가격 변동, 규제, 대규모 투자, 경기 민감성'
+    },
+    robotics: {
+      description: '산업용 로봇, 자동화 장비, 센서 및 생산 공정 기술을 개발하는 산업입니다.',
+      drivers: '자동화 수요, 인건비, 생산성 개선, 공장 투자',
+      risks: '설비투자 위축, 기술 경쟁, 프로젝트 지연'
+    },
+    finance: {
+      description: '대출, 결제, 자산관리와 금융 플랫폼 서비스를 제공하는 산업입니다.',
+      drivers: '대출 수요, 결제량, 자산 증가, 금리 환경',
+      risks: '신용 손실, 규제, 유동성 문제, 금리 변동'
+    },
+    consumer: {
+      description: '소비재, 유통, 전자상거래와 일상 소비 서비스를 제공하는 산업입니다.',
+      drivers: '소비 지출, 브랜드 경쟁력, 유통 효율, 고객 충성도',
+      risks: '소비 둔화, 재고 부담, 경쟁 심화, 원가 상승'
+    },
+    industrial: {
+      description: '산업 장비, 항공우주, 부품 및 대형 인프라 시스템을 공급하는 산업입니다.',
+      drivers: '수주 잔고, 산업 투자, 생산성, 정부 및 기업 지출',
+      risks: '경기 침체, 공급망 차질, 프로젝트 지연, 원가 상승'
+    },
+    telecom: {
+      description: '통신 장비, 네트워크 인프라와 데이터 연결 서비스를 다루는 산업입니다.',
+      drivers: '데이터 트래픽, 네트워크 투자, 연결 기기 증가',
+      risks: '대규모 설비투자, 가격 경쟁, 규제, 부채 부담'
+    }
+  };
+
   const NEWS = [
     { text: '분기 매출이 시장 예상치를 웃돌았습니다.', move: 0.035, type: 'positive' },
     { text: '분기 매출이 시장 예상치를 밑돌았습니다.', move: -0.04, type: 'negative' },
@@ -441,7 +545,7 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
     { text: '생산 효율이 개선되고 있습니다.', move: 0.018, type: 'positive' }
   ];
 
-  const names = [
+  const NAMES = [
     'Aster', 'Bluepeak', 'Cinder', 'Dovetail', 'Everline',
     'Foxbridge', 'Glimmer', 'Harbor', 'Ionworks', 'Juniper',
     'Keystone', 'Lattice', 'Mosaic', 'Northstar', 'Orbit',
@@ -461,8 +565,17 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
     maximumFractionDigits: 2
   }).format(Number.isFinite(n) ? n : 0);
 
-  const percent = n => `${n >= 0 ? '+' : ''}${(n * 100).toFixed(2)}%`;
-  const number = n => new Intl.NumberFormat('en-US').format(n);
+  const percent = n =>
+    `${n >= 0 ? '+' : ''}${(n * 100).toFixed(2)}%`;
+
+  const number = n =>
+    new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(n);
+
+  const multiple = n =>
+    Number.isFinite(n) && n > 0 ? `${n.toFixed(2)}x` : 'N/A';
+
+  const perShare = n =>
+    Number.isFinite(n) ? money(n) : 'N/A';
 
   function escapeHTML(value) {
     return String(value).replace(/[&<>"']/g, ch => ({
@@ -485,13 +598,76 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
     return result;
   }
 
+  // All fundamentals are fictional and remain stored with the company.
+  function createFundamentals(c) {
+    const q = c.quality;
+    const pe = random(12, 38);
+    const psr = random(1.5, 9);
+    const pbr = random(1.2, 5.5);
+
+    const profitable = q > 0.35 || Math.random() < 0.65;
+
+    c.eps = profitable
+      ? c.price / pe
+      : -c.price / random(15, 45);
+
+    c.revenuePerShare = Math.max(0.1, c.price / psr);
+    c.bookValuePerShare = Math.max(0.1, c.price / pbr);
+
+    c.roe = clamp(random(-0.03, 0.20) + (q - 0.5) * 0.20, -0.30, 0.45);
+    c.roa = clamp(c.roe * random(0.30, 0.75), -0.20, 0.30);
+
+    c.operatingMargin = clamp(
+      random(-0.05, 0.22) + (q - 0.5) * 0.20,
+      -0.40, 0.50
+    );
+
+    c.netMargin = clamp(
+      c.operatingMargin - random(0.01, 0.09),
+      -0.45, 0.40
+    );
+
+    c.debtRatio = random(20, 180) * (1.15 - q * 0.4);
+    c.revenueGrowth = clamp(random(-0.12, 0.28) + (q - 0.5) * 0.16, -0.60, 1.00);
+    c.earningsGrowth = clamp(random(-0.35, 0.45) + (q - 0.5) * 0.30, -1.50, 2.00);
+  }
+
+  function normalizeCompany(c) {
+    if (!Number.isFinite(c.previousClose)) c.previousClose = c.price;
+    if (!Number.isFinite(c.initialPrice) || c.initialPrice <= 0) {
+      c.initialPrice = Math.max(0.5, c.price);
+    }
+    if (!Array.isArray(c.history)) c.history = [c.price];
+    if (!Number.isFinite(c.growth)) c.growth = random(-0.015, 0.035);
+    if (!Number.isFinite(c.volatility)) c.volatility = random(0.012, 0.035);
+    if (!Number.isFinite(c.quality)) c.quality = random(0.25, 0.85);
+    if (!Number.isFinite(c.research)) c.research = random(0.1, 0.55);
+    if (!Number.isFinite(c.cashHealth)) c.cashHealth = random(0.35, 0.95);
+    if (typeof c.delisted !== 'boolean') c.delisted = false;
+
+    if (
+      !Number.isFinite(c.eps) ||
+      !Number.isFinite(c.revenuePerShare) ||
+      !Number.isFinite(c.bookValuePerShare) ||
+      !Number.isFinite(c.roe) ||
+      !Number.isFinite(c.roa) ||
+      !Number.isFinite(c.operatingMargin) ||
+      !Number.isFinite(c.netMargin) ||
+      !Number.isFinite(c.debtRatio) ||
+      !Number.isFinite(c.revenueGrowth) ||
+      !Number.isFinite(c.earningsGrowth)
+    ) {
+      createFundamentals(c);
+    }
+  }
+
   function createCompany(i) {
     const theme = THEMES[i % THEMES.length];
     const price = Math.round(random(12, 180) * 100) / 100;
 
-    return {
+    const c = {
       ticker: tickerFor(i),
-      name: `${names[i % names.length]} ${SUFFIXES[Math.floor(i / 20)]}`,
+      name: `${NAMES[i % NAMES.length]} ${SUFFIXES[Math.floor(i / 20)]}`,
       themeId: theme[0],
       themeName: theme[1],
       price,
@@ -505,6 +681,9 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
       cashHealth: random(0.35, 0.95),
       delisted: false
     };
+
+    createFundamentals(c);
+    return c;
   }
 
   function createState() {
@@ -529,7 +708,7 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
         day: 0,
         title: '가상 주식시장 개장',
         text: '가상의 주식 시장이 개장했습니다. 30년간의 투자 여정이 시작됩니다.',
-        clue: '기업의 성장 가능성, 재무 건전성, 주가 흐름을 함께 살펴보세요.',
+        clue: '기업의 성장 가능성, 재무 건전성, 주가와 밸류에이션을 함께 살펴보세요.',
         ticker: null,
         type: 'neutral'
       }],
@@ -555,11 +734,28 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
         return createState();
       }
 
-      // Migration for saves made by earlier versions.
       if (typeof s.player.nameChosen !== 'boolean') {
         s.player.nameChosen = false;
       }
       if (typeof s.player.name !== 'string') s.player.name = '';
+      if (!Number.isFinite(s.player.initialValue) || s.player.initialValue <= 0) {
+        s.player.initialValue = START_CASH;
+      }
+      if (!Number.isFinite(s.player.trades)) s.player.trades = 0;
+
+      s.companies.forEach(normalizeCompany);
+
+      if (!s.sentiment || typeof s.sentiment !== 'object') {
+        s.sentiment = {};
+      }
+      for (const [id] of THEMES) {
+        if (!Number.isFinite(s.sentiment[id])) s.sentiment[id] = 0;
+      }
+
+      s.bots.forEach(bot => {
+        if (!Number.isFinite(bot.cash)) bot.cash = START_CASH;
+        if (!bot.holdings || typeof bot.holdings !== 'object') bot.holdings = {};
+      });
 
       return s;
     } catch {
@@ -571,12 +767,14 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
   let selected = 'A';
   let autoTimer = null;
 
-  function save() {
+  function save(showError = true) {
     try {
       localStorage.setItem(KEY, JSON.stringify(state));
       return true;
     } catch {
-      alert('Could not save the game. Check your browser storage settings.');
+      if (showError) {
+        alert('Could not save the game. Check your browser storage settings.');
+      }
       return false;
     }
   }
@@ -639,6 +837,30 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
     }
   }
 
+  function updateFundamentals(c) {
+    if (c.delisted) return;
+
+    // Fundamentals change every quarter, not every simulated day.
+    const revenueFactor = clamp(1 + c.revenueGrowth / 4, 0.65, 1.45);
+    const earningsFactor = clamp(1 + c.earningsGrowth / 4, 0.30, 1.80);
+
+    c.revenuePerShare = Math.max(0.05, c.revenuePerShare * revenueFactor);
+    c.eps *= earningsFactor;
+    c.bookValuePerShare = Math.max(
+      0.05,
+      c.bookValuePerShare * clamp(1 + c.roe / 4, 0.80, 1.15)
+    );
+
+    c.revenueGrowth = clamp(c.revenueGrowth + random(-0.04, 0.04), -0.60, 1.00);
+    c.earningsGrowth = clamp(c.earningsGrowth + random(-0.12, 0.12), -1.50, 2.00);
+
+    c.roe = clamp(c.roe + random(-0.025, 0.025), -0.40, 0.50);
+    c.roa = clamp(c.roa + random(-0.015, 0.015), -0.25, 0.35);
+    c.operatingMargin = clamp(c.operatingMargin + random(-0.025, 0.025), -0.50, 0.55);
+    c.netMargin = clamp(c.netMargin + random(-0.025, 0.025), -0.50, 0.45);
+    c.debtRatio = clamp(c.debtRatio + random(-8, 8), 0, 400);
+  }
+
   function runNews() {
     const active = state.companies.filter(c => !c.delisted);
     if (!active.length) return;
@@ -653,10 +875,16 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
 
       c.price = Math.max(0.5, Math.round(c.price * (1 + move) * 100) / 100);
 
+      state.sentiment[c.themeId] = clamp(
+        (state.sentiment[c.themeId] || 0) + move * 0.6,
+        -1,
+        1
+      );
+
       addNews(
         `${c.name} · ${c.ticker}`,
         n.text,
-        '투자 단서: 뉴스의 방향뿐 아니라 기업의 성장 가능성, 재무 건전성, 현재 가격도 함께 비교하세요.',
+        '투자 단서: 뉴스의 방향뿐 아니라 성장률, 수익성, 부채, 밸류에이션도 함께 비교하세요.',
         c.ticker,
         n.type
       );
@@ -683,29 +911,57 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
     }
   }
 
-  function advanceDay() {
-    if (state.day >= TOTAL_DAYS) {
-      stopAuto();
-      alert('The 30-year simulation is complete.');
-      return;
-    }
+  function advanceOneDay() {
+    if (state.day >= TOTAL_DAYS) return false;
 
     state.day++;
 
-    for (const c of state.companies) updateCompany(c);
+    for (const c of state.companies) {
+      updateCompany(c);
+      if (!c.delisted && state.day % QUARTER_DAYS === 0) {
+        updateFundamentals(c);
+      }
+    }
+
+    for (const key of Object.keys(state.sentiment)) {
+      state.sentiment[key] *= 0.995;
+    }
+
     runNews();
 
     for (const bot of state.bots) {
       if (Math.random() < 0.72) botTrade(bot);
     }
 
+    return true;
+  }
+
+  function advanceDays(requestedDays) {
+    if (state.day >= TOTAL_DAYS) {
+      stopAuto();
+      alert('The 30-year simulation is complete.');
+      return;
+    }
+
+    if (!Number.isInteger(requestedDays) || requestedDays < 1) {
+      alert('Enter a whole number of days greater than zero.');
+      return;
+    }
+
+    const daysToRun = Math.min(requestedDays, TOTAL_DAYS - state.day);
+
+    for (let i = 0; i < daysToRun; i++) {
+      advanceOneDay();
+    }
+
+    if (state.day >= TOTAL_DAYS) stopAuto();
+
     save();
     render();
   }
 
-  function trade(side) {
+  function trade(side, forcedQuantity = null) {
     const c = getCompany(selected);
-    const quantity = Number($('quantity').value);
     const p = state.player;
 
     if (!c || c.delisted) {
@@ -713,8 +969,12 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
       return;
     }
 
-    if (!Number.isInteger(quantity) || quantity < 1 || quantity > 100000) {
-      alert('Enter a whole number between 1 and 100,000 shares.');
+    const quantity = forcedQuantity === null
+      ? Number($('quantity').value)
+      : forcedQuantity;
+
+    if (!Number.isSafeInteger(quantity) || quantity < 1 || quantity > 100000000) {
+      alert('Invalid share quantity.');
       return;
     }
 
@@ -722,18 +982,26 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
     const gross = c.price * quantity;
     const fee = gross * FEE;
 
+    if (!Number.isFinite(gross) || gross <= 0) {
+      alert('Invalid transaction value.');
+      return;
+    }
+
     if (side === 'buy') {
-      if (p.cash < gross + fee) {
+      if (p.cash + 1e-8 < gross + fee) {
         alert('Insufficient cash, including the trading fee.');
         return;
       }
+
       p.cash -= gross + fee;
+      if (p.cash < 0 && p.cash > -1e-7) p.cash = 0;
       p.holdings[c.ticker] = held + quantity;
     } else {
       if (held < quantity) {
         alert('You do not own enough shares.');
         return;
       }
+
       p.cash += gross - fee;
       p.holdings[c.ticker] = held - quantity;
       if (!p.holdings[c.ticker]) delete p.holdings[c.ticker];
@@ -742,6 +1010,46 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
     p.trades++;
     save();
     render();
+  }
+
+  function buyFraction(fraction) {
+    const c = getCompany(selected);
+    if (!c || c.delisted) {
+      alert('This stock is not available for trading.');
+      return;
+    }
+
+    const cashBudget = state.player.cash * fraction;
+    const costPerShare = c.price * (1 + FEE);
+    const quantity = Math.floor((cashBudget + 1e-8) / costPerShare);
+
+    if (quantity < 1) {
+      alert('Not enough cash to buy even one share at this percentage.');
+      return;
+    }
+
+    trade('buy', quantity);
+  }
+
+  function sellFraction(fraction) {
+    const c = getCompany(selected);
+    if (!c || c.delisted) {
+      alert('This stock is not available for trading.');
+      return;
+    }
+
+    const held = state.player.holdings[c.ticker] || 0;
+
+    if (held < 1) {
+      alert('You do not own any shares of this company.');
+      return;
+    }
+
+    const quantity = fraction >= 1
+      ? held
+      : Math.min(held, Math.max(1, Math.floor(held * fraction)));
+
+    trade('sell', quantity);
   }
 
   function renderCompanies() {
@@ -764,8 +1072,8 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
     }
 
     $('companies').innerHTML = list.map(c => {
-      const daily = c.previousClose ? c.price / c.previousClose - 1 : 0;
-      const total = c.initialPrice ? c.price / c.initialPrice - 1 : 0;
+      const daily = c.previousClose > 0 ? c.price / c.previousClose - 1 : 0;
+      const total = c.initialPrice > 0 ? c.price / c.initialPrice - 1 : 0;
 
       return `
         <tr data-ticker="${escapeHTML(c.ticker)}"
@@ -787,11 +1095,30 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
     if (!c) return;
 
     const qty = state.player.holdings[c.ticker] || 0;
-    const totalReturn = c.initialPrice ? c.price / c.initialPrice - 1 : 0;
+    const positionValue = qty * c.price;
+    const totalReturn = c.initialPrice > 0 ? c.price / c.initialPrice - 1 : 0;
 
     const qualityLabel =
       c.quality > 0.72 ? 'Strong' :
       c.quality > 0.48 ? 'Average' : 'Weak';
+
+    const pe = c.eps > 0 ? c.price / c.eps : NaN;
+    const pb = c.bookValuePerShare > 0 ? c.price / c.bookValuePerShare : NaN;
+    const ps = c.revenuePerShare > 0 ? c.price / c.revenuePerShare : NaN;
+    const themeInfo = THEME_INFO[c.themeId] || {
+      description: '이 테마의 가상 기업입니다.',
+      drivers: '수요, 제품 경쟁력, 투자 환경',
+      risks: '경쟁, 비용 증가, 경기 변동'
+    };
+
+    const themeSentiment = state.sentiment[c.themeId] || 0;
+    const themeLabel =
+      themeSentiment > 0.10 ? 'Positive' :
+      themeSentiment < -0.10 ? 'Negative' : 'Neutral';
+
+    const related = state.companies
+      .filter(other => other.themeId === c.themeId && other.ticker !== c.ticker)
+      .slice(0, 6);
 
     $('details').innerHTML = `
       <h2>${escapeHTML(c.name)} <span class="muted">${escapeHTML(c.ticker)}</span></h2>
@@ -801,31 +1128,125 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
         Total Return: ${percent(totalReturn)}
       </p>
 
-      ${c.delisted ? '<p class="negative"><strong>This company has been delisted.</strong></p>' : ''}
+      ${c.delisted
+        ? '<p class="negative"><strong>This company has been delisted.</strong></p>'
+        : ''}
 
+      <h3>Valuation</h3>
       <div class="detail-grid">
-        <div class="detail-item"><span class="muted">Shares Owned</span><strong>${number(qty)}</strong></div>
-        <div class="detail-item"><span class="muted">Position Value</span><strong>${money(qty * c.price)}</strong></div>
-        <div class="detail-item"><span class="muted">Company Quality</span><strong>${qualityLabel}</strong></div>
-        <div class="detail-item"><span class="muted">Research Progress</span><strong>${Math.round(c.research * 100)}%</strong></div>
-        <div class="detail-item"><span class="muted">Financial Health</span><strong>${Math.round(c.cashHealth * 100)}%</strong></div>
-        <div class="detail-item"><span class="muted">Volatility</span><strong>${(c.volatility * 100).toFixed(2)}%</strong></div>
+        <div class="detail-item"><span class="detail-label">PER</span><strong>${multiple(pe)}</strong></div>
+        <div class="detail-item"><span class="detail-label">PBR</span><strong>${multiple(pb)}</strong></div>
+        <div class="detail-item"><span class="detail-label">PSR</span><strong>${multiple(ps)}</strong></div>
+        <div class="detail-item"><span class="detail-label">EPS</span><strong>${perShare(c.eps)}</strong></div>
+        <div class="detail-item"><span class="detail-label">Book Value / Share</span><strong>${perShare(c.bookValuePerShare)}</strong></div>
+        <div class="detail-item"><span class="detail-label">Revenue / Share</span><strong>${perShare(c.revenuePerShare)}</strong></div>
+      </div>
+
+      <h3 style="margin-top:18px">Financial Health</h3>
+      <div class="detail-grid">
+        <div class="detail-item"><span class="detail-label">ROE</span><strong class="${c.roe >= 0 ? 'positive' : 'negative'}">${percent(c.roe)}</strong></div>
+        <div class="detail-item"><span class="detail-label">ROA</span><strong class="${c.roa >= 0 ? 'positive' : 'negative'}">${percent(c.roa)}</strong></div>
+        <div class="detail-item"><span class="detail-label">Operating Margin</span><strong class="${c.operatingMargin >= 0 ? 'positive' : 'negative'}">${percent(c.operatingMargin)}</strong></div>
+        <div class="detail-item"><span class="detail-label">Net Margin</span><strong class="${c.netMargin >= 0 ? 'positive' : 'negative'}">${percent(c.netMargin)}</strong></div>
+        <div class="detail-item"><span class="detail-label">Revenue Growth (Annual Estimate)</span><strong class="${c.revenueGrowth >= 0 ? 'positive' : 'negative'}">${percent(c.revenueGrowth)}</strong></div>
+        <div class="detail-item"><span class="detail-label">Earnings Growth (Annual Estimate)</span><strong class="${c.earningsGrowth >= 0 ? 'positive' : 'negative'}">${percent(c.earningsGrowth)}</strong></div>
+        <div class="detail-item"><span class="detail-label">Debt / Equity (Simulated)</span><strong>${percent(c.debtRatio / 100)}</strong></div>
+        <div class="detail-item"><span class="detail-label">Company Quality</span><strong>${qualityLabel}</strong></div>
+      </div>
+
+      <h3 style="margin-top:18px">Position & Operations</h3>
+      <div class="detail-grid">
+        <div class="detail-item"><span class="detail-label">Shares Owned</span><strong>${number(qty)}</strong></div>
+        <div class="detail-item"><span class="detail-label">Position Value</span><strong>${money(positionValue)}</strong></div>
+        <div class="detail-item"><span class="detail-label">Research Progress</span><strong>${Math.round(c.research * 100)}%</strong></div>
+        <div class="detail-item"><span class="detail-label">Financial Health Index</span><strong>${Math.round(c.cashHealth * 100)} / 100</strong></div>
+        <div class="detail-item"><span class="detail-label">Daily Volatility Parameter</span><strong>${(c.volatility * 100).toFixed(2)}%</strong></div>
+        <div class="detail-item"><span class="detail-label">Market Theme Mood</span><strong class="${themeSentiment >= 0 ? 'positive' : 'negative'}">${themeLabel} (${percent(themeSentiment)})</strong></div>
       </div>
 
       <div class="trade-controls">
         <label>Quantity
-          <input id="quantity" type="number" min="1" max="100000" step="1" value="10" ${c.delisted ? 'disabled' : ''}>
+          <input id="quantity" type="number" min="1" max="100000000" step="1"
+            value="10" ${c.delisted ? 'disabled' : ''}>
         </label>
-        <button id="buy" class="buy-button" ${c.delisted ? 'disabled' : ''}>Buy</button>
-        <button id="sell" class="sell-button" ${c.delisted ? 'disabled' : ''}>Sell</button>
+        <button id="buy" class="buy-button" ${c.delisted ? 'disabled' : ''}>Buy Shares</button>
+        <button id="sell" class="sell-button" ${c.delisted ? 'disabled' : ''}>Sell Shares</button>
       </div>
-      <p class="muted">Trading fee: 0.1% of transaction value.</p>
+
+      <div class="quick-trades">
+        <div class="quick-trade-box">
+          <h3>Quick Buy · Cash Allocation</h3>
+          <p class="muted">Uses available cash, including the 0.1% fee.</p>
+          <div class="button-row">
+            <button data-buy-fraction="0.25" ${c.delisted ? 'disabled' : ''}>25%</button>
+            <button data-buy-fraction="0.5" ${c.delisted ? 'disabled' : ''}>50%</button>
+            <button data-buy-fraction="0.75" ${c.delisted ? 'disabled' : ''}>75%</button>
+            <button data-buy-fraction="1" class="buy-button" ${c.delisted ? 'disabled' : ''}>All-in</button>
+          </div>
+        </div>
+        <div class="quick-trade-box">
+          <h3>Quick Sell · Shares Held</h3>
+          <p class="muted">Sells a percentage of your current shares.</p>
+          <div class="button-row">
+            <button class="sell-quick" data-sell-fraction="0.25" ${c.delisted || qty < 1 ? 'disabled' : ''}>25%</button>
+            <button class="sell-quick" data-sell-fraction="0.5" ${c.delisted || qty < 1 ? 'disabled' : ''}>50%</button>
+            <button class="sell-quick" data-sell-fraction="0.75" ${c.delisted || qty < 1 ? 'disabled' : ''}>75%</button>
+            <button class="sell-button" data-sell-fraction="1" ${c.delisted || qty < 1 ? 'disabled' : ''}>Sell All</button>
+          </div>
+        </div>
+      </div>
+
+      <p class="muted">
+        Trading fee: 0.1% per transaction. Share-based orders use whole shares.
+        Percentage sales round down, with at least one share sold when you own shares.
+        PER is N/A when EPS is not positive.
+      </p>
+
+      <div class="theme-panel">
+        <h3>Theme & Industry Briefing</h3>
+        <div class="theme-tags">
+          <span class="theme-tag">${escapeHTML(c.themeName)}</span>
+          <span class="theme-tag">Theme mood: ${themeLabel}</span>
+        </div>
+        <p>${escapeHTML(themeInfo.description)}</p>
+        <p><strong>Key drivers:</strong> ${escapeHTML(themeInfo.drivers)}</p>
+        <p><strong>Main risks:</strong> ${escapeHTML(themeInfo.risks)}</p>
+
+        <h3 style="margin-top:18px">Related Companies</h3>
+        <p class="muted">Other fictional companies in the same sector.</p>
+        <div class="related-list">
+          ${related.map(other => `
+            <button class="related-company" data-related-ticker="${escapeHTML(other.ticker)}">
+              <span><strong>${escapeHTML(other.ticker)}</strong> · ${escapeHTML(other.name)}</span>
+              <small>${money(other.price)} · ${other.delisted ? 'Delisted' : 'Active'}</small>
+            </button>
+          `).join('')}
+        </div>
+      </div>
     `;
 
-    if (!c.delisted) {
-      $('buy').addEventListener('click', () => trade('buy'));
-      $('sell').addEventListener('click', () => trade('sell'));
-    }
+    $('buy').addEventListener('click', () => trade('buy'));
+    $('sell').addEventListener('click', () => trade('sell'));
+
+    $('details').querySelectorAll('[data-buy-fraction]').forEach(button => {
+      button.addEventListener('click', () => {
+        buyFraction(Number(button.dataset.buyFraction));
+      });
+    });
+
+    $('details').querySelectorAll('[data-sell-fraction]').forEach(button => {
+      button.addEventListener('click', () => {
+        sellFraction(Number(button.dataset.sellFraction));
+      });
+    });
+
+    $('details').querySelectorAll('[data-related-ticker]').forEach(button => {
+      button.addEventListener('click', () => {
+        selected = button.dataset.relatedTicker;
+        render();
+        $('details').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
   }
 
   function renderNews() {
@@ -833,7 +1254,8 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
     $('newsCount').textContent = `${items.length} recent items`;
 
     if (!items.length) {
-      $('news').innerHTML = '<div class="empty">No news yet. Advance to the next trading day.</div>';
+      $('news').innerHTML =
+        '<div class="empty">No news yet. Advance to the next trading day.</div>';
       return;
     }
 
@@ -897,7 +1319,7 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
       .map(([ticker, qty]) => {
         const c = getCompany(ticker);
         if (!c) return null;
-        return { ticker, qty, c, value: c.price * qty };
+        return { ticker, qty, c, value: c.delisted ? 0 : c.price * qty };
       })
       .filter(Boolean)
       .sort((a, b) => b.value - a.value);
@@ -911,13 +1333,18 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
     $('portfolio').innerHTML = `
       <div class="table-wrap" style="max-height:350px">
         <table>
-          <thead><tr><th>Company</th><th>Shares</th><th>Price</th><th>Value</th></tr></thead>
+          <thead>
+            <tr><th>Company</th><th>Shares</th><th>Price</th><th>Value</th></tr>
+          </thead>
           <tbody>
             ${holdings.map(h => `
               <tr data-portfolio-ticker="${escapeHTML(h.ticker)}">
-                <td><strong>${escapeHTML(h.ticker)}</strong><br><span class="company-name">${escapeHTML(h.c.name)}</span></td>
+                <td>
+                  <strong>${escapeHTML(h.ticker)}</strong><br>
+                  <span class="company-name">${escapeHTML(h.c.name)}</span>
+                </td>
                 <td>${number(h.qty)}</td>
-                <td>${money(h.c.price)}</td>
+                <td>${money(h.c.delisted ? 0 : h.c.price)}</td>
                 <td>${money(h.value)}</td>
               </tr>`).join('')}
           </tbody>
@@ -949,7 +1376,14 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
         `Year ${Math.floor((state.day - 1) / 252) + 1} · Trading Day ${((state.day - 1) % 252) + 1}`;
     }
 
-    $('nextDay').disabled = state.day >= TOTAL_DAYS;
+    const complete = state.day >= TOTAL_DAYS;
+    $('nextDay').disabled = complete;
+    $('advanceCustom').disabled = complete;
+    $('customDays').disabled = complete;
+
+    document.querySelectorAll('.advance-button').forEach(button => {
+      button.disabled = complete;
+    });
 
     renderCompanies();
     renderDetails();
@@ -1023,7 +1457,25 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
 
     $('search').addEventListener('input', renderCompanies);
     $('theme').addEventListener('change', renderCompanies);
-    $('nextDay').addEventListener('click', advanceDay);
+
+    $('nextDay').addEventListener('click', () => advanceDays(1));
+
+    document.querySelectorAll('.advance-button').forEach(button => {
+      button.addEventListener('click', () => {
+        advanceDays(Number(button.dataset.days));
+      });
+    });
+
+    $('advanceCustom').addEventListener('click', () => {
+      const days = Number($('customDays').value);
+
+      if (!Number.isSafeInteger(days) || days < 1 || days > TOTAL_DAYS) {
+        alert(`Enter a whole number between 1 and ${TOTAL_DAYS}.`);
+        return;
+      }
+
+      advanceDays(days);
+    });
 
     $('auto').addEventListener('click', () => {
       if (autoTimer !== null) {
@@ -1043,7 +1495,7 @@ footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
           stopAuto();
           return;
         }
-        advanceDay();
+        advanceDays(1);
       }, 700);
     });
 
