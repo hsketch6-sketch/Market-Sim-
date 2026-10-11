@@ -1,527 +1,399 @@
 
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0b1220">
-  <title>마켓 시뮬레이션 — 30년 주식 거래소</title>
-
-  <style>
-    :root {
-      color-scheme: dark;
-      font-family: Arial, "Malgun Gothic", sans-serif;
-      background: #0b1220;
-      color: #e8eef8;
-      --panel: #152136;
-      --panel-dark: #0d1727;
-      --border: #30415b;
-      --muted: #9aabc2;
-      --blue: #245da8;
-      --green: #38d996;
-      --red: #ff7185;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      padding: 20px;
-      line-height: 1.55;
-    }
-
-    main {
-      max-width: 1550px;
-      margin: auto;
-    }
-
-    header {
-      margin-bottom: 20px;
-    }
-
-    header h1 {
-      margin-bottom: 4px;
-      font-size: clamp(24px, 3vw, 34px);
-    }
-
-    section {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 18px;
-      margin: 16px 0;
-      min-width: 0;
-    }
-
-    h2 {
-      margin-top: 0;
-      line-height: 1.35;
-    }
-
-    button, input, select {
-      padding: 10px 12px;
-      border-radius: 7px;
-      border: 1px solid #405574;
-      background: var(--panel-dark);
-      color: #e8eef8;
-      font: inherit;
-      max-width: 100%;
-    }
-
-    button {
-      cursor: pointer;
-      background: var(--blue);
-      transition: filter .15s ease;
-    }
-
-    button:hover:not(:disabled) {
-      filter: brightness(1.2);
-    }
-
-    button:disabled {
-      opacity: .5;
-      cursor: not-allowed;
-    }
-
-    input:focus, select:focus, button:focus-visible {
-      outline: 2px solid #7bb7ff;
-      outline-offset: 2px;
-    }
-
-    .muted { color: var(--muted); }
-    .positive { color: var(--green); }
-    .negative { color: var(--red); }
-
-    .notice {
-      border-left: 4px solid #7bb7ff;
-      background: #12243b;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .stat {
-      background: var(--panel-dark);
-      padding: 14px;
-      border-radius: 9px;
-      min-width: 0;
-    }
-
-    .stat h2 {
-      margin: 7px 0;
-      font-size: clamp(18px, 2vw, 25px);
-      overflow-wrap: anywhere;
-    }
-
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-      gap: 16px;
-      align-items: start;
-    }
-
-    .layout > div { min-width: 0; }
-
-    .filters {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
-
-    #search {
-      flex: 1;
-      min-width: 160px;
-    }
-
-    .table-wrap {
-      overflow: auto;
-      max-height: 650px;
-      border-radius: 7px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      white-space: nowrap;
-    }
-
-    th, td {
-      text-align: right;
-      padding: 10px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    th {
-      position: sticky;
-      top: 0;
-      background: #1b2c45;
-      z-index: 1;
-    }
-
-    th:first-child, td:first-child { text-align: left; }
-
-    tr[data-ticker] { cursor: pointer; }
-
-    tr[data-ticker]:hover {
-      background: #233653;
-    }
-
-    tr.selected-row {
-      background: #203b5d;
-    }
-
-    .company-name {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .detail-price {
-      font-size: 28px;
-      font-weight: bold;
-      margin: 8px 0;
-    }
-
-    .detail-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .detail-item {
-      padding: 11px;
-      background: var(--panel-dark);
-      border-radius: 8px;
-      overflow-wrap: anywhere;
-    }
-
-    .detail-item strong {
-      display: block;
-      margin-top: 4px;
-    }
-
-    .trade-controls {
-      display: flex;
-      gap: 8px;
-      align-items: end;
-      flex-wrap: wrap;
-      margin-top: 16px;
-    }
-
-    .trade-controls label {
-      display: grid;
-      gap: 5px;
-    }
-
-    #quantity { width: 150px; }
-
-    .buy-button { background: #16784f; }
-    .sell-button { background: #a53a4d; }
-
-    /* 확대된 뉴스 영역 */
-    #newsSection {
-      padding: 22px;
-    }
-
-    .news-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
-    .news-header h2 { margin: 0; }
-
-    #news {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      max-height: 760px;
-      overflow-y: auto;
-      padding-right: 6px;
-      scrollbar-color: #405574 #0d1727;
-      scrollbar-width: thin;
-    }
-
-    .news {
-      padding: 16px;
-      border: 1px solid var(--border);
-      border-left: 4px solid #627995;
-      border-radius: 9px;
-      background: var(--panel-dark);
-      min-width: 0;
-      overflow-wrap: anywhere;
-    }
-
-    .news.news-positive {
-      border-left-color: var(--green);
-    }
-
-    .news.news-negative {
-      border-left-color: var(--red);
-    }
-
-    .news-title {
-      font-size: 16px;
-      font-weight: bold;
-      margin-bottom: 9px;
-    }
-
-    .news-body {
-      margin: 0 0 10px;
-      font-size: 15px;
-      line-height: 1.7;
-    }
-
-    .news-clue {
-      margin: 0 0 12px;
-      padding: 10px;
-      border-radius: 6px;
-      background: #15263b;
-      color: #b9cce4;
-      font-size: 13px;
-      line-height: 1.65;
-    }
-
-    .news-meta {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 5px;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .leader-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .leader-row:last-child { border-bottom: 0; }
-
-    .leader-name {
-      overflow-wrap: anywhere;
-    }
-
-    .leader-value {
-      white-space: nowrap;
-      font-weight: bold;
-    }
-
-    .rank {
-      display: inline-block;
-      width: 32px;
-      color: var(--muted);
-    }
-
-    .empty {
-      padding: 24px;
-      text-align: center;
-      color: var(--muted);
-      border: 1px dashed var(--border);
-      border-radius: 8px;
-    }
-
-    footer {
-      margin: 24px 0;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    @media (max-width: 950px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-
-      .table-wrap { max-height: 500px; }
-
-      #news {
-        grid-template-columns: 1fr;
-        max-height: 650px;
-      }
-    }
-
-    @media (max-width: 600px) {
-      body { padding: 10px; }
-
-      section { padding: 13px; }
-
-      .stats {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .stat { padding: 10px; }
-
-      .toolbar button {
-        flex: 1;
-      }
-
-      .detail-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      th, td {
-        padding: 8px;
-        font-size: 13px;
-      }
-
-      #newsSection { padding: 13px; }
-
-      .news { padding: 13px; }
-
-      .leader-value { font-size: 13px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b1220">
+<title>Market Sim — 30 Year Exchange</title>
+
+<style>
+:root {
+  color-scheme: dark;
+  font-family: Arial, sans-serif;
+  background: #0b1220;
+  color: #e8eef8;
+  --panel: #152136;
+  --dark: #0d1727;
+  --border: #30415b;
+  --muted: #9aabc2;
+  --blue: #245da8;
+  --green: #38d996;
+  --red: #ff7185;
+}
+* { box-sizing: border-box; }
+body { margin: 0; padding: 20px; }
+main { max-width: 1600px; margin: auto; }
+h1 { margin-bottom: 4px; }
+h2 { margin-top: 0; }
+p { line-height: 1.55; }
+.muted { color: var(--muted); }
+.positive { color: var(--green); }
+.negative { color: var(--red); }
+
+section {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 16px 0;
+  min-width: 0;
+}
+
+button, input, select {
+  padding: 10px 12px;
+  border-radius: 7px;
+  border: 1px solid #405574;
+  background: var(--dark);
+  color: #e8eef8;
+  font: inherit;
+}
+button {
+  cursor: pointer;
+  background: var(--blue);
+}
+button:hover:not(:disabled) { filter: brightness(1.15); }
+button:disabled { opacity: .5; cursor: not-allowed; }
+input:focus, select:focus, button:focus-visible {
+  outline: 2px solid #7bb7ff;
+  outline-offset: 2px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+.stat {
+  background: var(--dark);
+  padding: 12px;
+  border-radius: 8px;
+  min-width: 0;
+}
+.stat h2 {
+  margin: 6px 0;
+  font-size: clamp(17px, 2vw, 25px);
+  overflow-wrap: anywhere;
+}
+.toolbar, .filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+}
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+.layout > div { min-width: 0; }
+#search { flex: 1; min-width: 150px; }
+.table-wrap {
+  overflow: auto;
+  max-height: 580px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  white-space: nowrap;
+}
+th, td {
+  text-align: right;
+  padding: 9px;
+  border-bottom: 1px solid var(--border);
+}
+th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #1b2c45;
+}
+th:first-child, td:first-child { text-align: left; }
+tr[data-ticker], tr[data-portfolio-ticker] { cursor: pointer; }
+tr[data-ticker]:hover, tr[data-portfolio-ticker]:hover {
+  background: #233653;
+}
+tr.selected-row { background: #203b5d; }
+.company-name { color: var(--muted); font-size: 12px; }
+.detail-price { font-size: 28px; font-weight: bold; }
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+.detail-item {
+  background: var(--dark);
+  padding: 10px;
+  border-radius: 7px;
+  overflow-wrap: anywhere;
+}
+.detail-item strong { display: block; margin-top: 4px; }
+.trade-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 8px;
+  margin-top: 14px;
+}
+.trade-controls label { display: grid; gap: 5px; }
+#quantity { width: 130px; }
+.buy-button { background: #16784f; }
+.sell-button { background: #a53a4d; }
+
+.leader-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.leader-row:last-child { border-bottom: 0; }
+.leader-value { white-space: nowrap; font-weight: bold; }
+.rank { display: inline-block; width: 35px; color: var(--muted); }
+.empty {
+  text-align: center;
+  padding: 22px;
+  color: var(--muted);
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+}
+
+/* Wide news panel */
+#newsSection { padding: 20px; }
+.news-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+#news {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  max-height: 760px;
+  overflow-y: auto;
+  padding: 2px 6px 2px 0;
+  scrollbar-color: #405574 var(--dark);
+  scrollbar-width: thin;
+}
+.news {
+  background: var(--dark);
+  border: 1px solid var(--border);
+  border-left: 4px solid #627995;
+  border-radius: 9px;
+  padding: 15px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.news-positive { border-left-color: var(--green); }
+.news-negative { border-left-color: var(--red); }
+.news-title { font-size: 16px; font-weight: bold; margin-bottom: 8px; }
+.news-body { font-size: 15px; line-height: 1.7; margin: 0 0 10px; }
+.news-clue {
+  background: #15263b;
+  padding: 10px;
+  border-radius: 6px;
+  color: #b9cce4;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.news-meta {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+footer { color: var(--muted); font-size: 13px; margin: 24px 0; }
+
+/* First-time nickname screen */
+#nameOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 18px;
+  background: rgba(3, 8, 17, .92);
+  backdrop-filter: blur(8px);
+}
+#nameOverlay.hidden { display: none; }
+.name-card {
+  width: 100%;
+  max-width: 480px;
+  background: #152136;
+  border: 1px solid #405574;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 24px 90px #0008;
+}
+.name-card h1 { font-size: 28px; }
+.name-card input { width: 100%; margin: 10px 0 14px; }
+.name-card button { width: 100%; padding: 12px; }
+.name-error { color: var(--red); min-height: 22px; font-size: 13px; }
+
+@media (max-width: 850px) {
+  .layout { grid-template-columns: 1fr; }
+  #news { grid-template-columns: 1fr; max-height: 650px; }
+}
+@media (max-width: 550px) {
+  body { padding: 9px; }
+  section { padding: 12px; }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .toolbar button { flex: 1; }
+  #newsSection { padding: 12px; }
+  .news { padding: 12px; }
+  th, td { padding: 8px; font-size: 13px; }
+  .leader-value { font-size: 13px; }
+}
+</style>
 </head>
 
 <body>
+
+<!-- First-time nickname setup -->
+<div id="nameOverlay">
+  <div class="name-card">
+    <p class="muted">MARKET SIM / PLAYER SETUP</p>
+    <h1>Welcome, Investor.</h1>
+    <p class="muted">
+      Choose your player nickname before entering the exchange.
+      Your name will appear on the leaderboard.
+    </p>
+    <form id="nameForm">
+      <label for="nickname">Player Nickname</label>
+      <input
+        id="nickname"
+        type="text"
+        maxlength="20"
+        autocomplete="nickname"
+        placeholder="Enter your nickname"
+        required
+      >
+      <div id="nameError" class="name-error"></div>
+      <button type="submit">Enter the Market →</button>
+    </form>
+    <p class="muted" style="font-size:12px">
+      Your game progress is saved in this browser.
+    </p>
+  </div>
+</div>
+
 <main>
   <header>
-    <h1>마켓 시뮬레이션 <span style="color:#7bb7ff">/</span> 30년 주식 거래소</h1>
+    <h1>Market Sim <span style="color:#7bb7ff">/</span> 30 Year Exchange</h1>
     <p class="muted">
-      가상 기업 100개 · 시장 뉴스 · 투자 단서 · 장기 투자 시뮬레이션
+      100 Fictional Companies · Market News · Long-Term Investing
     </p>
   </header>
 
-  <section class="notice">
-    <strong>시뮬레이션 안내</strong>
-    <p>
-      이 게임은 가상의 주가와 기업을 이용합니다. 진행 상황은 현재 브라우저에
-      저장되며, 다른 방문자와 시장이나 자산을 실시간으로 공유하지 않습니다.
+  <section>
+    <strong>Notice:</strong>
+    <p class="muted">
+      This version stores data in your browser. Different visitors do not share
+      the same market or player data in real time.
     </p>
+    <p>Player: <strong id="playerName">—</strong></p>
   </section>
 
   <section>
     <div class="stats">
       <div class="stat">
-        <div class="muted">시뮬레이션 진행</div>
+        <div class="muted">SIMULATION DAY</div>
         <h2 id="day">0 / 7560</h2>
-        <div id="date">1년 차 · 1일 차</div>
+        <div id="date">Year 1 · Not started</div>
       </div>
-
       <div class="stat">
-        <div class="muted">총자산</div>
+        <div class="muted">TOTAL ASSETS</div>
         <h2 id="assets">$100,000.00</h2>
         <div id="returns" class="positive">+0.00%</div>
       </div>
-
       <div class="stat">
-        <div class="muted">보유 현금</div>
+        <div class="muted">CASH BALANCE</div>
         <h2 id="cash">$100,000.00</h2>
-        <div class="muted">거래 수수료 0.1%</div>
+        <div class="muted">Trading fee: 0.1%</div>
       </div>
-
       <div class="stat">
-        <div class="muted">거래 가능 기업</div>
+        <div class="muted">ACTIVE COMPANIES</div>
         <h2 id="active">100 / 100</h2>
-        <div id="tradeCount" class="muted">거래 0회</div>
+        <div id="tradeCount" class="muted">Trades: 0</div>
       </div>
     </div>
   </section>
 
   <section>
     <div class="toolbar">
-      <button id="nextDay">다음 거래일 ▶</button>
-      <button id="auto">자동 진행 시작</button>
-      <button id="save">진행 상황 저장</button>
-      <button id="reset">게임 초기화</button>
+      <button id="nextDay">Next Trading Day ▶</button>
+      <button id="auto">Start Auto Advance</button>
+      <button id="save">Save Game</button>
+      <button id="reset">Reset Game</button>
     </div>
-    <p class="muted" style="margin-bottom:0">
-      1년은 252거래일로 계산합니다. 자동 진행 중에도 거래와 뉴스 확인이 가능합니다.
-    </p>
   </section>
 
   <div class="layout">
     <div>
       <section>
-        <h2>기업 시장</h2>
-        <p class="muted">
-          기업을 선택하면 상세 정보를 확인하고 매수·매도할 수 있습니다.
-        </p>
-
+        <h2>Company Market</h2>
         <div class="filters">
-          <input
-            id="search"
-            type="search"
-            placeholder="티커 또는 기업명 검색"
-            aria-label="기업 검색"
-          >
-
-          <select id="theme" aria-label="산업 테마 필터">
-            <option value="all">모든 산업</option>
+          <input id="search" type="search" placeholder="Search ticker or company">
+          <select id="theme">
+            <option value="all">All Sectors</option>
           </select>
         </div>
-
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>기업</th>
-                <th>현재가</th>
-                <th>일간 변동</th>
-                <th>누적 변동</th>
+                <th>Company</th>
+                <th>Price</th>
+                <th>Daily</th>
+                <th>Total</th>
               </tr>
             </thead>
             <tbody id="companies"></tbody>
           </table>
         </div>
-
         <p id="companyCount" class="muted"></p>
       </section>
 
       <section>
-        <h2>투자자 순위</h2>
-        <p class="muted">현금과 보유 주식의 현재 평가액을 합산합니다.</p>
+        <h2>Leaderboard</h2>
+        <p class="muted">Ranked by total portfolio value.</p>
         <div id="leaderboard"></div>
       </section>
     </div>
 
     <div>
       <section id="details">
-        <h2>기업 상세 정보</h2>
-        <p class="muted">기업을 선택하세요.</p>
+        <h2>Company Details</h2>
+        <p class="muted">Select a company from the market.</p>
       </section>
 
       <section>
-        <h2>내 포트폴리오</h2>
-        <p class="muted">현재 보유 중인 주식과 평가액입니다.</p>
+        <h2>My Portfolio</h2>
         <div id="portfolio"></div>
       </section>
     </div>
   </div>
 
-  <!-- 뉴스 영역을 기업 시장과 별도 배치해 가로 공간을 넓힘 -->
   <section id="newsSection">
-    <div class="news-header">
-      <h2>📰 시장 뉴스 및 투자 단서</h2>
-      <span id="newsCount" class="muted">뉴스 0건</span>
+    <div class="news-heading">
+      <h2>Market News & Investment Clues</h2>
+      <span id="newsCount" class="muted">0 news items</span>
     </div>
-
     <p class="muted">
-      뉴스는 가상의 기업 사건입니다. 단서는 참고 정보이며 미래 수익을 보장하지 않습니다.
+      News headlines, articles and investment clues are displayed in Korean.
     </p>
-
     <div id="news"></div>
   </section>
 
   <footer>
-    가상 시장 시뮬레이션입니다. 실제 증권 거래, 실제 기업 또는 실제 시장 데이터와
-    연결되어 있지 않습니다. 모든 투자 결과는 게임 내부에서만 유효합니다.
+    Fictional simulation only. Not connected to real securities, companies,
+    or financial market data.
   </footer>
 </main>
 
@@ -535,109 +407,38 @@
   const FEE = 0.001;
 
   const THEMES = [
-    ['ai', '반도체 및 인공지능'],
-    ['software', '소프트웨어 및 클라우드'],
-    ['ev', '전기차 및 배터리'],
-    ['health', '바이오 및 헬스케어'],
-    ['energy', '에너지 및 전력'],
-    ['robotics', '로봇 및 자동화'],
-    ['finance', '금융 서비스'],
-    ['consumer', '소비재 및 유통'],
-    ['industrial', '산업재 및 항공우주'],
-    ['telecom', '통신 및 인프라']
+    ['ai', 'Semiconductor & AI'],
+    ['software', 'Software & Cloud'],
+    ['ev', 'EV & Batteries'],
+    ['health', 'Biotech & Healthcare'],
+    ['energy', 'Energy & Power'],
+    ['robotics', 'Robotics & Automation'],
+    ['finance', 'Financial Services'],
+    ['consumer', 'Consumer & Retail'],
+    ['industrial', 'Industrial & Aerospace'],
+    ['telecom', 'Telecom & Infrastructure']
   ];
 
+  // News text is Korean; the rest of the interface remains English.
   const NEWS = [
-    {
-      text: '분기 매출이 시장 예상치를 웃돌았습니다.',
-      move: 0.035,
-      type: 'positive'
-    },
-    {
-      text: '분기 매출이 시장 예상치를 밑돌았습니다.',
-      move: -0.04,
-      type: 'negative'
-    },
-    {
-      text: '새로운 제품 출시를 발표했습니다.',
-      move: 0.022,
-      type: 'positive'
-    },
-    {
-      text: '주요 고객과 대규모 계약을 체결했습니다.',
-      move: 0.05,
-      type: 'positive'
-    },
-    {
-      text: '주요 고객과의 계약을 잃었습니다.',
-      move: -0.055,
-      type: 'negative'
-    },
-    {
-      text: '연구개발 예산을 확대했습니다.',
-      move: 0.008,
-      type: 'positive'
-    },
-    {
-      text: '생산 일정이 지연되고 있습니다.',
-      move: -0.025,
-      type: 'negative'
-    },
-    {
-      text: '새로운 시장으로 사업을 확장합니다.',
-      move: 0.025,
-      type: 'positive'
-    },
-    {
-      text: '업계 수요 전망이 하향 조정됐습니다.',
-      move: -0.02,
-      type: 'negative'
-    },
-    {
-      text: '현금흐름이 예상보다 개선됐습니다.',
-      move: 0.02,
-      type: 'positive'
-    },
-    {
-      text: '제품 품질 관련 문제가 발견됐습니다.',
-      move: -0.04,
-      type: 'negative'
-    },
-    {
-      text: '신규 기술이 검증 단계에 진입했습니다.',
-      move: 0.015,
-      type: 'positive'
-    },
-    {
-      text: '경쟁사의 신제품이 시장에 출시됐습니다.',
-      move: -0.018,
-      type: 'negative'
-    },
-    {
-      text: '업계 전반의 투자 심리가 개선됐습니다.',
-      move: 0.012,
-      type: 'positive'
-    },
-    {
-      text: '운영비 증가로 수익성 압박이 커졌습니다.',
-      move: -0.028,
-      type: 'negative'
-    },
-    {
-      text: '장기 공급 계약을 확보했습니다.',
-      move: 0.032,
-      type: 'positive'
-    },
-    {
-      text: '신규 사업의 상용화가 예상보다 늦어지고 있습니다.',
-      move: -0.03,
-      type: 'negative'
-    },
-    {
-      text: '생산 효율이 개선되고 있습니다.',
-      move: 0.018,
-      type: 'positive'
-    }
+    { text: '분기 매출이 시장 예상치를 웃돌았습니다.', move: 0.035, type: 'positive' },
+    { text: '분기 매출이 시장 예상치를 밑돌았습니다.', move: -0.04, type: 'negative' },
+    { text: '새로운 제품 출시를 발표했습니다.', move: 0.022, type: 'positive' },
+    { text: '주요 고객과 대규모 계약을 체결했습니다.', move: 0.05, type: 'positive' },
+    { text: '주요 고객과의 계약을 잃었습니다.', move: -0.055, type: 'negative' },
+    { text: '연구개발 예산을 확대했습니다.', move: 0.008, type: 'positive' },
+    { text: '생산 일정이 지연되고 있습니다.', move: -0.025, type: 'negative' },
+    { text: '새로운 시장으로 사업을 확장합니다.', move: 0.025, type: 'positive' },
+    { text: '업계 수요 전망이 하향 조정됐습니다.', move: -0.02, type: 'negative' },
+    { text: '현금흐름이 예상보다 개선됐습니다.', move: 0.02, type: 'positive' },
+    { text: '제품 품질 관련 문제가 발견됐습니다.', move: -0.04, type: 'negative' },
+    { text: '신규 기술이 검증 단계에 진입했습니다.', move: 0.015, type: 'positive' },
+    { text: '경쟁사의 신제품이 시장에 출시됐습니다.', move: -0.018, type: 'negative' },
+    { text: '업계 전반의 투자 심리가 개선됐습니다.', move: 0.012, type: 'positive' },
+    { text: '운영비 증가로 수익성 압박이 커졌습니다.', move: -0.028, type: 'negative' },
+    { text: '장기 공급 계약을 확보했습니다.', move: 0.032, type: 'positive' },
+    { text: '신규 사업의 상용화가 예상보다 늦어지고 있습니다.', move: -0.03, type: 'negative' },
+    { text: '생산 효율이 개선되고 있습니다.', move: 0.018, type: 'positive' }
   ];
 
   const names = [
@@ -647,59 +448,40 @@
     'Pioneer', 'Quartz', 'Redwood', 'Silverpath', 'Tandem'
   ];
 
-  const SUFFIXES = [
-    'Systems',
-    'Technologies',
-    'Labs',
-    'Industries',
-    'Group'
-  ];
-
+  const SUFFIXES = ['Systems', 'Technologies', 'Labs', 'Industries', 'Group'];
   const $ = id => document.getElementById(id);
+  const random = (min, max) => min + Math.random() * (max - min);
+  const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+  const clamp = (x, min, max) => Math.max(min, Math.min(max, x));
 
-  const random = (min, max) =>
-    min + Math.random() * (max - min);
+  const money = n => new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(Number.isFinite(n) ? n : 0);
 
-  const pick = arr =>
-    arr[Math.floor(Math.random() * arr.length)];
-
-  const clamp = (x, min, max) =>
-    Math.max(min, Math.min(max, x));
-
-  const money = n =>
-    new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(Number.isFinite(n) ? n : 0);
-
-  const percent = n =>
-    `${n >= 0 ? '+' : ''}${(n * 100).toFixed(2)}%`;
-
-  const number = n =>
-    new Intl.NumberFormat('ko-KR').format(n);
+  const percent = n => `${n >= 0 ? '+' : ''}${(n * 100).toFixed(2)}%`;
+  const number = n => new Intl.NumberFormat('en-US').format(n);
 
   function escapeHTML(value) {
-    return String(value).replace(/[&<>"']/g, char => ({
+    return String(value).replace(/[&<>"']/g, ch => ({
       '&': '&amp;',
       '<': '&lt;',
       '>': '&gt;',
       '"': '&quot;',
       "'": '&#39;'
-    })[char]);
+    })[ch]);
   }
 
   function tickerFor(n) {
     let result = '';
     n++;
-
     while (n > 0) {
       n--;
       result = String.fromCharCode(65 + n % 26) + result;
       n = Math.floor(n / 26);
     }
-
     return result;
   }
 
@@ -728,63 +510,56 @@
   function createState() {
     return {
       day: 0,
-
       player: {
-        name: '나',
+        name: '',
+        nameChosen: false,
         cash: START_CASH,
         holdings: {},
         initialValue: START_CASH,
         trades: 0
       },
-
-      companies: Array.from(
-        { length: 100 },
-        (_, i) => createCompany(i)
-      ),
-
+      companies: Array.from({ length: 100 }, (_, i) => createCompany(i)),
       bots: Array.from({ length: 12 }, (_, i) => ({
-        name: `시장 봇 ${String(i + 1).padStart(2, '0')}`,
+        name: `Market Bot ${String(i + 1).padStart(2, '0')}`,
         cash: START_CASH,
         holdings: {},
         initialValue: START_CASH
       })),
-
       news: [{
         day: 0,
         title: '가상 주식시장 개장',
-        text: '30년간의 가상 주식시장 시뮬레이션이 시작됐습니다.',
-        clue: '기업의 성장 가능성, 재무 건전성, 주가 변화를 함께 관찰해 보세요.',
+        text: '가상의 주식 시장이 개장했습니다. 30년간의 투자 여정이 시작됩니다.',
+        clue: '기업의 성장 가능성, 재무 건전성, 주가 흐름을 함께 살펴보세요.',
+        ticker: null,
         type: 'neutral'
       }],
-
-      sentiment: Object.fromEntries(
-        THEMES.map(t => [t[0], 0])
-      )
+      sentiment: Object.fromEntries(THEMES.map(t => [t[0], 0]))
     };
   }
 
   function loadState() {
     try {
-      const saved = localStorage.getItem(KEY);
-      if (!saved) return createState();
+      const raw = localStorage.getItem(KEY);
+      if (!raw) return createState();
 
-      const s = JSON.parse(saved);
+      const s = JSON.parse(raw);
 
       if (
-        !s ||
-        !Number.isInteger(s.day) ||
-        s.day < 0 ||
-        s.day > TOTAL_DAYS ||
-        !Array.isArray(s.companies) ||
-        s.companies.length !== 100 ||
-        !s.player ||
-        !Number.isFinite(s.player.cash) ||
+        !s || !Number.isInteger(s.day) ||
+        s.day < 0 || s.day > TOTAL_DAYS ||
+        !Array.isArray(s.companies) || s.companies.length !== 100 ||
+        !s.player || !Number.isFinite(s.player.cash) ||
         !s.player.holdings ||
-        !Array.isArray(s.bots) ||
-        !Array.isArray(s.news)
+        !Array.isArray(s.bots) || !Array.isArray(s.news)
       ) {
         return createState();
       }
+
+      // Migration for saves made by earlier versions.
+      if (typeof s.player.nameChosen !== 'boolean') {
+        s.player.nameChosen = false;
+      }
+      if (typeof s.player.name !== 'string') s.player.name = '';
 
       return s;
     } catch {
@@ -801,9 +576,7 @@
       localStorage.setItem(KEY, JSON.stringify(state));
       return true;
     } catch {
-      alert(
-        '브라우저 저장에 실패했습니다. 저장 공간이나 브라우저 설정을 확인하세요.'
-      );
+      alert('Could not save the game. Check your browser storage settings.');
       return false;
     }
   }
@@ -814,15 +587,10 @@
 
   function portfolioValue(account) {
     let total = account.cash;
-
     for (const [ticker, qty] of Object.entries(account.holdings)) {
       const c = getCompany(ticker);
-
-      if (c && !c.delisted) {
-        total += c.price * qty;
-      }
+      if (c && !c.delisted) total += c.price * qty;
     }
-
     return total;
   }
 
@@ -835,7 +603,6 @@
       ticker,
       type
     });
-
     state.news = state.news.slice(0, 120);
   }
 
@@ -844,51 +611,28 @@
 
     c.previousClose = c.price;
 
-    const drift =
-      c.growth / 252 +
-      (c.quality - 0.5) * 0.00018;
-
+    const drift = c.growth / 252 + (c.quality - 0.5) * 0.00018;
     const change = clamp(
       drift + random(-c.volatility, c.volatility),
       -0.18,
       0.18
     );
 
-    c.price = Math.max(
-      0.5,
-      Math.round(c.price * (1 + change) * 100) / 100
-    );
-
+    c.price = Math.max(0.5, Math.round(c.price * (1 + change) * 100) / 100);
     c.history.push(c.price);
+    if (c.history.length > 220) c.history.shift();
 
-    if (c.history.length > 220) {
-      c.history.shift();
-    }
+    c.research = clamp(c.research + random(-0.002, 0.006), 0, 1);
+    c.cashHealth = clamp(c.cashHealth + random(-0.002, 0.0015), 0, 1);
 
-    c.research = clamp(
-      c.research + random(-0.002, 0.006),
-      0,
-      1
-    );
-
-    c.cashHealth = clamp(
-      c.cashHealth + random(-0.002, 0.0015),
-      0,
-      1
-    );
-
-    if (
-      c.cashHealth < 0.12 &&
-      c.price < 3 &&
-      Math.random() < 0.012
-    ) {
+    if (c.cashHealth < 0.12 && c.price < 3 && Math.random() < 0.012) {
       c.delisted = true;
       c.price = 0;
 
       addNews(
-        `상장폐지 · ${c.ticker}`,
+        `상장폐지 · ${c.name} (${c.ticker})`,
         `${c.name}이(가) 가상 지급불능 절차로 상장폐지됐습니다.`,
-        '이 시뮬레이션에서는 상장폐지된 주식의 평가 가격을 0달러로 처리합니다.',
+        '상장폐지된 주식은 이 시뮬레이션에서 가치가 0으로 처리됩니다.',
         c.ticker,
         'negative'
       );
@@ -905,13 +649,9 @@
     for (let i = 0; i < count; i++) {
       const c = pick(active);
       const n = pick(NEWS);
-
       const move = n.move * random(0.7, 1.25);
 
-      c.price = Math.max(
-        0.5,
-        Math.round(c.price * (1 + move) * 100) / 100
-      );
+      c.price = Math.max(0.5, Math.round(c.price * (1 + move) * 100) / 100);
 
       addNews(
         `${c.name} · ${c.ticker}`,
@@ -932,43 +672,31 @@
     const gross = c.price * qty;
     const held = bot.holdings[c.ticker] || 0;
 
-    if (
-      Math.random() < 0.55 &&
-      bot.cash >= gross * (1 + FEE)
-    ) {
+    if (Math.random() < 0.55 && bot.cash >= gross * (1 + FEE)) {
       bot.cash -= gross * (1 + FEE);
       bot.holdings[c.ticker] = held + qty;
     } else if (held > 0) {
       const sold = Math.min(held, qty);
-
       bot.cash += c.price * sold * (1 - FEE);
       bot.holdings[c.ticker] = held - sold;
-
-      if (!bot.holdings[c.ticker]) {
-        delete bot.holdings[c.ticker];
-      }
+      if (!bot.holdings[c.ticker]) delete bot.holdings[c.ticker];
     }
   }
 
   function advanceDay() {
     if (state.day >= TOTAL_DAYS) {
       stopAuto();
-      alert('30년 시뮬레이션이 종료됐습니다.');
+      alert('The 30-year simulation is complete.');
       return;
     }
 
     state.day++;
 
-    for (const c of state.companies) {
-      updateCompany(c);
-    }
-
+    for (const c of state.companies) updateCompany(c);
     runNews();
 
     for (const bot of state.bots) {
-      if (Math.random() < 0.72) {
-        botTrade(bot);
-      }
+      if (Math.random() < 0.72) botTrade(bot);
     }
 
     save();
@@ -981,16 +709,12 @@
     const p = state.player;
 
     if (!c || c.delisted) {
-      alert('거래할 수 없는 주식입니다.');
+      alert('This stock is not available for trading.');
       return;
     }
 
-    if (
-      !Number.isInteger(quantity) ||
-      quantity < 1 ||
-      quantity > 100000
-    ) {
-      alert('수량은 1~100,000주 사이의 정수로 입력하세요.');
+    if (!Number.isInteger(quantity) || quantity < 1 || quantity > 100000) {
+      alert('Enter a whole number between 1 and 100,000 shares.');
       return;
     }
 
@@ -1000,28 +724,22 @@
 
     if (side === 'buy') {
       if (p.cash < gross + fee) {
-        alert('현금이 부족합니다. 거래 금액과 수수료를 확인하세요.');
+        alert('Insufficient cash, including the trading fee.');
         return;
       }
-
       p.cash -= gross + fee;
       p.holdings[c.ticker] = held + quantity;
     } else {
       if (held < quantity) {
-        alert('보유 수량이 부족합니다.');
+        alert('You do not own enough shares.');
         return;
       }
-
       p.cash += gross - fee;
       p.holdings[c.ticker] = held - quantity;
-
-      if (!p.holdings[c.ticker]) {
-        delete p.holdings[c.ticker];
-      }
+      if (!p.holdings[c.ticker]) delete p.holdings[c.ticker];
     }
 
     p.trades++;
-
     save();
     render();
   }
@@ -1032,50 +750,35 @@
 
     const list = state.companies.filter(c =>
       (theme === 'all' || c.themeId === theme) &&
-      (
-        !query ||
+      (!query ||
         c.ticker.toLowerCase().includes(query) ||
-        c.name.toLowerCase().includes(query)
-      )
+        c.name.toLowerCase().includes(query))
     );
 
-    $('companyCount').textContent =
-      `검색 결과 ${list.length}개 기업`;
+    $('companyCount').textContent = `${list.length} companies`;
 
     if (!list.length) {
       $('companies').innerHTML =
-        '<tr><td colspan="4">검색 결과가 없습니다.</td></tr>';
+        '<tr><td colspan="4">No matching companies.</td></tr>';
       return;
     }
 
     $('companies').innerHTML = list.map(c => {
-      const daily = c.previousClose
-        ? c.price / c.previousClose - 1
-        : 0;
-
-      const total = c.price / c.initialPrice - 1;
-      const isSelected = selected === c.ticker;
+      const daily = c.previousClose ? c.price / c.previousClose - 1 : 0;
+      const total = c.initialPrice ? c.price / c.initialPrice - 1 : 0;
 
       return `
-        <tr
-          data-ticker="${escapeHTML(c.ticker)}"
-          class="${isSelected ? 'selected-row' : ''}"
-        >
+        <tr data-ticker="${escapeHTML(c.ticker)}"
+            class="${selected === c.ticker ? 'selected-row' : ''}">
           <td>
-            <strong>${escapeHTML(c.ticker)}</strong>
-            <br>
+            <strong>${escapeHTML(c.ticker)}</strong><br>
             <span class="company-name">${escapeHTML(c.name)}</span>
-            ${c.delisted ? '<br><span class="negative">상장폐지</span>' : ''}
+            ${c.delisted ? '<br><span class="negative">Delisted</span>' : ''}
           </td>
           <td>${money(c.price)}</td>
-          <td class="${daily >= 0 ? 'positive' : 'negative'}">
-            ${percent(daily)}
-          </td>
-          <td class="${total >= 0 ? 'positive' : 'negative'}">
-            ${percent(total)}
-          </td>
-        </tr>
-      `;
+          <td class="${daily >= 0 ? 'positive' : 'negative'}">${percent(daily)}</td>
+          <td class="${total >= 0 ? 'positive' : 'negative'}">${percent(total)}</td>
+        </tr>`;
     }).join('');
   }
 
@@ -1084,104 +787,39 @@
     if (!c) return;
 
     const qty = state.player.holdings[c.ticker] || 0;
-
-    const totalReturn = c.initialPrice > 0
-      ? c.price / c.initialPrice - 1
-      : 0;
+    const totalReturn = c.initialPrice ? c.price / c.initialPrice - 1 : 0;
 
     const qualityLabel =
-      c.quality > 0.72
-        ? '우수'
-        : c.quality > 0.48
-          ? '보통'
-          : '취약';
-
-    const status = c.delisted
-      ? '<p class="negative"><strong>상장폐지된 기업입니다. 거래할 수 없습니다.</strong></p>'
-      : '';
+      c.quality > 0.72 ? 'Strong' :
+      c.quality > 0.48 ? 'Average' : 'Weak';
 
     $('details').innerHTML = `
-      <h2>
-        ${escapeHTML(c.name)}
-        <span class="muted">(${escapeHTML(c.ticker)})</span>
-      </h2>
-
+      <h2>${escapeHTML(c.name)} <span class="muted">${escapeHTML(c.ticker)}</span></h2>
       <p class="muted">${escapeHTML(c.themeName)}</p>
-
       <div class="detail-price">${money(c.price)}</div>
-
       <p class="${totalReturn >= 0 ? 'positive' : 'negative'}">
-        최초 가격 대비 ${percent(totalReturn)}
+        Total Return: ${percent(totalReturn)}
       </p>
 
-      ${status}
+      ${c.delisted ? '<p class="negative"><strong>This company has been delisted.</strong></p>' : ''}
 
       <div class="detail-grid">
-        <div class="detail-item">
-          <span class="muted">보유 수량</span>
-          <strong>${number(qty)}주</strong>
-        </div>
-
-        <div class="detail-item">
-          <span class="muted">보유 평가액</span>
-          <strong>${money(qty * c.price)}</strong>
-        </div>
-
-        <div class="detail-item">
-          <span class="muted">기업 품질</span>
-          <strong>${qualityLabel}</strong>
-        </div>
-
-        <div class="detail-item">
-          <span class="muted">연구 진행도</span>
-          <strong>${Math.round(c.research * 100)}%</strong>
-        </div>
-
-        <div class="detail-item">
-          <span class="muted">재무 건전성</span>
-          <strong>${Math.round(c.cashHealth * 100)}%</strong>
-        </div>
-
-        <div class="detail-item">
-          <span class="muted">주가 변동성</span>
-          <strong>${(c.volatility * 100).toFixed(2)}%</strong>
-        </div>
+        <div class="detail-item"><span class="muted">Shares Owned</span><strong>${number(qty)}</strong></div>
+        <div class="detail-item"><span class="muted">Position Value</span><strong>${money(qty * c.price)}</strong></div>
+        <div class="detail-item"><span class="muted">Company Quality</span><strong>${qualityLabel}</strong></div>
+        <div class="detail-item"><span class="muted">Research Progress</span><strong>${Math.round(c.research * 100)}%</strong></div>
+        <div class="detail-item"><span class="muted">Financial Health</span><strong>${Math.round(c.cashHealth * 100)}%</strong></div>
+        <div class="detail-item"><span class="muted">Volatility</span><strong>${(c.volatility * 100).toFixed(2)}%</strong></div>
       </div>
 
       <div class="trade-controls">
-        <label>
-          거래 수량
-          <input
-            id="quantity"
-            type="number"
-            min="1"
-            max="100000"
-            step="1"
-            value="10"
-            ${c.delisted ? 'disabled' : ''}
-          >
+        <label>Quantity
+          <input id="quantity" type="number" min="1" max="100000" step="1" value="10" ${c.delisted ? 'disabled' : ''}>
         </label>
-
-        <button
-          id="buy"
-          class="buy-button"
-          ${c.delisted ? 'disabled' : ''}
-        >
-          매수
-        </button>
-
-        <button
-          id="sell"
-          class="sell-button"
-          ${c.delisted ? 'disabled' : ''}
-        >
-          매도
-        </button>
+        <button id="buy" class="buy-button" ${c.delisted ? 'disabled' : ''}>Buy</button>
+        <button id="sell" class="sell-button" ${c.delisted ? 'disabled' : ''}>Sell</button>
       </div>
-
-      <p class="muted">
-        예상 거래 수수료: 거래 금액의 0.1%
-      </p>
+      <p class="muted">Trading fee: 0.1% of transaction value.</p>
     `;
 
     if (!c.delisted) {
@@ -1191,31 +829,22 @@
   }
 
   function renderNews() {
-    const news = state.news.slice(0, 60);
+    const items = state.news.slice(0, 60);
+    $('newsCount').textContent = `${items.length} recent items`;
 
-    $('newsCount').textContent =
-      `최근 뉴스 ${news.length}건 · 최대 60건 표시`;
-
-    if (!news.length) {
-      $('news').innerHTML =
-        '<div class="empty">아직 뉴스가 없습니다. 다음 거래일로 진행해 보세요.</div>';
+    if (!items.length) {
+      $('news').innerHTML = '<div class="empty">No news yet. Advance to the next trading day.</div>';
       return;
     }
 
-    $('news').innerHTML = news.map(n => {
+    $('news').innerHTML = items.map(n => {
       const typeClass =
-        n.type === 'positive'
-          ? 'news-positive'
-          : n.type === 'negative'
-            ? 'news-negative'
-            : '';
+        n.type === 'positive' ? 'news-positive' :
+        n.type === 'negative' ? 'news-negative' : '';
 
       const typeLabel =
-        n.type === 'positive'
-          ? '긍정적 뉴스'
-          : n.type === 'negative'
-            ? '부정적 뉴스'
-            : '시장 소식';
+        n.type === 'positive' ? '긍정적 뉴스' :
+        n.type === 'negative' ? '부정적 뉴스' : '시장 소식';
 
       const dayLabel = n.day === 0
         ? '개장일'
@@ -1223,36 +852,27 @@
 
       return `
         <article class="news ${typeClass}">
-          <div class="news-title">
-            ${escapeHTML(n.title)}
-          </div>
-
-          <p class="news-body">
-            ${escapeHTML(n.text)}
-          </p>
-
-          <p class="news-clue">
+          <div class="news-title">${escapeHTML(n.title)}</div>
+          <p class="news-body">${escapeHTML(n.text)}</p>
+          <div class="news-clue">
             <strong>투자 단서</strong><br>
             ${escapeHTML(n.clue)}
-          </p>
-
+          </div>
           <div class="news-meta">
             <span>${escapeHTML(typeLabel)}</span>
             <span>${escapeHTML(dayLabel)}</span>
           </div>
-        </article>
-      `;
+        </article>`;
     }).join('');
   }
 
   function renderLeaderboard() {
     const people = [
       {
-        name: state.player.name,
+        name: state.player.name || 'Player',
         value: portfolioValue(state.player),
         isPlayer: true
       },
-
       ...state.bots.map(b => ({
         name: b.name,
         value: portfolioValue(b),
@@ -1262,15 +882,13 @@
 
     $('leaderboard').innerHTML = people.map((p, i) => `
       <div class="leader-row">
-        <div class="leader-name">
-          <span class="rank">${i + 1}위</span>
+        <div>
+          <span class="rank">#${i + 1}</span>
           ${escapeHTML(p.name)}
-          ${p.isPlayer ? '<span class="positive"> (나)</span>' : ''}
+          ${p.isPlayer ? '<span class="positive"> (You)</span>' : ''}
         </div>
-
         <div class="leader-value">${money(p.value)}</div>
-      </div>
-    `).join('');
+      </div>`).join('');
   }
 
   function renderPortfolio() {
@@ -1278,61 +896,33 @@
       .filter(([, qty]) => qty > 0)
       .map(([ticker, qty]) => {
         const c = getCompany(ticker);
-
         if (!c) return null;
-
-        return {
-          ticker,
-          qty,
-          name: c.name,
-          price: c.price,
-          value: c.price * qty,
-          delisted: c.delisted
-        };
+        return { ticker, qty, c, value: c.price * qty };
       })
       .filter(Boolean)
       .sort((a, b) => b.value - a.value);
 
     if (!holdings.length) {
-      $('portfolio').innerHTML = `
-        <div class="empty">
-          보유 주식이 없습니다.<br>
-          기업 시장에서 주식을 선택해 매수해 보세요.
-        </div>
-      `;
+      $('portfolio').innerHTML =
+        '<div class="empty">No holdings yet. Select a company and buy shares.</div>';
       return;
     }
 
     $('portfolio').innerHTML = `
-      <div class="table-wrap" style="max-height:400px">
+      <div class="table-wrap" style="max-height:350px">
         <table>
-          <thead>
-            <tr>
-              <th>기업</th>
-              <th>수량</th>
-              <th>현재가</th>
-              <th>평가액</th>
-            </tr>
-          </thead>
-
+          <thead><tr><th>Company</th><th>Shares</th><th>Price</th><th>Value</th></tr></thead>
           <tbody>
             ${holdings.map(h => `
               <tr data-portfolio-ticker="${escapeHTML(h.ticker)}">
-                <td>
-                  <strong>${escapeHTML(h.ticker)}</strong>
-                  <br>
-                  <span class="company-name">${escapeHTML(h.name)}</span>
-                  ${h.delisted ? '<br><span class="negative">상장폐지</span>' : ''}
-                </td>
+                <td><strong>${escapeHTML(h.ticker)}</strong><br><span class="company-name">${escapeHTML(h.c.name)}</span></td>
                 <td>${number(h.qty)}</td>
-                <td>${money(h.price)}</td>
+                <td>${money(h.c.price)}</td>
                 <td>${money(h.value)}</td>
-              </tr>
-            `).join('')}
+              </tr>`).join('')}
           </tbody>
         </table>
-      </div>
-    `;
+      </div>`;
   }
 
   function render() {
@@ -1340,34 +930,24 @@
     const worth = portfolioValue(p);
     const ret = worth / p.initialValue - 1;
 
-    $('day').textContent =
-      `${number(state.day)} / ${number(TOTAL_DAYS)}`;
-
-    const year = Math.min(
-      30,
-      Math.floor(state.day / 252) + 1
-    );
-
-    const dayInYear = state.day === TOTAL_DAYS
-      ? 252
-      : state.day % 252 || (state.day === 0 ? 0 : 252);
-
-    $('date').textContent =
-      state.day === TOTAL_DAYS
-        ? '30년 시뮬레이션 완료'
-        : `${year}년 차 · ${dayInYear === 0 ? '시작 전' : `${dayInYear}거래일`}`;
-
+    $('playerName').textContent = p.name || '—';
+    $('day').textContent = `${number(state.day)} / ${number(TOTAL_DAYS)}`;
     $('assets').textContent = money(worth);
     $('returns').textContent = percent(ret);
     $('returns').className = ret >= 0 ? 'positive' : 'negative';
-
     $('cash').textContent = money(p.cash);
-
     $('active').textContent =
       `${state.companies.filter(c => !c.delisted).length} / 100`;
+    $('tradeCount').textContent = `Trades: ${number(p.trades)}`;
 
-    $('tradeCount').textContent =
-      `거래 ${number(p.trades)}회`;
+    if (state.day >= TOTAL_DAYS) {
+      $('date').textContent = '30-year simulation complete';
+    } else if (state.day === 0) {
+      $('date').textContent = 'Year 1 · Not started';
+    } else {
+      $('date').textContent =
+        `Year ${Math.floor((state.day - 1) / 252) + 1} · Trading Day ${((state.day - 1) % 252) + 1}`;
+    }
 
     $('nextDay').disabled = state.day >= TOTAL_DAYS;
 
@@ -1383,8 +963,37 @@
       clearInterval(autoTimer);
       autoTimer = null;
     }
+    $('auto').textContent = 'Start Auto Advance';
+  }
 
-    $('auto').textContent = '자동 진행 시작';
+  function showNicknameScreen() {
+    $('nameOverlay').classList.remove('hidden');
+    $('nickname').value = state.player.name || '';
+    setTimeout(() => $('nickname').focus(), 0);
+  }
+
+  function acceptNickname(event) {
+    event.preventDefault();
+
+    const name = $('nickname').value.trim();
+
+    if (!name) {
+      $('nameError').textContent = 'Please enter a nickname.';
+      return;
+    }
+
+    if (name.length > 20) {
+      $('nameError').textContent = 'Nickname must be 20 characters or fewer.';
+      return;
+    }
+
+    state.player.name = name;
+    state.player.nameChosen = true;
+
+    if (!save()) return;
+
+    $('nameOverlay').classList.add('hidden');
+    render();
   }
 
   function init() {
@@ -1395,10 +1004,11 @@
       $('theme').appendChild(option);
     }
 
+    $('nameForm').addEventListener('submit', acceptNickname);
+
     $('companies').addEventListener('click', event => {
       const row = event.target.closest('tr[data-ticker]');
       if (!row) return;
-
       selected = row.dataset.ticker;
       render();
     });
@@ -1406,19 +1016,13 @@
     $('portfolio').addEventListener('click', event => {
       const row = event.target.closest('tr[data-portfolio-ticker]');
       if (!row) return;
-
       selected = row.dataset.portfolioTicker;
       render();
-
-      $('details').scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
+      $('details').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
     $('search').addEventListener('input', renderCompanies);
     $('theme').addEventListener('change', renderCompanies);
-
     $('nextDay').addEventListener('click', advanceDay);
 
     $('auto').addEventListener('click', () => {
@@ -1428,61 +1032,53 @@
       }
 
       if (state.day >= TOTAL_DAYS) {
-        alert('30년 시뮬레이션이 이미 종료됐습니다.');
+        alert('The 30-year simulation is already complete.');
         return;
       }
 
-      $('auto').textContent = '자동 진행 중지';
+      $('auto').textContent = 'Stop Auto Advance';
 
       autoTimer = setInterval(() => {
         if (state.day >= TOTAL_DAYS) {
           stopAuto();
           return;
         }
-
         advanceDay();
       }, 700);
     });
 
     $('save').addEventListener('click', () => {
-      if (save()) {
-        alert('현재 진행 상황을 이 브라우저에 저장했습니다.');
-      }
+      if (save()) alert('Game saved in this browser.');
     });
 
     $('reset').addEventListener('click', () => {
-      const confirmed = confirm(
-        '저장된 진행 상황을 삭제하고 새로운 게임을 시작할까요?'
-      );
-
-      if (!confirmed) return;
+      if (!confirm('Delete the saved game and start over?')) return;
 
       stopAuto();
-
       state = createState();
       selected = 'A';
 
       if (save()) {
         render();
+        showNicknameScreen();
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        render();
       }
     });
 
     window.addEventListener('beforeunload', () => {
-      if (autoTimer !== null) {
-        clearInterval(autoTimer);
-      }
-
+      if (autoTimer !== null) clearInterval(autoTimer);
       try {
         localStorage.setItem(KEY, JSON.stringify(state));
       } catch {
-        // 브라우저 저장이 불가능한 경우 종료 처리를 방해하지 않음
+        // Do not interrupt closing if browser storage is unavailable.
       }
     });
 
     render();
+
+    if (!state.player.nameChosen || !state.player.name.trim()) {
+      showNicknameScreen();
+    }
   }
 
   init();
