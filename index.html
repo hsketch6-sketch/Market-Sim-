@@ -1093,19 +1093,20 @@ tr.selected-row{background:rgba(56,112,174,.25);box-shadow:inset 3px 0 #7bb7ff}
  function sellFraction(f){const c=getCompany(selected);if(!c||c.delisted){alert(t('stockUnavailable'));return;}const held=state.player.holdings[c.ticker]||0;if(held<1){alert(t('noShares'));return;}trade('sell',f>=1?held:Math.min(held,Math.max(1,Math.floor(held*f))));}
  function borrow(){const amount=Number($('loanAmount').value),p=state.player;if(!Number.isFinite(amount)||amount<=0){alert(t('borrowInvalid'));return;}if(p.loanBalance+amount>MAX_LOAN+1e-8){alert(t('creditExceeded'));return;}p.cash+=amount;p.loanBalance+=amount;save();render();alert(t('borrowSuccess'));}
  function repay(amount){const p=state.player;if(p.loanBalance<=0){alert(t('noDebt'));return;}if(!Number.isFinite(amount)||amount<=0){alert(t('loanAmountInvalid'));return;}const pay=Math.min(amount,p.loanBalance);if(p.cash+1e-8<pay){alert(t('cashRepay'));return;}p.cash-=pay;p.loanBalance-=pay;if(p.loanBalance<.005)p.loanBalance=0;save();render();alert(t('repaySuccess'));}
- function renderCompanies(){const q=$('search').value.trim().toLowerCase(),theme=$('theme').value,list=state.companies.filter(c=>(theme==='all'||c.themeId===theme)&&(!q||c.ticker.toLowerCase().includes(q)||c.name.toLowerCase().includes(q)));$('companyCount').textContent=`${list.length} ${t('companies')}`;if(!list.length){$('companies').innerHTML=`<tr><td colspan="4">${t('noMatch')}</td></tr>`;return;}$('companies').innerHTML=list.map(c=>{const daily=c.previousClose>0?c.price/c.previousClose-1:0,total=c.initialPrice>0?c.price/c.initialPrice-1:0;return `<tr data-ticker="${
-            esc(c.ticker)
-        }
-        " class="${
-            selected===c.ticker?'selected-row':''
-        }
-        "><td><strong>${esc(c.ticker)}</strong><br><span class="company-name">${esc(c.name)}</span>${c.delisted?`<br><span class="negative">${t('delisted')}</span>`:''}</td><td>${money(c.price)}</td><td class="${
-            daily>=0?'positive':'negative'
-        }
-        ">${pct(daily)}</td><td class="${
-            total>=0?'positive':'negative'
-        }
-        ">${pct(total)}</td></tr>`;}).join('');}
+ function renderCompanies(){
+  const q=$('search').value.trim().toLowerCase();
+  const theme=$('theme').value;
+  const list=state.companies.filter(c=>(theme==='all'||c.themeId===theme)&&(!q||c.ticker.toLowerCase().includes(q)||c.name.toLowerCase().includes(q)));
+  $('companyCount').textContent=`${list.length} ${t('companies')}`;
+  if(!list.length){$('companies').innerHTML=`<tr><td colspan="4">${t('noMatch')}</td></tr>`;return;}
+  $('companies').innerHTML=list.map(c=>{
+   const daily=c.previousClose>0?c.price/c.previousClose-1:0;
+   const total=c.initialPrice>0?c.price/c.initialPrice-1:0;
+   const selectedClass=selected===c.ticker?'selected-row':'';
+   const delistedLabel=c.delisted?`<br><span class="negative">${t('delisted')}</span>`:'';
+   return `<tr data-ticker="${esc(c.ticker)}" class="${selectedClass}"><td><strong>${esc(c.ticker)}</strong><br><span class="company-name">${esc(c.name)}</span>${delistedLabel}</td><td>${money(c.price)}</td><td class="${daily>=0?'positive':'negative'}">${pct(daily)}</td><td class="${total>=0?'positive':'negative'}">${pct(total)}</td></tr>`;
+  }).join('');
+ }
  function historicalReturn(c,period){const h=c.history;if(h.length<=period)return null;const past=h[h.length-1-period],now=h[h.length-1];if(!Number.isFinite(past)||past<=0||!Number.isFinite(now))return null;return now/past-1;}
  function drawChart(c){const canvas=$('priceChart');if(!canvas)return;const rect=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1,w=Math.max(320,Math.floor(rect.width||650)),h=Math.max(180,Math.floor(rect.height||260));canvas.width=Math.floor(w*dpr);canvas.height=Math.floor(h*dpr);const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);ctx.clearRect(0,0,w,h);const values=c.history.filter(Number.isFinite);if(!values.length)return;const pad={l:66,r:14,t:18,b:28},cw=w-pad.l-pad.r,ch=h-pad.t-pad.b;let min=Math.min(...values),max=Math.max(...values);if(min===max){min*=.95;max*=1.05;}const y=v=>pad.t+(max-v)/(max-min)*ch,x=i=>pad.l+(values.length<=1?0:i/(values.length-1))*cw;ctx.font='11px Arial';ctx.strokeStyle='#30415b';ctx.fillStyle='#9aabc2';ctx.lineWidth=1;for(let i=0;i<5;i++){const yy=pad.t+i*ch/4,v=max-i*(max-min)/4;ctx.beginPath();ctx.moveTo(pad.l,yy);ctx.lineTo(w-pad.r,yy);ctx.stroke();ctx.fillText(money(v),4,yy+4);}ctx.strokeStyle='#7bb7ff';ctx.lineWidth=2;ctx.beginPath();values.forEach((v,i)=>{if(i===0)ctx.moveTo(x(i),y(v));else ctx.lineTo(x(i),y(v));});ctx.stroke();ctx.fillStyle='#9aabc2';ctx.fillText(lang==='ko'?`최근 ${values.length}개 기록`:`Last ${values.length} observations`,pad.l,h-7);}
  function renderDetails(){const c=getCompany(selected);if(!c)return;const p=state.player,qty=p.holdings[c.ticker]||0,pos=qty*c.price,total=c.initialPrice>0?c.price/c.initialPrice-1:0,quality=c.quality>.72?(lang==='ko'?'강함':'Strong'):c.quality>.48?(lang==='ko'?'보통':'Average'):(lang==='ko'?'약함':'Weak'),pe=c.eps>0?c.price/c.eps:NaN,pb=c.bookValuePerShare>0?c.price/c.bookValuePerShare:NaN,ps=c.revenuePerShare>0?c.price/c.revenuePerShare:NaN,info=THEME_INFO[c.themeId]||{ko:['가상 기업입니다.','수요, 제품 경쟁력, 투자 환경','경쟁, 비용 증가, 경기 변동'],en:['Fictional company.','Demand, product competitiveness, investment environment','Competition, rising costs, economic shifts']},ti=info[lang]||info.en,sm=state.sentiment[c.themeId]||0,mood=sm>.1?t('moodPositive'):sm<-.1?t('moodNegative'):t('moodNeutral'),related=state.companies.filter(o=>o.themeId===c.themeId&&o.ticker!==c.ticker).slice(0,6),periods=[[10,t('days10')],[50,t('days50')],[100,t('days100')],[200,t('days200')],[252,t('days252')]],relatedNews=state.news.filter(n=>n.ticker===c.ticker).slice(0,6);
