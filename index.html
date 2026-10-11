@@ -1,51 +1,1028 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b1220">
-<title>Market Sim — 30 Year Exchange</title>
-<style>
-:root{color-scheme:dark;font-family:Arial,sans-serif;background:#0b1220;color:#e8eef8;--panel:#152136;--dark:#0d1727;--border:#30415b;--muted:#9aabc2;--blue:#245da8;--green:#38d996;--red:#ff7185}*{box-sizing:border-box}body{margin:0;padding:20px}main{max-width:1600px;margin:auto}h1{margin-bottom:4px}h2{margin-top:0}h3{margin-bottom:10px}p{line-height:1.55}.muted{color:var(--muted)}.positive{color:var(--green)}.negative{color:var(--red)}section{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;min-width:0}button,input,select{padding:10px 12px;border-radius:7px;border:1px solid #405574;background:var(--dark);color:#e8eef8;font:inherit}button{cursor:pointer;background:var(--blue)}button:hover:not(:disabled){filter:brightness(1.15)}button:disabled{opacity:.45;cursor:not-allowed}input:focus,select:focus,button:focus-visible{outline:2px solid #7bb7ff;outline-offset:2px}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.stat{background:var(--dark);padding:12px;border-radius:8px;min-width:0}.stat h2{margin:6px 0;font-size:clamp(17px,2vw,25px);overflow-wrap:anywhere}.toolbar,.filters,.button-row{display:flex;flex-wrap:wrap;align-items:center;gap:9px}.toolbar button{flex:0 0 auto}.layout{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);gap:16px;align-items:start}.layout>div{min-width:0}#search{flex:1;min-width:150px}.table-wrap{overflow:auto;max-height:580px}table{width:100%;border-collapse:collapse;white-space:nowrap}th,td{text-align:right;padding:9px;border-bottom:1px solid var(--border)}th{position:sticky;top:0;z-index:1;background:#1b2c45}th:first-child,td:first-child{text-align:left}tr[data-ticker],tr[data-portfolio-ticker]{cursor:pointer}tr[data-ticker]:hover,tr[data-portfolio-ticker]:hover{background:#233653}tr.selected-row{background:#203b5d}.company-name{color:var(--muted);font-size:12px}.detail-price{font-size:28px;font-weight:bold}.detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.detail-item{background:var(--dark);padding:10px;border-radius:7px;overflow-wrap:anywhere;min-width:0}.detail-item strong{display:block;margin-top:4px}.detail-label{color:var(--muted);font-size:12px}.trade-controls{display:flex;flex-wrap:wrap;align-items:end;gap:8px;margin-top:14px}.trade-controls label{display:grid;gap:5px}#quantity{width:130px}.buy-button{background:#16784f}.sell-button{background:#a53a4d}.quick-trades{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}.quick-trade-box{background:var(--dark);border-radius:9px;padding:12px;min-width:0}.quick-trade-box h3{font-size:14px}.quick-trade-box .button-row{gap:6px}.quick-trade-box button{flex:1 1 65px;padding:9px 6px;font-size:12px}.sell-quick{background:#783344}.theme-panel{margin-top:16px;padding:14px;border:1px solid var(--border);border-radius:9px;background:#101c2e}.theme-panel p{margin:7px 0}.theme-tags{display:flex;flex-wrap:wrap;gap:6px}.theme-tag{border:1px solid #405574;border-radius:20px;padding:5px 9px;background:#1b2c45;font-size:12px}.related-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:10px}.related-company{width:100%;text-align:left;background:#1b2c45;padding:9px;overflow-wrap:anywhere}.related-company span{display:block}.related-company small{color:var(--muted)}.leader-row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}.leader-row:last-child{border-bottom:0}.leader-value{white-space:nowrap;font-weight:bold}.rank{display:inline-block;width:35px;color:var(--muted)}.empty{text-align:center;padding:22px;color:var(--muted);border:1px dashed var(--border);border-radius:8px}#newsSection{padding:20px}.news-heading{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}#news{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-height:760px;overflow-y:auto;padding:2px 6px 2px 0;scrollbar-color:#405574 var(--dark);scrollbar-width:thin}.news{background:var(--dark);border:1px solid var(--border);border-left:4px solid #627995;border-radius:9px;padding:15px;min-width:0;overflow-wrap:anywhere}.news-positive{border-left-color:var(--green)}.news-negative{border-left-color:var(--red)}.news-title{font-size:16px;font-weight:bold;margin-bottom:8px}.news-body{font-size:15px;line-height:1.7;margin:0 0 10px}.news-clue{background:#15263b;padding:10px;border-radius:6px;color:#b9cce4;font-size:13px;line-height:1.6}.news-meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;font-size:12px;color:var(--muted)}footer{color:var(--muted);font-size:13px;margin:24px 0}#nameOverlay{position:fixed;inset:0;z-index:1000;display:flex;justify-content:center;align-items:center;padding:18px;background:rgba(3,8,17,.92);backdrop-filter:blur(8px)}#nameOverlay.hidden{display:none}.name-card{width:100%;max-width:480px;background:#152136;border:1px solid #405574;border-radius:16px;padding:28px;box-shadow:0 24px 90px #0008}.name-card h1{font-size:28px}.name-card input{width:100%;margin:10px 0 14px}.name-card button{width:100%;padding:12px}.name-error{color:var(--red);min-height:22px;font-size:13px}.chart-wrap{background:var(--dark);border:1px solid var(--border);border-radius:9px;padding:10px;margin:12px 0}.chart-wrap canvas{display:block;width:100%;height:260px}.returns-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin:12px 0}.return-card{background:var(--dark);padding:10px 7px;border-radius:7px;min-width:0}.return-card .period{font-size:12px;color:var(--muted)}.return-card strong{display:block;margin-top:5px;overflow-wrap:anywhere}.loan-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.loan-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:end;margin-top:12px}.loan-controls label{display:grid;gap:5px}.loan-controls input{width:150px}.headline{border-left:4px solid #7bb7ff;background:#101c2e}.headline strong{display:block;margin-bottom:5px}.lang-button{float:right}.related-news{margin-top:16px}.related-news .news{margin:8px 0}.notice-text{margin-top:8px}@media(max-width:850px){.layout{grid-template-columns:1fr}#news{grid-template-columns:1fr;max-height:650px}.returns-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.loan-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:550px){body{padding:9px}section{padding:12px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.toolbar button{flex:1 1 40%}#newsSection{padding:12px}.news{padding:12px}th,td{padding:8px;font-size:13px}.leader-value{font-size:13px}.quick-trades,.related-list{grid-template-columns:1fr}.returns-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.loan-grid{grid-template-columns:1fr}.chart-wrap canvas{height:220px}}
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <meta content="#0b1220" name="theme-color"/>
+  <title>
+   Market Sim — 30 Year Exchange
+  </title>
+  <style>
+:root
+{
+    color-scheme:dark;
+    font-family:Arial,sans-serif;
+    background:#0b1220;
+    color:#e8eef8;
+    --panel:#152136;
+    --dark:#0d1727;
+    --border:#30415b;
+    --muted:#9aabc2;
+    --blue:#245da8;
+    --green:#38d996;
+    --red:#ff7185
+}
+*
+{
+    box-sizing:border-box
+}
+body
+{
+    margin:0;
+    padding:20px
+}
+main
+{
+    max-width:1600px;
+    margin:auto
+}
+h1
+{
+    margin-bottom:4px
+}
+h2
+{
+    margin-top:0
+}
+h3
+{
+    margin-bottom:10px
+}
+p
+{
+    line-height:1.55
+}
+.muted
+{
+    color:var(--muted)
+}
+.positive
+{
+    color:var(--green)
+}
+.negative
+{
+    color:var(--red)
+}
+section
+{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:16px;
+    margin:16px 0;
+    min-width:0
+}
+button,input,select
+{
+    padding:10px 12px;
+    border-radius:7px;
+    border:1px solid #405574;
+    background:var(--dark);
+    color:#e8eef8;
+    font:inherit
+}
+button
+{
+    cursor:pointer;
+    background:var(--blue)
+}
+button:hover:not(:disabled)
+{
+    filter:brightness(1.15)
+}
+button:disabled
+{
+    opacity:.45;
+    cursor:not-allowed
+}
+input:focus,select:focus,button:focus-visible
+{
+    outline:2px solid #7bb7ff;
+    outline-offset:2px
+}
+.stats
+{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:10px
+}
+.stat
+{
+    background:var(--dark);
+    padding:12px;
+    border-radius:8px;
+    min-width:0
+}
+.stat h2
+{
+    margin:6px 0;
+    font-size:clamp(17px,2vw,25px);
+    overflow-wrap:anywhere
+}
+.toolbar,.filters,.button-row
+{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:9px
+}
+.toolbar button
+{
+    flex:0 0 auto
+}
+.layout
+{
+    display:grid;
+    grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);
+    gap:16px;
+    align-items:start
+}
+.layout>div
+{
+    min-width:0
+}
+#search
+{
+    flex:1;
+    min-width:150px
+}
+.table-wrap
+{
+    overflow:auto;
+    max-height:580px
+}
+table
+{
+    width:100%;
+    border-collapse:collapse;
+    white-space:nowrap
+}
+th,td
+{
+    text-align:right;
+    padding:9px;
+    border-bottom:1px solid var(--border)
+}
+th
+{
+    position:sticky;
+    top:0;
+    z-index:1;
+    background:#1b2c45
+}
+th:first-child,td:first-child
+{
+    text-align:left
+}
+tr[data-ticker],tr[data-portfolio-ticker]
+{
+    cursor:pointer
+}
+tr[data-ticker]:hover,tr[data-portfolio-ticker]:hover
+{
+    background:#233653
+}
+tr.selected-row
+{
+    background:#203b5d
+}
+.company-name
+{
+    color:var(--muted);
+    font-size:12px
+}
+.detail-price
+{
+    font-size:28px;
+    font-weight:bold
+}
+.detail-grid
+{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:9px
+}
+.detail-item
+{
+    background:var(--dark);
+    padding:10px;
+    border-radius:7px;
+    overflow-wrap:anywhere;
+    min-width:0
+}
+.detail-item strong
+{
+    display:block;
+    margin-top:4px
+}
+.detail-label
+{
+    color:var(--muted);
+    font-size:12px
+}
+.trade-controls
+{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:end;
+    gap:8px;
+    margin-top:14px
+}
+.trade-controls label
+{
+    display:grid;
+    gap:5px
+}
+#quantity
+{
+    width:130px
+}
+.buy-button
+{
+    background:#16784f
+}
+.sell-button
+{
+    background:#a53a4d
+}
+.quick-trades
+{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+    margin-top:14px
+}
+.quick-trade-box
+{
+    background:var(--dark);
+    border-radius:9px;
+    padding:12px;
+    min-width:0
+}
+.quick-trade-box h3
+{
+    font-size:14px
+}
+.quick-trade-box .button-row
+{
+    gap:6px
+}
+.quick-trade-box button
+{
+    flex:1 1 65px;
+    padding:9px 6px;
+    font-size:12px
+}
+.sell-quick
+{
+    background:#783344
+}
+.theme-panel
+{
+    margin-top:16px;
+    padding:14px;
+    border:1px solid var(--border);
+    border-radius:9px;
+    background:#101c2e
+}
+.theme-panel p
+{
+    margin:7px 0
+}
+.theme-tags
+{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px
+}
+.theme-tag
+{
+    border:1px solid #405574;
+    border-radius:20px;
+    padding:5px 9px;
+    background:#1b2c45;
+    font-size:12px
+}
+.related-list
+{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:7px;
+    margin-top:10px
+}
+.related-company
+{
+    width:100%;
+    text-align:left;
+    background:#1b2c45;
+    padding:9px;
+    overflow-wrap:anywhere
+}
+.related-company span
+{
+    display:block
+}
+.related-company small
+{
+    color:var(--muted)
+}
+.leader-row
+{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    padding:10px 0;
+    border-bottom:1px solid var(--border)
+}
+.leader-row:last-child
+{
+    border-bottom:0
+}
+.leader-value
+{
+    white-space:nowrap;
+    font-weight:bold
+}
+.rank
+{
+    display:inline-block;
+    width:35px;
+    color:var(--muted)
+}
+.empty
+{
+    text-align:center;
+    padding:22px;
+    color:var(--muted);
+    border:1px dashed var(--border);
+    border-radius:8px
+}
+#newsSection
+{
+    padding:20px
+}
+.news-heading
+{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px
+}
+#news
+{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+    max-height:760px;
+    overflow-y:auto;
+    padding:2px 6px 2px 0;
+    scrollbar-color:#405574 var(--dark);
+    scrollbar-width:thin
+}
+.news
+{
+    background:var(--dark);
+    border:1px solid var(--border);
+    border-left:4px solid #627995;
+    border-radius:9px;
+    padding:15px;
+    min-width:0;
+    overflow-wrap:anywhere
+}
+.news-positive
+{
+    border-left-color:var(--green)
+}
+.news-negative
+{
+    border-left-color:var(--red)
+}
+.news-title
+{
+    font-size:16px;
+    font-weight:bold;
+    margin-bottom:8px
+}
+.news-body
+{
+    font-size:15px;
+    line-height:1.7;
+    margin:0 0 10px
+}
+.news-clue
+{
+    background:#15263b;
+    padding:10px;
+    border-radius:6px;
+    color:#b9cce4;
+    font-size:13px;
+    line-height:1.6
+}
+.news-meta
+{
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:6px;
+    font-size:12px;
+    color:var(--muted)
+}
+footer
+{
+    color:var(--muted);
+    font-size:13px;
+    margin:24px 0
+}
+#nameOverlay
+{
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:18px;
+    background:rgba(3,8,17,.92);
+    backdrop-filter:blur(8px)
+}
+#nameOverlay.hidden
+{
+    display:none
+}
+.name-card
+{
+    width:100%;
+    max-width:480px;
+    background:#152136;
+    border:1px solid #405574;
+    border-radius:16px;
+    padding:28px;
+    box-shadow:0 24px 90px #0008
+}
+.name-card h1
+{
+    font-size:28px
+}
+.name-card input
+{
+    width:100%;
+    margin:10px 0 14px
+}
+.name-card button
+{
+    width:100%;
+    padding:12px
+}
+.name-error
+{
+    color:var(--red);
+    min-height:22px;
+    font-size:13px
+}
+.chart-wrap
+{
+    background:var(--dark);
+    border:1px solid var(--border);
+    border-radius:9px;
+    padding:10px;
+    margin:12px 0
+}
+.chart-wrap canvas
+{
+    display:block;
+    width:100%;
+    height:260px
+}
+.returns-grid
+{
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:7px;
+    margin:12px 0
+}
+.return-card
+{
+    background:var(--dark);
+    padding:10px 7px;
+    border-radius:7px;
+    min-width:0
+}
+.return-card .period
+{
+    font-size:12px;
+    color:var(--muted)
+}
+.return-card strong
+{
+    display:block;
+    margin-top:5px;
+    overflow-wrap:anywhere
+}
+.loan-grid
+{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:9px
+}
+.loan-controls
+{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:end;
+    margin-top:12px
+}
+.loan-controls label
+{
+    display:grid;
+    gap:5px
+}
+.loan-controls input
+{
+    width:150px
+}
+.headline
+{
+    border-left:4px solid #7bb7ff;
+    background:#101c2e
+}
+.headline strong
+{
+    display:block;
+    margin-bottom:5px
+}
+.lang-button
+{
+    float:right
+}
+.related-news
+{
+    margin-top:16px
+}
+.related-news .news
+{
+    margin:8px 0
+}
+.notice-text
+{
+    margin-top:8px
+}
+@media(max-width:850px)
+{
+    .layout
+    {
+        grid-template-columns:1fr
+    }
+    #news
+    {
+        grid-template-columns:1fr;
+        max-height:650px
+    }
+    .returns-grid
+    {
+        grid-template-columns:repeat(3,minmax(0,1fr))
+    }
+    .loan-grid
+    {
+        grid-template-columns:repeat(2,minmax(0,1fr))
+    }
+}
+@media(max-width:550px)
+{
+    body
+    {
+        padding:9px
+    }
+    section
+    {
+        padding:12px
+    }
+    .stats
+    {
+        grid-template-columns:repeat(2,minmax(0,1fr))
+    }
+    .toolbar button
+    {
+        flex:1 1 40%
+    }
+    #newsSection
+    {
+        padding:12px
+    }
+    .news
+    {
+        padding:12px
+    }
+    th,td
+    {
+        padding:8px;
+        font-size:13px
+    }
+    .leader-value
+    {
+        font-size:13px
+    }
+    .quick-trades,.related-list
+    {
+        grid-template-columns:1fr
+    }
+    .returns-grid
+    {
+        grid-template-columns:repeat(2,minmax(0,1fr))
+    }
+    .loan-grid
+    {
+        grid-template-columns:1fr
+    }
+    .chart-wrap canvas
+    {
+        height:220px
+    }
+}
 </style>
-</head><body>
-<div id="nameOverlay"><div class="name-card"><p class="muted" id="setupEyebrow">MARKET SIM / PLAYER SETUP</p><h1 id="welcomeTitle">환영합니다, 투자자님.</h1><p class="muted" id="welcomeText">거래소에 입장하기 전에 닉네임을 선택하세요. 닉네임은 순위표에 표시됩니다.</p><form id="nameForm"><label for="nickname" id="nicknameLabel">플레이어 닉네임</label><input id="nickname" type="text" maxlength="20" autocomplete="nickname" placeholder="닉네임 입력" required><div id="nameError" class="name-error"></div><button type="submit" id="enterMarket">시장 입장 →</button></form><p class="muted" style="font-size:12px" id="saveNotice">게임 진행 상황은 이 브라우저에 저장됩니다.</p></div></div>
-<main><header><button id="languageToggle" class="lang-button">English</button><h1>Market Sim <span style="color:#7bb7ff">/</span> 30 Year Exchange</h1><p class="muted" id="subtitle">가상 기업 100개 · 재무 분석 · 시장 뉴스 · 장기 투자</p></header>
-<section><strong id="noticeTitle">안내:</strong><p class="muted notice-text" id="noticeText">이 버전은 데이터를 브라우저에 저장합니다. 방문자 간 시장이나 플레이어 데이터가 실시간으로 공유되지 않습니다. 모든 기업과 주가는 가상입니다.</p><p><span id="playerLabel">플레이어:</span> <strong id="playerName">—</strong></p></section>
-<section><div class="headline" style="padding:12px;border-radius:8px"><strong id="headlineLabel">최신 시장 헤드라인</strong><span id="topHeadline">가상 주식시장 개장 — 30년 시뮬레이션을 시작하세요.</span></div></section>
-<section><div class="stats"><div class="stat"><div class="muted" id="dayLabel">시뮬레이션 일수</div><h2 id="day">0 / 7560</h2><div id="date">1년 차 · 시작 전</div></div><div class="stat"><div class="muted" id="netWorthLabel">순자산</div><h2 id="assets">$100,000.00</h2><div id="returns" class="positive">+0.00%</div></div><div class="stat"><div class="muted" id="cashLabel">현금 잔액</div><h2 id="cash">$100,000.00</h2><div class="muted" id="feeLabel">거래 수수료: 0.1%</div></div><div class="stat"><div class="muted" id="activeLabel">활성 기업</div><h2 id="active">100 / 100</h2><div id="tradeCount" class="muted">거래: 0</div></div></div></section>
-<section><h2 id="timeTitle">시간 조절</h2><div class="toolbar"><button id="nextDay">다음 날 ▶</button><button class="advance-button" data-days="7">+7일</button><button class="advance-button" data-days="30">+30일</button><button class="advance-button" data-days="50">+50일</button><button class="advance-button" data-days="100">+100일</button><label class="muted" for="customDays" id="customDaysLabel">직접 입력</label><input id="customDays" type="number" min="1" max="7560" value="50" style="width:100px"><button id="advanceCustom">진행</button><button id="auto">자동 진행 시작</button><button id="save">게임 저장</button><button id="normalReset">노말 리셋</button><button id="reset">하드 리셋</button></div><p class="muted" id="timeHelp">건너뛴 날에도 주가 변동, 기업 뉴스, 재무 업데이트와 봇 거래가 처리됩니다. 시간은 가상 거래일 기준입니다.</p><p class="muted" id="resetHelp">노말 리셋은 날짜만 0일로 되돌립니다. 하드 리셋은 자산·기업·뉴스·시간을 모두 초기화합니다.</p></section>
-<section><h2 id="loanTitle">대출 · 레버리지 (가상 자금 전용)</h2><div class="loan-grid"><div class="detail-item"><span class="detail-label" id="loanBalanceLabel">대출 잔액</span><strong id="loanBalance">$0.00</strong></div><div class="detail-item"><span class="detail-label" id="interestLabel">누적 이자</span><strong id="loanInterest">$0.00</strong></div><div class="detail-item"><span class="detail-label" id="creditLabel">추가 대출 가능액</span><strong id="creditAvailable">$500,000.00</strong></div></div><p class="muted" id="loanHelp">연 8% 이자가 거래일마다 복리로 적용됩니다. 대출금은 가상 현금으로 지급되며, 상환 시 현금에서 차감됩니다. 대출 한도 $500,000.</p><div class="loan-controls"><label><span id="loanAmountLabel">금액 ($)</span><input id="loanAmount" type="number" min="0.01" step="0.01" value="10000"></label><button id="borrowButton">대출 받기</button><button id="repayButton" class="sell-button">대출 상환</button><button id="repayAllButton" class="sell-button">전액 상환</button></div></section>
-<div class="layout"><div><section><h2 id="marketTitle">기업 시장</h2><div class="filters"><input id="search" type="search" placeholder="티커 또는 기업명 검색"><select id="theme"><option value="all">모든 업종</option></select></div><div class="table-wrap"><table><thead><tr><th id="companyCol">기업</th><th id="priceCol">주가</th><th id="dailyCol">일간</th><th id="totalCol">누적</th></tr></thead><tbody id="companies"></tbody></table></div><p id="companyCount" class="muted"></p></section><section><h2 id="leaderboardTitle">순위표</h2><p class="muted" id="leaderboardHelp">순자산 기준 순위입니다.</p><div id="leaderboard"></div></section></div><div><section id="details"><h2 id="detailsTitle">기업 상세 정보</h2><p class="muted" id="selectCompanyHelp">시장에서 기업을 선택하세요.</p></section><section><h2 id="portfolioTitle">내 포트폴리오</h2><div id="portfolio"></div></section></div></div>
-<section id="newsSection"><div class="news-heading"><h2 id="newsTitle">시장 뉴스 · 투자 단서</h2><span id="newsCount" class="muted">뉴스 0건</span></div><p class="muted" id="newsHelp">뉴스 헤드라인, 기사와 투자 단서를 표시합니다.</p><div id="news"></div></section><footer id="footerText">가상 시뮬레이션 전용. 실제 증권, 기업 또는 금융시장 데이터와 연결되어 있지 않습니다.</footer></main>
-<script>
+ </head>
+ <body>
+  <div id="nameOverlay">
+   <div class="name-card">
+    <p class="muted" id="setupEyebrow">
+     MARKET SIM / PLAYER SETUP
+    </p>
+    <h1 id="welcomeTitle">
+     환영합니다, 투자자님.
+    </h1>
+    <p class="muted" id="welcomeText">
+     거래소에 입장하기 전에 닉네임을 선택하세요. 닉네임은 순위표에 표시됩니다.
+    </p>
+    <form id="nameForm">
+     <label for="nickname" id="nicknameLabel">
+      플레이어 닉네임
+     </label>
+     <input autocomplete="nickname" id="nickname" maxlength="20" placeholder="닉네임 입력" required="" type="text"/>
+     <div class="name-error" id="nameError">
+     </div>
+     <button id="enterMarket" type="submit">
+      시장 입장 →
+     </button>
+    </form>
+    <p class="muted" id="saveNotice" style="font-size:12px">
+     게임 진행 상황은 이 브라우저에 저장됩니다.
+    </p>
+   </div>
+  </div>
+  <main>
+   <header>
+    <button class="lang-button" id="languageToggle">
+     English
+    </button>
+    <h1>
+     Market Sim
+     <span style="color:#7bb7ff">
+      /
+     </span>
+     30 Year Exchange
+    </h1>
+    <p class="muted" id="subtitle">
+     가상 기업 100개 · 재무 분석 · 시장 뉴스 · 장기 투자
+    </p>
+   </header>
+   <section>
+    <strong id="noticeTitle">
+     안내:
+    </strong>
+    <p class="muted notice-text" id="noticeText">
+     이 버전은 데이터를 브라우저에 저장합니다. 방문자 간 시장이나 플레이어 데이터가 실시간으로 공유되지 않습니다. 모든 기업과 주가는 가상입니다.
+    </p>
+    <p>
+     <span id="playerLabel">
+      플레이어:
+     </span>
+     <strong id="playerName">
+      —
+     </strong>
+    </p>
+   </section>
+   <section>
+    <div class="headline" style="padding:12px;border-radius:8px">
+     <strong id="headlineLabel">
+      최신 시장 헤드라인
+     </strong>
+     <span id="topHeadline">
+      가상 주식시장 개장 — 30년 시뮬레이션을 시작하세요.
+     </span>
+    </div>
+   </section>
+   <section>
+    <div class="stats">
+     <div class="stat">
+      <div class="muted" id="dayLabel">
+       시뮬레이션 일수
+      </div>
+      <h2 id="day">
+       0 / 7560
+      </h2>
+      <div id="date">
+       1년 차 · 시작 전
+      </div>
+     </div>
+     <div class="stat">
+      <div class="muted" id="netWorthLabel">
+       순자산
+      </div>
+      <h2 id="assets">
+       $100,000.00
+      </h2>
+      <div class="positive" id="returns">
+       +0.00%
+      </div>
+     </div>
+     <div class="stat">
+      <div class="muted" id="cashLabel">
+       현금 잔액
+      </div>
+      <h2 id="cash">
+       $100,000.00
+      </h2>
+      <div class="muted" id="feeLabel">
+       거래 수수료: 0.1%
+      </div>
+     </div>
+     <div class="stat">
+      <div class="muted" id="activeLabel">
+       활성 기업
+      </div>
+      <h2 id="active">
+       100 / 100
+      </h2>
+      <div class="muted" id="tradeCount">
+       거래: 0
+      </div>
+     </div>
+    </div>
+   </section>
+   <section>
+    <h2 id="timeTitle">
+     시간 조절
+    </h2>
+    <div class="toolbar">
+     <button id="nextDay">
+      다음 날 ▶
+     </button>
+     <button class="advance-button" data-days="7">
+      +7일
+     </button>
+     <button class="advance-button" data-days="30">
+      +30일
+     </button>
+     <button class="advance-button" data-days="50">
+      +50일
+     </button>
+     <button class="advance-button" data-days="100">
+      +100일
+     </button>
+     <label class="muted" for="customDays" id="customDaysLabel">
+      직접 입력
+     </label>
+     <input id="customDays" max="7560" min="1" style="width:100px" type="number" value="50"/>
+     <button id="advanceCustom">
+      진행
+     </button>
+     <button id="auto">
+      자동 진행 시작
+     </button>
+     <button id="save">
+      게임 저장
+     </button>
+     <button id="normalReset">
+      노말 리셋
+     </button>
+     <button id="reset">
+      하드 리셋
+     </button>
+    </div>
+    <p class="muted" id="timeHelp">
+     건너뛴 날에도 주가 변동, 기업 뉴스, 재무 업데이트와 봇 거래가 처리됩니다. 시간은 가상 거래일 기준입니다.
+    </p>
+    <p class="muted" id="resetHelp">
+     노말 리셋은 날짜만 0일로 되돌립니다. 하드 리셋은 자산·기업·뉴스·시간을 모두 초기화합니다.
+    </p>
+   </section>
+   <section>
+    <h2 id="loanTitle">
+     대출 · 레버리지 (가상 자금 전용)
+    </h2>
+    <div class="loan-grid">
+     <div class="detail-item">
+      <span class="detail-label" id="loanBalanceLabel">
+       대출 잔액
+      </span>
+      <strong id="loanBalance">
+       $0.00
+      </strong>
+     </div>
+     <div class="detail-item">
+      <span class="detail-label" id="interestLabel">
+       누적 이자
+      </span>
+      <strong id="loanInterest">
+       $0.00
+      </strong>
+     </div>
+     <div class="detail-item">
+      <span class="detail-label" id="creditLabel">
+       추가 대출 가능액
+      </span>
+      <strong id="creditAvailable">
+       $500,000.00
+      </strong>
+     </div>
+    </div>
+    <p class="muted" id="loanHelp">
+     연 8% 이자가 거래일마다 복리로 적용됩니다. 대출금은 가상 현금으로 지급되며, 상환 시 현금에서 차감됩니다. 대출 한도 $500,000.
+    </p>
+    <div class="loan-controls">
+     <label>
+      <span id="loanAmountLabel">
+       금액 ($)
+      </span>
+      <input id="loanAmount" min="0.01" step="0.01" type="number" value="10000"/>
+     </label>
+     <button id="borrowButton">
+      대출 받기
+     </button>
+     <button class="sell-button" id="repayButton">
+      대출 상환
+     </button>
+     <button class="sell-button" id="repayAllButton">
+      전액 상환
+     </button>
+    </div>
+   </section>
+   <div class="layout">
+    <div>
+     <section>
+      <h2 id="marketTitle">
+       기업 시장
+      </h2>
+      <div class="filters">
+       <input id="search" placeholder="티커 또는 기업명 검색" type="search"/>
+       <select id="theme">
+        <option value="all">
+         모든 업종
+        </option>
+       </select>
+      </div>
+      <div class="table-wrap">
+       <table>
+        <thead>
+         <tr>
+          <th id="companyCol">
+           기업
+          </th>
+          <th id="priceCol">
+           주가
+          </th>
+          <th id="dailyCol">
+           일간
+          </th>
+          <th id="totalCol">
+           누적
+          </th>
+         </tr>
+        </thead>
+        <tbody id="companies">
+        </tbody>
+       </table>
+      </div>
+      <p class="muted" id="companyCount">
+      </p>
+     </section>
+     <section>
+      <h2 id="leaderboardTitle">
+       순위표
+      </h2>
+      <p class="muted" id="leaderboardHelp">
+       순자산 기준 순위입니다.
+      </p>
+      <div id="leaderboard">
+      </div>
+     </section>
+    </div>
+    <div>
+     <section id="details">
+      <h2 id="detailsTitle">
+       기업 상세 정보
+      </h2>
+      <p class="muted" id="selectCompanyHelp">
+       시장에서 기업을 선택하세요.
+      </p>
+     </section>
+     <section>
+      <h2 id="portfolioTitle">
+       내 포트폴리오
+      </h2>
+      <div id="portfolio">
+      </div>
+     </section>
+    </div>
+   </div>
+   <section id="newsSection">
+    <div class="news-heading">
+     <h2 id="newsTitle">
+      시장 뉴스 · 투자 단서
+     </h2>
+     <span class="muted" id="newsCount">
+      뉴스 0건
+     </span>
+    </div>
+    <p class="muted" id="newsHelp">
+     뉴스 헤드라인, 기사와 투자 단서를 표시합니다.
+    </p>
+    <div id="news">
+    </div>
+   </section>
+   <footer id="footerText">
+    가상 시뮬레이션 전용. 실제 증권, 기업 또는 금융시장 데이터와 연결되어 있지 않습니다.
+   </footer>
+  </main>
+  <script>
 'use strict';
 (() => {
- const KEY='marketSimPagesV1', TOTAL_DAYS=7560, START_CASH=100000, FEE=.001, QUARTER_DAYS=63, MAX_LOAN=500000, DAILY_LOAN_RATE=Math.pow(1.08,1/252)-1, HISTORY_LIMIT=253;
- const THEMES=[['ai','반도체·AI','Semiconductor & AI'],['software','소프트웨어·클라우드','Software & Cloud'],['ev','전기차·배터리','EV & Batteries'],['health','바이오·헬스케어','Biotech & Healthcare'],['energy','에너지·전력','Energy & Power'],['robotics','로봇·자동화','Robotics & Automation'],['finance','금융 서비스','Financial Services'],['consumer','소비재·유통','Consumer & Retail'],['industrial','산업·항공우주','Industrial & Aerospace'],['telecom','통신·인프라','Telecom & Infrastructure']];
- const THEME_INFO={
- ai:{ko:['칩 설계, 반도체 제조, AI 연산, 데이터센터 하드웨어를 다루는 산업입니다.','AI 투자, 반도체 수요, 생산능력, 기술 경쟁력','반도체 경기 순환, 높은 설비투자, 기술 변화, 고객 집중'],en:['Industry covering chip design, semiconductor manufacturing, AI compute and data-center hardware.','AI investment, chip demand, capacity, technical competitiveness','Semiconductor cycles, capital expenditure, technology shifts, customer concentration']},
- software:{ko:['기업용 소프트웨어, 클라우드 서비스, 구독형 플랫폼을 제공합니다.','구독 매출, 고객 유지율, 클라우드 전환, 반복 매출','경쟁 심화, 고객 이탈, 높은 밸류에이션, 보안 문제'],en:['Enterprise software, cloud services and subscription platforms.','Subscription revenue, retention, cloud migration, recurring revenue','Competition, churn, valuation, security issues']},
- ev:{ko:['전기차, 배터리, 충전 기술과 전동화 공급망에 집중합니다.','전기차 보급, 배터리 원가, 생산 효율, 충전 인프라','가격 경쟁, 원자재 가격, 보조금 변화, 과잉 생산'],en:['Electric vehicles, batteries, charging technology and electrification supply chains.','EV adoption, battery costs, production efficiency, charging infrastructure','Price competition, commodity prices, subsidies, overcapacity']},
- health:{ko:['바이오 기술, 의료기기, 치료제 개발 및 의료 서비스를 다룹니다.','임상 성과, 신제품, 특허, 의료 수요','임상 실패, 규제, 특허 만료, 연구개발 비용'],en:['Biotechnology, medical devices, therapeutics and healthcare services.','Clinical results, new products, patents, healthcare demand','Clinical failures, regulation, patent expiry, R&D costs']},
- energy:{ko:['전력, 에너지 생산, 발전 설비와 에너지 공급망을 다룹니다.','에너지 수요, 전력 가격, 발전 효율, 인프라 투자','원자재 가격 변동, 규제, 대규모 투자, 경기 민감성'],en:['Power, energy production, generation equipment and energy supply chains.','Energy demand, power prices, generation efficiency, infrastructure investment','Commodity volatility, regulation, capital intensity, cyclicality']},
- robotics:{ko:['산업용 로봇, 자동화 장비, 센서 및 생산 공정 기술을 개발합니다.','자동화 수요, 인건비, 생산성 개선, 공장 투자','설비투자 위축, 기술 경쟁, 프로젝트 지연'],en:['Industrial robots, automation equipment, sensors and production technology.','Automation demand, labor costs, productivity, factory investment','Weak capex, technology competition, project delays']},
- finance:{ko:['대출, 결제, 자산관리와 금융 플랫폼 서비스를 제공합니다.','대출 수요, 결제량, 자산 증가, 금리 환경','신용 손실, 규제, 유동성 문제, 금리 변동'],en:['Lending, payments, asset management and financial platforms.','Loan demand, payment volume, asset growth, interest rates','Credit losses, regulation, liquidity, rate volatility']},
- consumer:{ko:['소비재, 유통, 전자상거래와 일상 소비 서비스를 제공합니다.','소비 지출, 브랜드 경쟁력, 유통 효율, 고객 충성도','소비 둔화, 재고 부담, 경쟁 심화, 원가 상승'],en:['Consumer goods, retail, e-commerce and everyday consumer services.','Consumer spending, brand strength, distribution efficiency, loyalty','Slower spending, inventory pressure, competition, rising costs']},
- industrial:{ko:['산업 장비, 항공우주, 부품 및 대형 인프라 시스템을 공급합니다.','수주 잔고, 산업 투자, 생산성, 정부 및 기업 지출','경기 침체, 공급망 차질, 프로젝트 지연, 원가 상승'],en:['Industrial equipment, aerospace, components and large infrastructure systems.','Order backlog, industrial investment, productivity, public and corporate spending','Recession, supply disruption, project delays, rising costs']},
- telecom:{ko:['통신 장비, 네트워크 인프라와 데이터 연결 서비스를 다룹니다.','데이터 트래픽, 네트워크 투자, 연결 기기 증가','대규모 설비투자, 가격 경쟁, 규제, 부채 부담'],en:['Telecom equipment, network infrastructure and data connectivity services.','Data traffic, network investment, connected devices','Capital intensity, price competition, regulation, debt']}
- };
- const NEWS=[
- {ko:'분기 매출이 시장 예상치를 웃돌았습니다.',en:'Quarterly revenue exceeded market expectations.',move:.035,type:'positive'}, {ko:'분기 매출이 시장 예상치를 밑돌았습니다.',en:'Quarterly revenue fell short of expectations.',move:-.04,type:'negative'}, {ko:'새로운 제품 출시를 발표했습니다.',en:'The company announced a new product launch.',move:.022,type:'positive'}, {ko:'주요 고객과 대규모 계약을 체결했습니다.',en:'The company signed a major contract with a key customer.',move:.05,type:'positive'}, {ko:'주요 고객과의 계약을 잃었습니다.',en:'The company lost a contract with a major customer.',move:-.055,type:'negative'}, {ko:'연구개발 예산을 확대했습니다.',en:'The company expanded its research and development budget.',move:.008,type:'positive'}, {ko:'생산 일정이 지연되고 있습니다.',en:'Production schedules are being delayed.',move:-.025,type:'negative'}, {ko:'새로운 시장으로 사업을 확장합니다.',en:'The company is expanding into a new market.',move:.025,type:'positive'}, {ko:'업계 수요 전망이 하향 조정됐습니다.',en:'Industry demand forecasts were revised downward.',move:-.02,type:'negative'}, {ko:'현금흐름이 예상보다 개선됐습니다.',en:'Cash flow improved more than expected.',move:.02,type:'positive'}, {ko:'제품 품질 관련 문제가 발견됐습니다.',en:'A product quality issue was discovered.',move:-.04,type:'negative'}, {ko:'신규 기술이 검증 단계에 진입했습니다.',en:'A new technology entered the validation stage.',move:.015,type:'positive'}, {ko:'경쟁사의 신제품이 시장에 출시됐습니다.',en:'A competitor launched a new product.',move:-.018,type:'negative'}, {ko:'업계 전반의 투자 심리가 개선됐습니다.',en:'Investment sentiment improved across the industry.',move:.012,type:'positive'}, {ko:'운영비 증가로 수익성 압박이 커졌습니다.',en:'Rising operating costs put pressure on profitability.',move:-.028,type:'negative'}, {ko:'장기 공급 계약을 확보했습니다.',en:'The company secured a long-term supply agreement.',move:.032,type:'positive'}, {ko:'신규 사업의 상용화가 예상보다 늦어지고 있습니다.',en:'Commercialization of a new business is taking longer than expected.',move:-.03,type:'negative'}, {ko:'생산 효율이 개선되고 있습니다.',en:'Production efficiency is improving.',move:.018,type:'positive'}];
- const NAMES=['Aster','Bluepeak','Cinder','Dovetail','Everline','Foxbridge','Glimmer','Harbor','Ionworks','Juniper','Keystone','Lattice','Mosaic','Northstar','Orbit','Pioneer','Quartz','Redwood','Silverpath','Tandem'], SUFFIXES=['Systems','Technologies','Labs','Industries','Group'];
- const $=id=>document.getElementById(id), random=(a,b)=>a+Math.random()*(b-a), pick=a=>a[Math.floor(Math.random()*a.length)], clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
- let lang='ko'; try { const savedLanguage=localStorage.getItem('marketSimLanguageV1'); if(savedLanguage==='ko'||savedLanguage==='en')lang=savedLanguage; } catch {}
- const TXT={ko:{subtitle:'가상 기업 100개 · 재무 분석 · 시장 뉴스 · 장기 투자',notice:'안내:',noticeText:'이 버전은 데이터를 브라우저에 저장합니다. 방문자 간 시장이나 플레이어 데이터가 실시간으로 공유되지 않습니다. 모든 기업과 주가는 가상입니다.',player:'플레이어:',headline:'최신 시장 헤드라인',day:'시뮬레이션 일수',netWorth:'순자산',cash:'현금 잔액',fee:'거래 수수료: 0.1%',active:'활성 기업',trades:'거래',time:'시간 조절',next:'다음 날 ▶',custom:'직접 입력',advance:'진행',autoStart:'자동 진행 시작',autoStop:'자동 진행 중지',save:'게임 저장',normalReset:'노말 리셋',hardReset:'하드 리셋',timeHelp:'건너뛴 날에도 주가 변동, 기업 뉴스, 재무 업데이트와 봇 거래가 처리됩니다. 시간은 가상 거래일 기준입니다.',resetHelp:'노말 리셋은 날짜만 0일로 되돌립니다. 하드 리셋은 자산·기업·뉴스·시간을 모두 초기화합니다.',loan:'대출 · 레버리지 (가상 자금 전용)',loanBalance:'대출 잔액',interest:'누적 이자',credit:'추가 대출 가능액',loanHelp:'연 8% 이자가 거래일마다 복리로 적용됩니다. 대출금은 가상 현금으로 지급되며, 상환 시 현금에서 차감됩니다. 대출 한도 $500,000.',amount:'금액 ($)',borrow:'대출 받기',repay:'대출 상환',repayAll:'전액 상환',market:'기업 시장',search:'티커 또는 기업명 검색',allSectors:'모든 업종',company:'기업',price:'주가',daily:'일간',total:'누적',leaderboard:'순위표',leaderHelp:'순자산 기준 순위입니다.',details:'기업 상세 정보',selectCompany:'시장에서 기업을 선택하세요.',portfolio:'내 포트폴리오',news:'시장 뉴스 · 투자 단서',newsHelp:'뉴스 헤드라인, 기사와 투자 단서를 표시합니다.',footer:'가상 시뮬레이션 전용. 실제 증권, 기업 또는 금융시장 데이터와 연결되어 있지 않습니다.',valuation:'밸류에이션',financial:'재무 건전성',position:'보유 현황 및 운영',shares:'보유 주식 수',positionValue:'보유 평가액',quality:'기업 품질',research:'연구 진행도',health:'재무 건전성 지수',volatility:'일간 변동성 설정값',mood:'업종 심리',quantity:'수량',buy:'주식 매수',sell:'주식 매도',quickBuy:'빠른 매수 · 현금 배분',usesCash:'거래 수수료 0.1%를 포함해 가용 현금을 사용합니다.',quickSell:'빠른 매도 · 보유 주식',sellDesc:'현재 보유 주식의 일부를 매도합니다.',allIn:'전액 매수',sellAll:'전량 매도',feeExplain:'거래당 수수료 0.1%. 주문은 정수 주식 단위입니다. PER은 EPS가 양수가 아닐 때 N/A입니다.',themeBrief:'업종 개요',drivers:'주요 동인',risks:'주요 위험',related:'관련 기업',relatedHelp:'같은 업종의 다른 가상 기업입니다.',chart:'가상 주가 기록',returnsTitle:'기간별 수익률',days10:'10거래일',days50:'50거래일',days100:'100거래일',days200:'200거래일',days252:'1년 (252일)',notEnough:'데이터 부족',noHoldings:'보유 주식이 없습니다. 기업을 선택해 주식을 매수하세요.',noNews:'아직 뉴스가 없습니다. 다음 거래일로 진행하세요.',newsClue:'투자 단서',positive:'긍정적 뉴스',negative:'부정적 뉴스',neutral:'시장 소식',openDay:'개장일',year:'년 차',tradingDay:'거래일',you:'(나)',delisted:'상장폐지',activeStatus:'거래 가능',per:'PER',pbr:'PBR',psr:'PSR',eps:'EPS',book:'주당 장부가',revenueShare:'주당 매출',roe:'ROE',roa:'ROA',opMargin:'영업이익률',netMargin:'순이익률',revGrowth:'매출 성장률 (연간 추정)',earnGrowth:'이익 성장률 (연간 추정)',debt:'부채비율 (가상)',moodPositive:'긍정',moodNegative:'부정',moodNeutral:'중립',totalReturn:'누적 수익률',noMatch:'일치하는 기업이 없습니다.',companies:'개 기업',newsItems:'개 뉴스',playerDefault:'플레이어',notStarted:'1년 차 · 시작 전',complete:'30년 시뮬레이션 완료',borrowSuccess:'대출을 실행했습니다.',repaySuccess:'대출을 상환했습니다.',normalConfirm:'게임 날짜만 0일로 초기화할까요? 현금, 보유 주식, 대출, 기업 주가와 뉴스 기록은 유지됩니다.',hardConfirm:'정말 하드 리셋할까요? 플레이어 자산, 대출, 기업 주가, 뉴스, 봇과 날짜가 모두 초기화됩니다.',saveSuccess:'이 브라우저에 게임을 저장했습니다.',resetDone:'게임을 초기화했습니다.',borrowInvalid:'0보다 큰 대출 금액을 입력하세요.',creditExceeded:'대출 한도를 초과했습니다.',cashRepay:'상환할 현금이 부족합니다.',noDebt:'상환할 대출 잔액이 없습니다.',loanAmountInvalid:'올바른 금액을 입력하세요.',completeAlert:'30년 시뮬레이션이 완료되었습니다.',daysInvalid:'0보다 큰 정수를 입력하세요.',saveError:'저장할 수 없습니다. 브라우저 저장 공간 설정을 확인하세요.',nicknamePrompt:'닉네임을 입력하세요.',nicknameLength:'닉네임은 20자 이하여야 합니다.',stockUnavailable:'이 주식은 거래할 수 없습니다.',quantityInvalid:'주식 수량이 올바르지 않습니다.',insufficient:'거래 수수료를 포함한 현금이 부족합니다.',notEnoughShares:'보유 주식 수가 부족합니다.',buyOne:'이 비율로는 주식 1주도 살 수 없습니다.',noShares:'이 기업의 주식을 보유하고 있지 않습니다.',gameSaved:'게임 저장 완료',gameReset:'게임 초기화 완료',dayInput:'1부터 7560 사이의 정수를 입력하세요.'},en:{subtitle:'100 Fictional Companies · Financial Analysis · Market News · Long-Term Investing',notice:'Notice:',noticeText:'This version stores data in your browser. Visitors do not share the same market or player data in real time. All companies and prices are fictional.',player:'Player:',headline:'Latest Market Headline',day:'SIMULATION DAY',netWorth:'NET WORTH',cash:'CASH BALANCE',fee:'Trading fee: 0.1%',active:'ACTIVE COMPANIES',trades:'Trades',time:'Time Controls',next:'Next Day ▶',custom:'Custom days',advance:'Advance',autoStart:'Start Auto Advance',autoStop:'Stop Auto Advance',save:'Save Game',normalReset:'Normal Reset',hardReset:'Hard Reset',timeHelp:'Every skipped day still processes price changes, company news, financial updates, and bot trades. Time controls count simulated trading days.',resetHelp:'Normal Reset sets only the day counter to zero. Hard Reset resets assets, companies, news and time.',loan:'Loan · Leverage (Virtual Funds Only)',loanBalance:'Loan Balance',interest:'Accrued Interest',credit:'Available Credit',loanHelp:'Interest accrues at 8% annualized, compounded each simulated trading day. Loan proceeds are virtual cash; repayments deduct cash. Maximum loan: $500,000.',amount:'Amount ($)',borrow:'Borrow',repay:'Repay Loan',repayAll:'Repay All',market:'Company Market',search:'Search ticker or company',allSectors:'All Sectors',company:'Company',price:'Price',daily:'Daily',total:'Total',leaderboard:'Leaderboard',leaderHelp:'Ranked by net worth.',details:'Company Details',selectCompany:'Select a company from the market.',portfolio:'My Portfolio',news:'Market News & Investment Clues',newsHelp:'News headlines, articles and investment clues.',footer:'Fictional simulation only. Not connected to real securities, companies, or financial market data.',valuation:'Valuation',financial:'Financial Health',position:'Position & Operations',shares:'Shares Owned',positionValue:'Position Value',quality:'Company Quality',research:'Research Progress',health:'Financial Health Index',volatility:'Daily Volatility Parameter',mood:'Market Theme Mood',quantity:'Quantity',buy:'Buy Shares',sell:'Sell Shares',quickBuy:'Quick Buy · Cash Allocation',usesCash:'Uses available cash, including the 0.1% fee.',quickSell:'Quick Sell · Shares Held',sellDesc:'Sells a percentage of your current shares.',allIn:'All-in',sellAll:'Sell All',feeExplain:'Trading fee: 0.1% per transaction. Orders use whole shares. PER is N/A when EPS is not positive.',themeBrief:'Theme & Industry Briefing',drivers:'Key drivers',risks:'Main risks',related:'Related Companies',relatedHelp:'Other fictional companies in the same sector.',chart:'Virtual Price History',returnsTitle:'Returns by Period',days10:'10 trading days',days50:'50 trading days',days100:'100 trading days',days200:'200 trading days',days252:'1 year (252 days)',notEnough:'Not enough data',noHoldings:'No holdings yet. Select a company and buy shares.',noNews:'No news yet. Advance to the next trading day.',newsClue:'Investment clue',positive:'Positive news',negative:'Negative news',neutral:'Market update',openDay:'Opening day',year:'Year',tradingDay:'Trading day',you:'(You)',delisted:'Delisted',activeStatus:'Active',per:'PER',pbr:'PBR',psr:'PSR',eps:'EPS',book:'Book Value / Share',revenueShare:'Revenue / Share',roe:'ROE',roa:'ROA',opMargin:'Operating Margin',netMargin:'Net Margin',revGrowth:'Revenue Growth (Annual Estimate)',earnGrowth:'Earnings Growth (Annual Estimate)',debt:'Debt Ratio (Simulated)',moodPositive:'Positive',moodNegative:'Negative',moodNeutral:'Neutral',totalReturn:'Total Return',noMatch:'No matching companies.',companies:'companies',newsItems:'recent items',playerDefault:'Player',notStarted:'Year 1 · Not started',complete:'30-year simulation complete',borrowSuccess:'Loan issued.',repaySuccess:'Loan repayment completed.',normalConfirm:'Reset only the game day counter to zero? Cash, holdings, loan, company prices and news history will be preserved.',hardConfirm:'Perform a full hard reset? Player assets, loan, company prices, news, bots and time will all reset.',saveSuccess:'Game saved in this browser.',resetDone:'Game reset.',borrowInvalid:'Enter a loan amount greater than zero.',creditExceeded:'That amount exceeds your credit limit.',cashRepay:'Not enough cash to repay that amount.',noDebt:'There is no outstanding loan to repay.',loanAmountInvalid:'Enter a valid amount.',completeAlert:'The 30-year simulation is complete.',daysInvalid:'Enter a whole number of days greater than zero.',saveError:'Could not save the game. Check your browser storage settings.',nicknamePrompt:'Please enter a nickname.',nicknameLength:'Nickname must be 20 characters or fewer.',stockUnavailable:'This stock is not available for trading.',quantityInvalid:'Invalid share quantity.',insufficient:'Insufficient cash, including the trading fee.',notEnoughShares:'You do not own enough shares.',buyOne:'Not enough cash to buy even one share at this percentage.',noShares:'You do not own any shares of this company.',gameSaved:'Game saved',gameReset:'Game reset',dayInput:'Enter a whole number between 1 and 7560.'}};
- const t=k=>TXT[lang][k]||TXT.en[k]||k;
- const money=n=>new Intl.NumberFormat(lang==='ko'?'en-US':'en-US',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2}).format(Number.isFinite(n)?n:0);
- const pct=n=>`${n>=0?'+':''}${(Number.isFinite(n)?n*100:0).toFixed(2)}%`;
- const number=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(Number.isFinite(n)?n:0);
- const multiple=n=>Number.isFinite(n)&&n>0?`${n.toFixed(2)}x`:'N/A';
- const perShare=n=>Number.isFinite(n)?money(n):'N/A';
- function esc(v){return String(v).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+    const KEY='marketSimPagesV1', TOTAL_DAYS=7560, START_CASH=100000, FEE=.001, QUARTER_DAYS=63, MAX_LOAN=500000, DAILY_LOAN_RATE=Math.pow(1.08, 1/252)-1, HISTORY_LIMIT=253; const THEMES=[['ai', '반도체·AI', 'Semiconductor & AI'], ['software', '소프트웨어·클라우드', 'Software & Cloud'], ['ev', '전기차·배터리', 'EV & Batteries'], ['health', '바이오·헬스케어', 'Biotech & Healthcare'], ['energy', '에너지·전력', 'Energy & Power'], ['robotics', '로봇·자동화', 'Robotics & Automation'], ['finance', '금융 서비스', 'Financial Services'], ['consumer', '소비재·유통', 'Consumer & Retail'], ['industrial', '산업·항공우주', 'Industrial & Aerospace'], ['telecom', '통신·인프라', 'Telecom & Infrastructure']]; const THEME_INFO= {
+        ai: {
+            ko:['칩 설계, 반도체 제조, AI 연산, 데이터센터 하드웨어를 다루는 산업입니다.', 'AI 투자, 반도체 수요, 생산능력, 기술 경쟁력', '반도체 경기 순환, 높은 설비투자, 기술 변화, 고객 집중'], en:['Industry covering chip design, semiconductor manufacturing, AI compute and data-center hardware.', 'AI investment, chip demand, capacity, technical competitiveness', 'Semiconductor cycles, capital expenditure, technology shifts, customer concentration']
+        }, software: {
+            ko:['기업용 소프트웨어, 클라우드 서비스, 구독형 플랫폼을 제공합니다.', '구독 매출, 고객 유지율, 클라우드 전환, 반복 매출', '경쟁 심화, 고객 이탈, 높은 밸류에이션, 보안 문제'], en:['Enterprise software, cloud services and subscription platforms.', 'Subscription revenue, retention, cloud migration, recurring revenue', 'Competition, churn, valuation, security issues']
+        }, ev: {
+            ko:['전기차, 배터리, 충전 기술과 전동화 공급망에 집중합니다.', '전기차 보급, 배터리 원가, 생산 효율, 충전 인프라', '가격 경쟁, 원자재 가격, 보조금 변화, 과잉 생산'], en:['Electric vehicles, batteries, charging technology and electrification supply chains.', 'EV adoption, battery costs, production efficiency, charging infrastructure', 'Price competition, commodity prices, subsidies, overcapacity']
+        }, health: {
+            ko:['바이오 기술, 의료기기, 치료제 개발 및 의료 서비스를 다룹니다.', '임상 성과, 신제품, 특허, 의료 수요', '임상 실패, 규제, 특허 만료, 연구개발 비용'], en:['Biotechnology, medical devices, therapeutics and healthcare services.', 'Clinical results, new products, patents, healthcare demand', 'Clinical failures, regulation, patent expiry, R&D costs']
+        }, energy: {
+            ko:['전력, 에너지 생산, 발전 설비와 에너지 공급망을 다룹니다.', '에너지 수요, 전력 가격, 발전 효율, 인프라 투자', '원자재 가격 변동, 규제, 대규모 투자, 경기 민감성'], en:['Power, energy production, generation equipment and energy supply chains.', 'Energy demand, power prices, generation efficiency, infrastructure investment', 'Commodity volatility, regulation, capital intensity, cyclicality']
+        }, robotics: {
+            ko:['산업용 로봇, 자동화 장비, 센서 및 생산 공정 기술을 개발합니다.', '자동화 수요, 인건비, 생산성 개선, 공장 투자', '설비투자 위축, 기술 경쟁, 프로젝트 지연'], en:['Industrial robots, automation equipment, sensors and production technology.', 'Automation demand, labor costs, productivity, factory investment', 'Weak capex, technology competition, project delays']
+        }, finance: {
+            ko:['대출, 결제, 자산관리와 금융 플랫폼 서비스를 제공합니다.', '대출 수요, 결제량, 자산 증가, 금리 환경', '신용 손실, 규제, 유동성 문제, 금리 변동'], en:['Lending, payments, asset management and financial platforms.', 'Loan demand, payment volume, asset growth, interest rates', 'Credit losses, regulation, liquidity, rate volatility']
+        }, consumer: {
+            ko:['소비재, 유통, 전자상거래와 일상 소비 서비스를 제공합니다.', '소비 지출, 브랜드 경쟁력, 유통 효율, 고객 충성도', '소비 둔화, 재고 부담, 경쟁 심화, 원가 상승'], en:['Consumer goods, retail, e-commerce and everyday consumer services.', 'Consumer spending, brand strength, distribution efficiency, loyalty', 'Slower spending, inventory pressure, competition, rising costs']
+        }, industrial: {
+            ko:['산업 장비, 항공우주, 부품 및 대형 인프라 시스템을 공급합니다.', '수주 잔고, 산업 투자, 생산성, 정부 및 기업 지출', '경기 침체, 공급망 차질, 프로젝트 지연, 원가 상승'], en:['Industrial equipment, aerospace, components and large infrastructure systems.', 'Order backlog, industrial investment, productivity, public and corporate spending', 'Recession, supply disruption, project delays, rising costs']
+        }, telecom: {
+            ko:['통신 장비, 네트워크 인프라와 데이터 연결 서비스를 다룹니다.', '데이터 트래픽, 네트워크 투자, 연결 기기 증가', '대규모 설비투자, 가격 경쟁, 규제, 부채 부담'], en:['Telecom equipment, network infrastructure and data connectivity services.', 'Data traffic, network investment, connected devices', 'Capital intensity, price competition, regulation, debt']
+        }
+    }; const NEWS=[ {
+        ko:'분기 매출이 시장 예상치를 웃돌았습니다.', en:'Quarterly revenue exceeded market expectations.', move:.035, type:'positive'
+    }, {
+        ko:'분기 매출이 시장 예상치를 밑돌았습니다.', en:'Quarterly revenue fell short of expectations.', move:-.04, type:'negative'
+    }, {
+        ko:'새로운 제품 출시를 발표했습니다.', en:'The company announced a new product launch.', move:.022, type:'positive'
+    }, {
+        ko:'주요 고객과 대규모 계약을 체결했습니다.', en:'The company signed a major contract with a key customer.', move:.05, type:'positive'
+    }, {
+        ko:'주요 고객과의 계약을 잃었습니다.', en:'The company lost a contract with a major customer.', move:-.055, type:'negative'
+    }, {
+        ko:'연구개발 예산을 확대했습니다.', en:'The company expanded its research and development budget.', move:.008, type:'positive'
+    }, {
+        ko:'생산 일정이 지연되고 있습니다.', en:'Production schedules are being delayed.', move:-.025, type:'negative'
+    }, {
+        ko:'새로운 시장으로 사업을 확장합니다.', en:'The company is expanding into a new market.', move:.025, type:'positive'
+    }, {
+        ko:'업계 수요 전망이 하향 조정됐습니다.', en:'Industry demand forecasts were revised downward.', move:-.02, type:'negative'
+    }, {
+        ko:'현금흐름이 예상보다 개선됐습니다.', en:'Cash flow improved more than expected.', move:.02, type:'positive'
+    }, {
+        ko:'제품 품질 관련 문제가 발견됐습니다.', en:'A product quality issue was discovered.', move:-.04, type:'negative'
+    }, {
+        ko:'신규 기술이 검증 단계에 진입했습니다.', en:'A new technology entered the validation stage.', move:.015, type:'positive'
+    }, {
+        ko:'경쟁사의 신제품이 시장에 출시됐습니다.', en:'A competitor launched a new product.', move:-.018, type:'negative'
+    }, {
+        ko:'업계 전반의 투자 심리가 개선됐습니다.', en:'Investment sentiment improved across the industry.', move:.012, type:'positive'
+    }, {
+        ko:'운영비 증가로 수익성 압박이 커졌습니다.', en:'Rising operating costs put pressure on profitability.', move:-.028, type:'negative'
+    }, {
+        ko:'장기 공급 계약을 확보했습니다.', en:'The company secured a long-term supply agreement.', move:.032, type:'positive'
+    }, {
+        ko:'신규 사업의 상용화가 예상보다 늦어지고 있습니다.', en:'Commercialization of a new business is taking longer than expected.', move:-.03, type:'negative'
+    }, {
+        ko:'생산 효율이 개선되고 있습니다.', en:'Production efficiency is improving.', move:.018, type:'positive'
+    }]; const NAMES=['Aster', 'Bluepeak', 'Cinder', 'Dovetail', 'Everline', 'Foxbridge', 'Glimmer', 'Harbor', 'Ionworks', 'Juniper', 'Keystone', 'Lattice', 'Mosaic', 'Northstar', 'Orbit', 'Pioneer', 'Quartz', 'Redwood', 'Silverpath', 'Tandem'], SUFFIXES=['Systems', 'Technologies', 'Labs', 'Industries', 'Group']; const $=id=>document.getElementById(id), random=(a, b)=>a+Math.random()*(b-a), pick=a=>a[Math.floor(Math.random()*a.length)], clamp=(x, a, b)=>Math.max(a, Math.min(b, x)); let lang='ko'; try {
+        const savedLanguage=localStorage.getItem('marketSimLanguageV1'); if(savedLanguage==='ko'||savedLanguage==='en')lang=savedLanguage;
+    } catch {
+    }
+    const TXT= {
+        ko: {
+            subtitle:'가상 기업 100개 · 재무 분석 · 시장 뉴스 · 장기 투자', notice:'안내:', noticeText:'이 버전은 데이터를 브라우저에 저장합니다. 방문자 간 시장이나 플레이어 데이터가 실시간으로 공유되지 않습니다. 모든 기업과 주가는 가상입니다.', player:'플레이어:', headline:'최신 시장 헤드라인', day:'시뮬레이션 일수', netWorth:'순자산', cash:'현금 잔액', fee:'거래 수수료: 0.1%', active:'활성 기업', trades:'거래', time:'시간 조절', next:'다음 날 ▶', custom:'직접 입력', advance:'진행', autoStart:'자동 진행 시작', autoStop:'자동 진행 중지', save:'게임 저장', normalReset:'노말 리셋', hardReset:'하드 리셋', timeHelp:'건너뛴 날에도 주가 변동, 기업 뉴스, 재무 업데이트와 봇 거래가 처리됩니다. 시간은 가상 거래일 기준입니다.', resetHelp:'노말 리셋은 날짜만 0일로 되돌립니다. 하드 리셋은 자산·기업·뉴스·시간을 모두 초기화합니다.', loan:'대출 · 레버리지 (가상 자금 전용)', loanBalance:'대출 잔액', interest:'누적 이자', credit:'추가 대출 가능액', loanHelp:'연 8% 이자가 거래일마다 복리로 적용됩니다. 대출금은 가상 현금으로 지급되며, 상환 시 현금에서 차감됩니다. 대출 한도 $500,000.', amount:'금액 ($)', borrow:'대출 받기', repay:'대출 상환', repayAll:'전액 상환', market:'기업 시장', search:'티커 또는 기업명 검색', allSectors:'모든 업종', company:'기업', price:'주가', daily:'일간', total:'누적', leaderboard:'순위표', leaderHelp:'순자산 기준 순위입니다.', details:'기업 상세 정보', selectCompany:'시장에서 기업을 선택하세요.', portfolio:'내 포트폴리오', news:'시장 뉴스 · 투자 단서', newsHelp:'뉴스 헤드라인, 기사와 투자 단서를 표시합니다.', footer:'가상 시뮬레이션 전용. 실제 증권, 기업 또는 금융시장 데이터와 연결되어 있지 않습니다.', valuation:'밸류에이션', financial:'재무 건전성', position:'보유 현황 및 운영', shares:'보유 주식 수', positionValue:'보유 평가액', quality:'기업 품질', research:'연구 진행도', health:'재무 건전성 지수', volatility:'일간 변동성 설정값', mood:'업종 심리', quantity:'수량', buy:'주식 매수', sell:'주식 매도', quickBuy:'빠른 매수 · 현금 배분', usesCash:'거래 수수료 0.1%를 포함해 가용 현금을 사용합니다.', quickSell:'빠른 매도 · 보유 주식', sellDesc:'현재 보유 주식의 일부를 매도합니다.', allIn:'전액 매수', sellAll:'전량 매도', feeExplain:'거래당 수수료 0.1%. 주문은 정수 주식 단위입니다. PER은 EPS가 양수가 아닐 때 N/A입니다.', themeBrief:'업종 개요', drivers:'주요 동인', risks:'주요 위험', related:'관련 기업', relatedHelp:'같은 업종의 다른 가상 기업입니다.', chart:'가상 주가 기록', returnsTitle:'기간별 수익률', days10:'10거래일', days50:'50거래일', days100:'100거래일', days200:'200거래일', days252:'1년 (252일)', notEnough:'데이터 부족', noHoldings:'보유 주식이 없습니다. 기업을 선택해 주식을 매수하세요.', noNews:'아직 뉴스가 없습니다. 다음 거래일로 진행하세요.', newsClue:'투자 단서', positive:'긍정적 뉴스', negative:'부정적 뉴스', neutral:'시장 소식', openDay:'개장일', year:'년 차', tradingDay:'거래일', you:'(나)', delisted:'상장폐지', activeStatus:'거래 가능', per:'PER', pbr:'PBR', psr:'PSR', eps:'EPS', book:'주당 장부가', revenueShare:'주당 매출', roe:'ROE', roa:'ROA', opMargin:'영업이익률', netMargin:'순이익률', revGrowth:'매출 성장률 (연간 추정)', earnGrowth:'이익 성장률 (연간 추정)', debt:'부채비율 (가상)', moodPositive:'긍정', moodNegative:'부정', moodNeutral:'중립', totalReturn:'누적 수익률', noMatch:'일치하는 기업이 없습니다.', companies:'개 기업', newsItems:'개 뉴스', playerDefault:'플레이어', notStarted:'1년 차 · 시작 전', complete:'30년 시뮬레이션 완료', borrowSuccess:'대출을 실행했습니다.', repaySuccess:'대출을 상환했습니다.', normalConfirm:'게임 날짜만 0일로 초기화할까요? 현금, 보유 주식, 대출, 기업 주가와 뉴스 기록은 유지됩니다.', hardConfirm:'정말 하드 리셋할까요? 플레이어 자산, 대출, 기업 주가, 뉴스, 봇과 날짜가 모두 초기화됩니다.', saveSuccess:'이 브라우저에 게임을 저장했습니다.', resetDone:'게임을 초기화했습니다.', borrowInvalid:'0보다 큰 대출 금액을 입력하세요.', creditExceeded:'대출 한도를 초과했습니다.', cashRepay:'상환할 현금이 부족합니다.', noDebt:'상환할 대출 잔액이 없습니다.', loanAmountInvalid:'올바른 금액을 입력하세요.', completeAlert:'30년 시뮬레이션이 완료되었습니다.', daysInvalid:'0보다 큰 정수를 입력하세요.', saveError:'저장할 수 없습니다. 브라우저 저장 공간 설정을 확인하세요.', nicknamePrompt:'닉네임을 입력하세요.', nicknameLength:'닉네임은 20자 이하여야 합니다.', stockUnavailable:'이 주식은 거래할 수 없습니다.', quantityInvalid:'주식 수량이 올바르지 않습니다.', insufficient:'거래 수수료를 포함한 현금이 부족합니다.', notEnoughShares:'보유 주식 수가 부족합니다.', buyOne:'이 비율로는 주식 1주도 살 수 없습니다.', noShares:'이 기업의 주식을 보유하고 있지 않습니다.', gameSaved:'게임 저장 완료', gameReset:'게임 초기화 완료', dayInput:'1부터 7560 사이의 정수를 입력하세요.'
+        }, en: {
+            subtitle:'100 Fictional Companies · Financial Analysis · Market News · Long-Term Investing', notice:'Notice:', noticeText:'This version stores data in your browser. Visitors do not share the same market or player data in real time. All companies and prices are fictional.', player:'Player:', headline:'Latest Market Headline', day:'SIMULATION DAY', netWorth:'NET WORTH', cash:'CASH BALANCE', fee:'Trading fee: 0.1%', active:'ACTIVE COMPANIES', trades:'Trades', time:'Time Controls', next:'Next Day ▶', custom:'Custom days', advance:'Advance', autoStart:'Start Auto Advance', autoStop:'Stop Auto Advance', save:'Save Game', normalReset:'Normal Reset', hardReset:'Hard Reset', timeHelp:'Every skipped day still processes price changes, company news, financial updates, and bot trades. Time controls count simulated trading days.', resetHelp:'Normal Reset sets only the day counter to zero. Hard Reset resets assets, companies, news and time.', loan:'Loan · Leverage (Virtual Funds Only)', loanBalance:'Loan Balance', interest:'Accrued Interest', credit:'Available Credit', loanHelp:'Interest accrues at 8% annualized, compounded each simulated trading day. Loan proceeds are virtual cash; repayments deduct cash. Maximum loan: $500,000.', amount:'Amount ($)', borrow:'Borrow', repay:'Repay Loan', repayAll:'Repay All', market:'Company Market', search:'Search ticker or company', allSectors:'All Sectors', company:'Company', price:'Price', daily:'Daily', total:'Total', leaderboard:'Leaderboard', leaderHelp:'Ranked by net worth.', details:'Company Details', selectCompany:'Select a company from the market.', portfolio:'My Portfolio', news:'Market News & Investment Clues', newsHelp:'News headlines, articles and investment clues.', footer:'Fictional simulation only. Not connected to real securities, companies, or financial market data.', valuation:'Valuation', financial:'Financial Health', position:'Position & Operations', shares:'Shares Owned', positionValue:'Position Value', quality:'Company Quality', research:'Research Progress', health:'Financial Health Index', volatility:'Daily Volatility Parameter', mood:'Market Theme Mood', quantity:'Quantity', buy:'Buy Shares', sell:'Sell Shares', quickBuy:'Quick Buy · Cash Allocation', usesCash:'Uses available cash, including the 0.1% fee.', quickSell:'Quick Sell · Shares Held', sellDesc:'Sells a percentage of your current shares.', allIn:'All-in', sellAll:'Sell All', feeExplain:'Trading fee: 0.1% per transaction. Orders use whole shares. PER is N/A when EPS is not positive.', themeBrief:'Theme & Industry Briefing', drivers:'Key drivers', risks:'Main risks', related:'Related Companies', relatedHelp:'Other fictional companies in the same sector.', chart:'Virtual Price History', returnsTitle:'Returns by Period', days10:'10 trading days', days50:'50 trading days', days100:'100 trading days', days200:'200 trading days', days252:'1 year (252 days)', notEnough:'Not enough data', noHoldings:'No holdings yet. Select a company and buy shares.', noNews:'No news yet. Advance to the next trading day.', newsClue:'Investment clue', positive:'Positive news', negative:'Negative news', neutral:'Market update', openDay:'Opening day', year:'Year', tradingDay:'Trading day', you:'(You)', delisted:'Delisted', activeStatus:'Active', per:'PER', pbr:'PBR', psr:'PSR', eps:'EPS', book:'Book Value / Share', revenueShare:'Revenue / Share', roe:'ROE', roa:'ROA', opMargin:'Operating Margin', netMargin:'Net Margin', revGrowth:'Revenue Growth (Annual Estimate)', earnGrowth:'Earnings Growth (Annual Estimate)', debt:'Debt Ratio (Simulated)', moodPositive:'Positive', moodNegative:'Negative', moodNeutral:'Neutral', totalReturn:'Total Return', noMatch:'No matching companies.', companies:'companies', newsItems:'recent items', playerDefault:'Player', notStarted:'Year 1 · Not started', complete:'30-year simulation complete', borrowSuccess:'Loan issued.', repaySuccess:'Loan repayment completed.', normalConfirm:'Reset only the game day counter to zero? Cash, holdings, loan, company prices and news history will be preserved.', hardConfirm:'Perform a full hard reset? Player assets, loan, company prices, news, bots and time will all reset.', saveSuccess:'Game saved in this browser.', resetDone:'Game reset.', borrowInvalid:'Enter a loan amount greater than zero.', creditExceeded:'That amount exceeds your credit limit.', cashRepay:'Not enough cash to repay that amount.', noDebt:'There is no outstanding loan to repay.', loanAmountInvalid:'Enter a valid amount.', completeAlert:'The 30-year simulation is complete.', daysInvalid:'Enter a whole number of days greater than zero.', saveError:'Could not save the game. Check your browser storage settings.', nicknamePrompt:'Please enter a nickname.', nicknameLength:'Nickname must be 20 characters or fewer.', stockUnavailable:'This stock is not available for trading.', quantityInvalid:'Invalid share quantity.', insufficient:'Insufficient cash, including the trading fee.', notEnoughShares:'You do not own enough shares.', buyOne:'Not enough cash to buy even one share at this percentage.', noShares:'You do not own any shares of this company.', gameSaved:'Game saved', gameReset:'Game reset', dayInput:'Enter a whole number between 1 and 7560.'
+        }
+    }; const t=k=>TXT[lang][k]||TXT.en[k]||k; const money=n=>new Intl.NumberFormat(lang==='ko'?'en-US':'en-US', {
+        style:'currency', currency:'USD', minimumFractionDigits:2, maximumFractionDigits:2
+    }).format(Number.isFinite(n)?n:0); const pct=n=>`${n>=0?'+':''}${(Number.isFinite(n)?n*100:0).toFixed(2)}%`; const number=n=>new Intl.NumberFormat('en-US', {
+        maximumFractionDigits:2
+    }).format(Number.isFinite(n)?n:0); const multiple=n=>Number.isFinite(n)&&n>0?`${n.toFixed(2)}x`:'N/A'; const perShare=n=>Number.isFinite(n)?money(n):'N/A'; function esc(v) {
+        return String(v).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
  function tickerFor(n){let r='';n++;while(n>0){n--;r=String.fromCharCode(65+n%26)+r;n=Math.floor(n/26);}return r;}
  function createFundamentals(c){const q=c.quality,pe=random(12,38),psr=random(1.5,9),pbr=random(1.2,5.5),profitable=q>.35||Math.random()<.65;c.eps=profitable?c.price/pe:-c.price/random(15,45);c.revenuePerShare=Math.max(.1,c.price/psr);c.bookValuePerShare=Math.max(.1,c.price/pbr);c.roe=clamp(random(-.03,.20)+(q-.5)*.20,-.30,.45);c.roa=clamp(c.roe*random(.30,.75),-.20,.30);c.operatingMargin=clamp(random(-.05,.22)+(q-.5)*.20,-.40,.50);c.netMargin=clamp(c.operatingMargin-random(.01,.09),-.45,.40);c.debtRatio=random(20,180)*(1.15-q*.4);c.revenueGrowth=clamp(random(-.12,.28)+(q-.5)*.16,-.60,1);c.earningsGrowth=clamp(random(-.35,.45)+(q-.5)*.30,-1.5,2);}
  function normalizeCompany(c){if(!Number.isFinite(c.previousClose))c.previousClose=c.price;if(!Number.isFinite(c.initialPrice)||c.initialPrice<=0)c.initialPrice=Math.max(.5,c.price);if(!Array.isArray(c.history)||!c.history.length)c.history=[c.price];c.history=c.history.filter(Number.isFinite).slice(-HISTORY_LIMIT);if(!c.history.length)c.history=[c.price];if(c.history[c.history.length-1]!==c.price)c.history[c.history.length-1]=c.price;if(!Number.isFinite(c.growth))c.growth=random(-.015,.035);if(!Number.isFinite(c.volatility))c.volatility=random(.012,.035);if(!Number.isFinite(c.quality))c.quality=random(.25,.85);if(!Number.isFinite(c.research))c.research=random(.1,.55);if(!Number.isFinite(c.cashHealth))c.cashHealth=random(.35,.95);if(typeof c.delisted!=='boolean')c.delisted=false;for(const k of ['eps','revenuePerShare','bookValuePerShare','roe','roa','operatingMargin','netMargin','debtRatio','revenueGrowth','earningsGrowth'])if(!Number.isFinite(c[k])){createFundamentals(c);break;}}
@@ -69,27 +1046,66 @@
  function sellFraction(f){const c=getCompany(selected);if(!c||c.delisted){alert(t('stockUnavailable'));return;}const held=state.player.holdings[c.ticker]||0;if(held<1){alert(t('noShares'));return;}trade('sell',f>=1?held:Math.min(held,Math.max(1,Math.floor(held*f))));}
  function borrow(){const amount=Number($('loanAmount').value),p=state.player;if(!Number.isFinite(amount)||amount<=0){alert(t('borrowInvalid'));return;}if(p.loanBalance+amount>MAX_LOAN+1e-8){alert(t('creditExceeded'));return;}p.cash+=amount;p.loanBalance+=amount;save();render();alert(t('borrowSuccess'));}
  function repay(amount){const p=state.player;if(p.loanBalance<=0){alert(t('noDebt'));return;}if(!Number.isFinite(amount)||amount<=0){alert(t('loanAmountInvalid'));return;}const pay=Math.min(amount,p.loanBalance);if(p.cash+1e-8<pay){alert(t('cashRepay'));return;}p.cash-=pay;p.loanBalance-=pay;if(p.loanBalance<.005)p.loanBalance=0;save();render();alert(t('repaySuccess'));}
- function renderCompanies(){const q=$('search').value.trim().toLowerCase(),theme=$('theme').value,list=state.companies.filter(c=>(theme==='all'||c.themeId===theme)&&(!q||c.ticker.toLowerCase().includes(q)||c.name.toLowerCase().includes(q)));$('companyCount').textContent=`${list.length} ${t('companies')}`;if(!list.length){$('companies').innerHTML=`<tr><td colspan="4">${t('noMatch')}</td></tr>`;return;}$('companies').innerHTML=list.map(c=>{const daily=c.previousClose>0?c.price/c.previousClose-1:0,total=c.initialPrice>0?c.price/c.initialPrice-1:0;return `<tr data-ticker="${esc(c.ticker)}" class="${selected===c.ticker?'selected-row':''}"><td><strong>${esc(c.ticker)}</strong><br><span class="company-name">${esc(c.name)}</span>${c.delisted?`<br><span class="negative">${t('delisted')}</span>`:''}</td><td>${money(c.price)}</td><td class="${daily>=0?'positive':'negative'}">${pct(daily)}</td><td class="${total>=0?'positive':'negative'}">${pct(total)}</td></tr>`;}).join('');}
+ function renderCompanies(){const q=$('search').value.trim().toLowerCase(),theme=$('theme').value,list=state.companies.filter(c=>(theme==='all'||c.themeId===theme)&&(!q||c.ticker.toLowerCase().includes(q)||c.name.toLowerCase().includes(q)));$('companyCount').textContent=`${list.length} ${t('companies')}`;if(!list.length){$('companies').innerHTML=`<tr><td colspan="4">${t('noMatch')}</td></tr>`;return;}$('companies').innerHTML=list.map(c=>{const daily=c.previousClose>0?c.price/c.previousClose-1:0,total=c.initialPrice>0?c.price/c.initialPrice-1:0;return `<tr data-ticker="$ {
+            esc(c.ticker)
+        }
+        " class="$ {
+            selected===c.ticker?'selected-row':''
+        }
+        "><td><strong>${esc(c.ticker)}</strong><br><span class="company-name">${esc(c.name)}</span>${c.delisted?`<br><span class="negative">${t('delisted')}</span>`:''}</td><td>${money(c.price)}</td><td class="$ {
+            daily>=0?'positive':'negative'
+        }
+        ">${pct(daily)}</td><td class="$ {
+            total>=0?'positive':'negative'
+        }
+        ">${pct(total)}</td></tr>`;}).join('');}
  function historicalReturn(c,period){const h=c.history;if(h.length<=period)return null;const past=h[h.length-1-period],now=h[h.length-1];if(!Number.isFinite(past)||past<=0||!Number.isFinite(now))return null;return now/past-1;}
  function drawChart(c){const canvas=$('priceChart');if(!canvas)return;const rect=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1,w=Math.max(320,Math.floor(rect.width||650)),h=Math.max(180,Math.floor(rect.height||260));canvas.width=Math.floor(w*dpr);canvas.height=Math.floor(h*dpr);const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);ctx.clearRect(0,0,w,h);const values=c.history.filter(Number.isFinite);if(!values.length)return;const pad={l:66,r:14,t:18,b:28},cw=w-pad.l-pad.r,ch=h-pad.t-pad.b;let min=Math.min(...values),max=Math.max(...values);if(min===max){min*=.95;max*=1.05;}const y=v=>pad.t+(max-v)/(max-min)*ch,x=i=>pad.l+(values.length<=1?0:i/(values.length-1))*cw;ctx.font='11px Arial';ctx.strokeStyle='#30415b';ctx.fillStyle='#9aabc2';ctx.lineWidth=1;for(let i=0;i<5;i++){const yy=pad.t+i*ch/4,v=max-i*(max-min)/4;ctx.beginPath();ctx.moveTo(pad.l,yy);ctx.lineTo(w-pad.r,yy);ctx.stroke();ctx.fillText(money(v),4,yy+4);}ctx.strokeStyle='#7bb7ff';ctx.lineWidth=2;ctx.beginPath();values.forEach((v,i)=>{if(i===0)ctx.moveTo(x(i),y(v));else ctx.lineTo(x(i),y(v));});ctx.stroke();ctx.fillStyle='#9aabc2';ctx.fillText(lang==='ko'?`최근 ${values.length}개 기록`:`Last ${values.length} observations`,pad.l,h-7);}
  function renderDetails(){const c=getCompany(selected);if(!c)return;const p=state.player,qty=p.holdings[c.ticker]||0,pos=qty*c.price,total=c.initialPrice>0?c.price/c.initialPrice-1:0,quality=c.quality>.72?(lang==='ko'?'강함':'Strong'):c.quality>.48?(lang==='ko'?'보통':'Average'):(lang==='ko'?'약함':'Weak'),pe=c.eps>0?c.price/c.eps:NaN,pb=c.bookValuePerShare>0?c.price/c.bookValuePerShare:NaN,ps=c.revenuePerShare>0?c.price/c.revenuePerShare:NaN,info=THEME_INFO[c.themeId]||{ko:['가상 기업입니다.','수요, 제품 경쟁력, 투자 환경','경쟁, 비용 증가, 경기 변동'],en:['Fictional company.','Demand, product competitiveness, investment environment','Competition, rising costs, economic shifts']},ti=info[lang]||info.en,sm=state.sentiment[c.themeId]||0,mood=sm>.1?t('moodPositive'):sm<-.1?t('moodNegative'):t('moodNeutral'),related=state.companies.filter(o=>o.themeId===c.themeId&&o.ticker!==c.ticker).slice(0,6),periods=[[10,t('days10')],[50,t('days50')],[100,t('days100')],[200,t('days200')],[252,t('days252')]],relatedNews=state.news.filter(n=>n.ticker===c.ticker).slice(0,6);
- const item=(label,value,cls='')=>`<div class="detail-item"><span class="detail-label">${label}</span><strong class="${cls}">${value}</strong></div>`;
- $('details').innerHTML=`<h2>${esc(c.name)} <span class="muted">${esc(c.ticker)}</span></h2><p class="muted">${esc(c.themeName)}</p><div class="detail-price">${money(c.price)}</div><p class="${total>=0?'positive':'negative'}">${t('totalReturn')}: ${pct(total)}</p>${c.delisted?`<p class="negative"><strong>${t('delisted')}</strong></p>`:''}
- <h3>${t('chart')}</h3><div class="chart-wrap"><canvas id="priceChart" aria-label="${t('chart')}"></canvas></div><h3>${t('returnsTitle')}</h3><div class="returns-grid">${periods.map(([days,label])=>{const r=historicalReturn(c,days);return `<div class="return-card"><div class="period">${label}</div><strong class="${r===null?'muted':r>=0?'positive':'negative'}">${r===null?t('notEnough'):pct(r)}</strong></div>`;}).join('')}</div>
+ const item=(label,value,cls='')=>`<div class="detail-item"><span class="detail-label">${label}</span><strong class="$ {
+            cls
+        }
+        ">${value}</strong></div>`;
+ $('details').innerHTML=`<h2>${esc(c.name)} <span class="muted">${esc(c.ticker)}</span></h2><p class="muted">${esc(c.themeName)}</p><div class="detail-price">${money(c.price)}</div><p class="$ {
+            total>=0?'positive':'negative'
+        }
+        ">${t('totalReturn')}: ${pct(total)}</p>${c.delisted?`<p class="negative"><strong>${t('delisted')}</strong></p>`:''}
+ <h3>${t('chart')}</h3><div class="chart-wrap"><canvas id="priceChart" aria-label="$ {
+            t('chart')
+        }
+        "></canvas></div><h3>${t('returnsTitle')}</h3><div class="returns-grid">${periods.map(([days,label])=>{const r=historicalReturn(c,days);return `<div class="return-card"><div class="period">${label}</div><strong class="$ {
+            r===null?'muted':r>=0?'positive':'negative'
+        }
+        ">${r===null?t('notEnough'):pct(r)}</strong></div>`;}).join('')}</div>
  <h3>${t('valuation')}</h3><div class="detail-grid">${item(t('per'),multiple(pe))}${item(t('pbr'),multiple(pb))}${item(t('psr'),multiple(ps))}${item(t('eps'),perShare(c.eps))}${item(t('book'),perShare(c.bookValuePerShare))}${item(t('revenueShare'),perShare(c.revenuePerShare))}</div>
  <h3 style="margin-top:18px">${t('financial')}</h3><div class="detail-grid">${item(t('roe'),pct(c.roe),c.roe>=0?'positive':'negative')}${item(t('roa'),pct(c.roa),c.roa>=0?'positive':'negative')}${item(t('opMargin'),pct(c.operatingMargin),c.operatingMargin>=0?'positive':'negative')}${item(t('netMargin'),pct(c.netMargin),c.netMargin>=0?'positive':'negative')}${item(t('revGrowth'),pct(c.revenueGrowth),c.revenueGrowth>=0?'positive':'negative')}${item(t('earnGrowth'),pct(c.earningsGrowth),c.earningsGrowth>=0?'positive':'negative')}${item(t('debt'),pct(c.debtRatio/100))}${item(t('quality'),quality)}</div>
  <h3 style="margin-top:18px">${t('position')}</h3><div class="detail-grid">${item(t('shares'),number(qty))}${item(t('positionValue'),money(pos))}${item(t('research'),Math.round(c.research*100)+'%')}${item(t('health'),Math.round(c.cashHealth*100)+' / 100')}${item(t('volatility'),(c.volatility*100).toFixed(2)+'%')}${item(t('mood'),`${mood} (${pct(sm)})`)}</div>
  <div class="trade-controls"><label>${t('quantity')}<input id="quantity" type="number" min="1" max="100000000" step="1" value="10" ${c.delisted?'disabled':''}></label><button id="buy" class="buy-button" ${c.delisted?'disabled':''}>${t('buy')}</button><button id="sell" class="sell-button" ${c.delisted?'disabled':''}>${t('sell')}</button></div>
  <div class="quick-trades"><div class="quick-trade-box"><h3>${t('quickBuy')}</h3><p class="muted">${t('usesCash')}</p><div class="button-row"><button data-buy-fraction="0.25" ${c.delisted?'disabled':''}>25%</button><button data-buy-fraction="0.5" ${c.delisted?'disabled':''}>50%</button><button data-buy-fraction="0.75" ${c.delisted?'disabled':''}>75%</button><button data-buy-fraction="1" class="buy-button" ${c.delisted?'disabled':''}>${t('allIn')}</button></div></div><div class="quick-trade-box"><h3>${t('quickSell')}</h3><p class="muted">${t('sellDesc')}</p><div class="button-row"><button class="sell-quick" data-sell-fraction="0.25" ${c.delisted||qty<1?'disabled':''}>25%</button><button class="sell-quick" data-sell-fraction="0.5" ${c.delisted||qty<1?'disabled':''}>50%</button><button class="sell-quick" data-sell-fraction="0.75" ${c.delisted||qty<1?'disabled':''}>75%</button><button class="sell-button" data-sell-fraction="1" ${c.delisted||qty<1?'disabled':''}>${t('sellAll')}</button></div></div></div><p class="muted">${t('feeExplain')}</p>
- <div class="theme-panel"><h3>${t('themeBrief')}</h3><div class="theme-tags"><span class="theme-tag">${esc(c.themeName)}</span><span class="theme-tag">${t('mood')}: ${mood}</span></div><p>${esc(ti[0])}</p><p><strong>${t('drivers')}:</strong> ${esc(ti[1])}</p><p><strong>${t('risks')}:</strong> ${esc(ti[2])}</p><h3 style="margin-top:18px">${t('related')}</h3><p class="muted">${t('relatedHelp')}</p><div class="related-list">${related.map(o=>`<button class="related-company" data-related-ticker="${esc(o.ticker)}"><span><strong>${esc(o.ticker)}</strong> · ${esc(o.name)}</span><small>${money(o.price)} · ${o.delisted?t('delisted'):t('activeStatus')}</small></button>`).join('')}</div></div>
- <div class="related-news"><h3>${lang==='ko'?'최근 관련 뉴스':'Recent Related News'}</h3>${relatedNews.length?relatedNews.map(n=>`<article class="news ${n.type==='positive'?'news-positive':n.type==='negative'?'news-negative':''}"><div class="news-title">${esc(lang==='ko'?n.title:(n.titleEn||n.title))}</div><p class="news-body">${esc(lang==='ko'?n.text:(n.textEn||n.text))}</p><div class="news-meta"><span>${esc(newsType(n.type))}</span><span>${esc(dayLabel(n.day))}</span></div></article>`).join(''):`<div class="empty">${t('noNews')}</div>`}</div>`;
+ <div class="theme-panel"><h3>${t('themeBrief')}</h3><div class="theme-tags"><span class="theme-tag">${esc(c.themeName)}</span><span class="theme-tag">${t('mood')}: ${mood}</span></div><p>${esc(ti[0])}</p><p><strong>${t('drivers')}:</strong> ${esc(ti[1])}</p><p><strong>${t('risks')}:</strong> ${esc(ti[2])}</p><h3 style="margin-top:18px">${t('related')}</h3><p class="muted">${t('relatedHelp')}</p><div class="related-list">${related.map(o=>`<button class="related-company" data-related-ticker="$ {
+            esc(o.ticker)
+        }
+        "><span><strong>${esc(o.ticker)}</strong> · ${esc(o.name)}</span><small>${money(o.price)} · ${o.delisted?t('delisted'):t('activeStatus')}</small></button>`).join('')}</div></div>
+ <div class="related-news"><h3>${lang==='ko'?'최근 관련 뉴스':'Recent Related News'}</h3>${relatedNews.length?relatedNews.map(n=>`<article class="news $ {
+            n.type==='positive'?'news-positive':n.type==='negative'?'news-negative':''
+        }
+        "><div class="news-title">${esc(lang==='ko'?n.title:(n.titleEn||n.title))}</div><p class="news-body">${esc(lang==='ko'?n.text:(n.textEn||n.text))}</p><div class="news-meta"><span>${esc(newsType(n.type))}</span><span>${esc(dayLabel(n.day))}</span></div></article>`).join(''):`<div class="empty">${t('noNews')}</div>`}</div>`;
  drawChart(c);$('buy').addEventListener('click',()=>trade('buy'));$('sell').addEventListener('click',()=>trade('sell'));$('details').querySelectorAll('[data-buy-fraction]').forEach(b=>b.addEventListener('click',()=>buyFraction(Number(b.dataset.buyFraction))));$('details').querySelectorAll('[data-sell-fraction]').forEach(b=>b.addEventListener('click',()=>sellFraction(Number(b.dataset.sellFraction))));$('details').querySelectorAll('[data-related-ticker]').forEach(b=>b.addEventListener('click',()=>{selected=b.dataset.relatedTicker;render();$('details').scrollIntoView({behavior:'smooth',block:'start'});}));}
  function dayLabel(day){return day===0?t('openDay'):`${Math.floor((day-1)/252)+1} ${t('year')} · ${day} ${t('tradingDay')}`;}
  function newsType(type){return type==='positive'?t('positive'):type==='negative'?t('negative'):t('neutral');}
- function renderNews(){const items=state.news.slice(0,60);$('newsCount').textContent=`${items.length} ${t('newsItems')}`;if(!items.length){$('news').innerHTML=`<div class="empty">${t('noNews')}</div>`;return;}$('news').innerHTML=items.map(n=>`<article class="news ${n.type==='positive'?'news-positive':n.type==='negative'?'news-negative':''}"><div class="news-title">${esc(lang==='ko'?n.title:(n.titleEn||n.title))}</div><p class="news-body">${esc(lang==='ko'?n.text:(n.textEn||n.text))}</p><div class="news-clue"><strong>${t('newsClue')}</strong><br>${esc(lang==='ko'?n.clue:(n.clueEn||n.clue))}</div><div class="news-meta"><span>${newsType(n.type)}</span><span>${dayLabel(n.day)}</span></div></article>`).join('');}
+ function renderNews(){const items=state.news.slice(0,60);$('newsCount').textContent=`${items.length} ${t('newsItems')}`;if(!items.length){$('news').innerHTML=`<div class="empty">${t('noNews')}</div>`;return;}$('news').innerHTML=items.map(n=>`<article class="news $ {
+            n.type==='positive'?'news-positive':n.type==='negative'?'news-negative':''
+        }
+        "><div class="news-title">${esc(lang==='ko'?n.title:(n.titleEn||n.title))}</div><p class="news-body">${esc(lang==='ko'?n.text:(n.textEn||n.text))}</p><div class="news-clue"><strong>${t('newsClue')}</strong><br>${esc(lang==='ko'?n.clue:(n.clueEn||n.clue))}</div><div class="news-meta"><span>${newsType(n.type)}</span><span>${dayLabel(n.day)}</span></div></article>`).join('');}
  function renderLeaderboard(){const people=[{name:state.player.name||t('playerDefault'),value:netWorth(state.player),isPlayer:true},...state.bots.map(b=>({name:b.name,value:portfolioValue(b),isPlayer:false}))].sort((a,b)=>b.value-a.value);$('leaderboard').innerHTML=people.map((p,i)=>`<div class="leader-row"><div><span class="rank">#${i+1}</span>${esc(p.name)} ${p.isPlayer?`<span class="positive">${t('you')}</span>`:''}</div><div class="leader-value">${money(p.value)}</div></div>`).join('');}
- function renderPortfolio(){const hs=Object.entries(state.player.holdings).filter(([,q])=>q>0).map(([ticker,qty])=>{const c=getCompany(ticker);return c?{ticker,qty,c,value:c.delisted?0:c.price*qty}:null;}).filter(Boolean).sort((a,b)=>b.value-a.value);if(!hs.length){$('portfolio').innerHTML=`<div class="empty">${t('noHoldings')}</div>`;return;}$('portfolio').innerHTML=`<div class="table-wrap" style="max-height:350px"><table><thead><tr><th>${t('company')}</th><th>${t('shares')}</th><th>${t('price')}</th><th>${t('positionValue')}</th></tr></thead><tbody>${hs.map(h=>`<tr data-portfolio-ticker="${esc(h.ticker)}"><td><strong>${esc(h.ticker)}</strong><br><span class="company-name">${esc(h.c.name)}</span></td><td>${number(h.qty)}</td><td>${money(h.c.delisted?0:h.c.price)}</td><td>${money(h.value)}</td></tr>`).join('')}</tbody></table></div>`;}
- function updateStaticLanguage(){document.documentElement.lang=lang;$('languageToggle').textContent=lang==='ko'?'English':'한국어';const ids={subtitle:'subtitle',noticeTitle:'notice',noticeText:'noticeText',playerLabel:'player',headlineLabel:'headline',dayLabel:'day',netWorthLabel:'netWorth',cashLabel:'cash',feeLabel:'fee',activeLabel:'active',timeTitle:'time',nextDay:'next',customDaysLabel:'custom',advanceCustom:'advance',auto:'autoStart',save:'save',normalReset:'normalReset',reset:'hardReset',timeHelp:'timeHelp',resetHelp:'resetHelp',loanTitle:'loan',loanBalanceLabel:'loanBalance',interestLabel:'interest',creditLabel:'credit',loanHelp:'loanHelp',loanAmountLabel:'amount',borrowButton:'borrow',repayButton:'repay',repayAllButton:'repayAll',marketTitle:'market',companyCol:'company',priceCol:'price',dailyCol:'daily',totalCol:'total',leaderboardTitle:'leaderboard',leaderboardHelp:'leaderHelp',detailsTitle:'details',selectCompanyHelp:'selectCompany',portfolioTitle:'portfolio',newsTitle:'news',newsHelp:'newsHelp',footerText:'footer'};for(const [id,k]of Object.entries(ids))if($(id))$(id).textContent=t(k);$('search').placeholder=t('search');const theme=$('theme'),old=theme.value;theme.innerHTML=`<option value="all">${t('allSectors')}</option>`+THEMES.map(x=>`<option value="${x[0]}">${lang==='ko'?x[1]:x[2]}</option>`).join('');theme.value=old||'all';$('welcomeTitle').textContent=lang==='ko'?'환영합니다, 투자자님.':'Welcome, Investor.';$('welcomeText').textContent=lang==='ko'?'거래소에 입장하기 전에 닉네임을 선택하세요. 닉네임은 순위표에 표시됩니다.':'Choose your player nickname before entering the exchange. Your name will appear on the leaderboard.';$('nicknameLabel').textContent=lang==='ko'?'플레이어 닉네임':'Player Nickname';$('nickname').placeholder=lang==='ko'?'닉네임 입력':'Enter your nickname';$('enterMarket').textContent=lang==='ko'?'시장 입장 →':'Enter the Market →';$('saveNotice').textContent=lang==='ko'?'게임 진행 상황은 이 브라우저에 저장됩니다.':'Your game progress is saved in this browser.';document.querySelectorAll('.advance-button').forEach(b=>b.textContent=`+${b.dataset.days} ${lang==='ko'?'일':'Days'}`);}
+ function renderPortfolio(){const hs=Object.entries(state.player.holdings).filter(([,q])=>q>0).map(([ticker,qty])=>{const c=getCompany(ticker);return c?{ticker,qty,c,value:c.delisted?0:c.price*qty}:null;}).filter(Boolean).sort((a,b)=>b.value-a.value);if(!hs.length){$('portfolio').innerHTML=`<div class="empty">${t('noHoldings')}</div>`;return;}$('portfolio').innerHTML=`<div class="table-wrap" style="max-height:350px"><table><thead><tr><th>${t('company')}</th><th>${t('shares')}</th><th>${t('price')}</th><th>${t('positionValue')}</th></tr></thead><tbody>${hs.map(h=>`<tr data-portfolio-ticker="$ {
+            esc(h.ticker)
+        }
+        "><td><strong>${esc(h.ticker)}</strong><br><span class="company-name">${esc(h.c.name)}</span></td><td>${number(h.qty)}</td><td>${money(h.c.delisted?0:h.c.price)}</td><td>${money(h.value)}</td></tr>`).join('')}</tbody></table></div>`;}
+ function updateStaticLanguage(){document.documentElement.lang=lang;$('languageToggle').textContent=lang==='ko'?'English':'한국어';const ids={subtitle:'subtitle',noticeTitle:'notice',noticeText:'noticeText',playerLabel:'player',headlineLabel:'headline',dayLabel:'day',netWorthLabel:'netWorth',cashLabel:'cash',feeLabel:'fee',activeLabel:'active',timeTitle:'time',nextDay:'next',customDaysLabel:'custom',advanceCustom:'advance',auto:'autoStart',save:'save',normalReset:'normalReset',reset:'hardReset',timeHelp:'timeHelp',resetHelp:'resetHelp',loanTitle:'loan',loanBalanceLabel:'loanBalance',interestLabel:'interest',creditLabel:'credit',loanHelp:'loanHelp',loanAmountLabel:'amount',borrowButton:'borrow',repayButton:'repay',repayAllButton:'repayAll',marketTitle:'market',companyCol:'company',priceCol:'price',dailyCol:'daily',totalCol:'total',leaderboardTitle:'leaderboard',leaderboardHelp:'leaderHelp',detailsTitle:'details',selectCompanyHelp:'selectCompany',portfolioTitle:'portfolio',newsTitle:'news',newsHelp:'newsHelp',footerText:'footer'};for(const [id,k]of Object.entries(ids))if($(id))$(id).textContent=t(k);$('search').placeholder=t('search');const theme=$('theme'),old=theme.value;theme.innerHTML=`<option value="all">${t('allSectors')}</option>`+THEMES.map(x=>`<option value="$ {
+            x[0]
+        }
+        ">${lang==='ko'?x[1]:x[2]}</option>`).join('');theme.value=old||'all';$('welcomeTitle').textContent=lang==='ko'?'환영합니다, 투자자님.':'Welcome, Investor.';$('welcomeText').textContent=lang==='ko'?'거래소에 입장하기 전에 닉네임을 선택하세요. 닉네임은 순위표에 표시됩니다.':'Choose your player nickname before entering the exchange. Your name will appear on the leaderboard.';$('nicknameLabel').textContent=lang==='ko'?'플레이어 닉네임':'Player Nickname';$('nickname').placeholder=lang==='ko'?'닉네임 입력':'Enter your nickname';$('enterMarket').textContent=lang==='ko'?'시장 입장 →':'Enter the Market →';$('saveNotice').textContent=lang==='ko'?'게임 진행 상황은 이 브라우저에 저장됩니다.':'Your game progress is saved in this browser.';document.querySelectorAll('.advance-button').forEach(b=>b.textContent=`+${b.dataset.days} ${lang==='ko'?'일':'Days'}`);}
  function render(){const p=state.player,worth=netWorth(p),ret=worth/p.initialValue-1;$('playerName').textContent=p.name||'—';$('day').textContent=`${number(state.day)} / ${number(TOTAL_DAYS)}`;$('assets').textContent=money(worth);$('returns').textContent=pct(ret);$('returns').className=ret>=0?'positive':'negative';$('cash').textContent=money(p.cash);$('active').textContent=`${state.companies.filter(c=>!c.delisted).length} / 100`;$('tradeCount').textContent=`${t('trades')}: ${number(p.trades)}`;$('date').textContent=state.day>=TOTAL_DAYS?t('complete'):state.day===0?t('notStarted'):`${Math.floor((state.day-1)/252)+1} ${t('year')} · ${((state.day-1)%252)+1} ${t('tradingDay')}`;$('loanBalance').textContent=money(p.loanBalance);$('loanInterest').textContent=money(p.loanInterest);$('creditAvailable').textContent=money(Math.max(0,MAX_LOAN-p.loanBalance));const latest=state.news[0];$('topHeadline').textContent=latest?(lang==='ko'?latest.text:(latest.textEn||latest.text)):'—';const complete=state.day>=TOTAL_DAYS;$('nextDay').disabled=complete;$('advanceCustom').disabled=complete;$('customDays').disabled=complete;document.querySelectorAll('.advance-button').forEach(b=>b.disabled=complete);if(autoTimer!==null)$('auto').textContent=t('autoStop');else $('auto').textContent=t('autoStart');renderCompanies();renderDetails();renderNews();renderLeaderboard();renderPortfolio();}
  function stopAuto(){if(autoTimer!==null){clearInterval(autoTimer);autoTimer=null;}$('auto').textContent=t('autoStart');}
  function showNicknameScreen(){$('nameOverlay').classList.remove('hidden');$('nickname').value=state.player.name||'';setTimeout(()=>$('nickname').focus(),0);}
@@ -97,4 +1113,6 @@
  function init(){updateStaticLanguage();$('nameForm').addEventListener('submit',acceptNickname);$('languageToggle').addEventListener('click',()=>{lang=lang==='ko'?'en':'ko';try{localStorage.setItem('marketSimLanguageV1',lang);}catch{}updateStaticLanguage();state.companies.forEach(c=>{const theme=THEMES.find(x=>x[0]===c.themeId);if(theme)c.themeName=lang==='ko'?theme[1]:theme[2];});render();});$('companies').addEventListener('click',e=>{const row=e.target.closest('tr[data-ticker]');if(!row)return;selected=row.dataset.ticker;render();});$('portfolio').addEventListener('click',e=>{const row=e.target.closest('tr[data-portfolio-ticker]');if(!row)return;selected=row.dataset.portfolioTicker;render();$('details').scrollIntoView({behavior:'smooth',block:'start'});});$('search').addEventListener('input',renderCompanies);$('theme').addEventListener('change',renderCompanies);$('nextDay').addEventListener('click',()=>advanceDays(1));document.querySelectorAll('.advance-button').forEach(b=>b.addEventListener('click',()=>advanceDays(Number(b.dataset.days))));$('advanceCustom').addEventListener('click',()=>{const days=Number($('customDays').value);if(!Number.isSafeInteger(days)||days<1||days>TOTAL_DAYS){alert(t('dayInput'));return;}advanceDays(days);});$('auto').addEventListener('click',()=>{if(autoTimer!==null){stopAuto();return;}if(state.day>=TOTAL_DAYS){alert(t('completeAlert'));return;}$('auto').textContent=t('autoStop');autoTimer=setInterval(()=>{if(state.day>=TOTAL_DAYS){stopAuto();return;}advanceDays(1);},700);});$('save').addEventListener('click',()=>{if(save())alert(t('saveSuccess'));});$('borrowButton').addEventListener('click',borrow);$('repayButton').addEventListener('click',()=>repay(Number($('loanAmount').value)));$('repayAllButton').addEventListener('click',()=>repay(state.player.loanBalance));$('normalReset').addEventListener('click',()=>{if(!confirm(t('normalConfirm')))return;stopAuto();state.day=0;save();render();alert(t('resetDone'));window.scrollTo({top:0,behavior:'smooth'});});$('reset').addEventListener('click',()=>{if(!confirm(t('hardConfirm')))return;stopAuto();state=createState();selected='A';save();render();showNicknameScreen();window.scrollTo({top:0,behavior:'smooth'});});window.addEventListener('beforeunload',()=>{if(autoTimer!==null)clearInterval(autoTimer);try{localStorage.setItem(KEY,JSON.stringify(state));}catch{}});window.addEventListener('resize',()=>{const c=getCompany(selected);if(c)drawChart(c);});render();if(!state.player.nameChosen||!state.player.name.trim())showNicknameScreen();}
  init();
 })();
-</script></body></html>
+</script>
+ </body>
+</html>
