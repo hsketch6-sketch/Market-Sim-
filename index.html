@@ -58,7 +58,9 @@ p
 }
 .positive
 {
-    color:var(--green)
+    color:#7bb7ff;
+    font-variant-numeric:tabular-nums;
+    font-weight:600
 }
 .negative
 {
@@ -643,6 +645,42 @@ footer
         height:220px
     }
 }
+
+/* Market Sim visual polish — keeps the original dark exchange style and chart colors. */
+:root{--blue:#2867b2;--border:#344963;--panel:#152238;--dark:#0c1626;--muted:#a6b6cc;--gain-blue:#7bb7ff;--loss-red:#ff7185}
+body{background:radial-gradient(ellipse at 15% 0%,rgba(42,86,140,.16),transparent 38%),#0b1220;color:#e8eef8;line-height:1.45}
+main{max-width:1660px}
+h1{letter-spacing:-.035em;font-size:clamp(27px,3vw,38px)}
+h2{letter-spacing:-.02em}
+section{background:linear-gradient(145deg,rgba(23,38,61,.98),rgba(17,29,47,.98));border-color:rgba(116,145,181,.24);border-radius:15px;box-shadow:0 8px 24px rgba(0,0,0,.12);transition:border-color .18s ease,transform .18s ease}
+section:hover{border-color:rgba(123,183,255,.34)}
+.stat,.detail-item,.return-card,.quick-trade-box,.theme-panel,.news,.leader-row{border:1px solid rgba(116,145,181,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.018)}
+.stat{background:linear-gradient(145deg,#101c2e,#0c1626);border-radius:11px;padding:14px}
+.stat h2{font-variant-numeric:tabular-nums;letter-spacing:-.025em}
+button{background:linear-gradient(180deg,#2b6fbd,#245da8);border-color:#477bb8;transition:filter .15s ease,transform .15s ease,box-shadow .15s ease}
+button:hover:not(:disabled){filter:brightness(1.12);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.18)}
+button:active:not(:disabled){transform:translateY(0)}
+input,select{border-color:#405574;transition:border-color .15s ease,box-shadow .15s ease}
+input:focus,select:focus{border-color:#7bb7ff;box-shadow:0 0 0 3px rgba(123,183,255,.12)}
+table{font-variant-numeric:tabular-nums}
+th{background:#1a2b43;color:#dce8f7;box-shadow:0 1px 0 rgba(255,255,255,.035)}
+th,td{padding:10px 11px}
+tbody tr{transition:background .12s ease}
+tr[data-ticker]:hover,tr[data-portfolio-ticker]:hover{background:rgba(73,123,181,.18)}
+tr.selected-row{background:rgba(56,112,174,.25);box-shadow:inset 3px 0 #7bb7ff}
+.positive{color:var(--gain-blue);font-variant-numeric:tabular-nums;font-weight:600}
+.negative{color:var(--loss-red);font-variant-numeric:tabular-nums;font-weight:600}
+.detail-price{font-size:clamp(28px,3vw,36px);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.return-card{background:linear-gradient(145deg,#111f33,#0c1626);border-radius:10px;padding:12px 9px}
+.return-card strong{font-size:clamp(14px,1.2vw,18px)}
+.chart-wrap{border-radius:12px;border-color:rgba(116,145,181,.22);background:#0c1626}
+.news{border-radius:10px;background:rgba(12,22,38,.68)}
+.market-regime{border-radius:10px;background:linear-gradient(100deg,rgba(28,47,73,.86),rgba(15,26,43,.92))}
+.company-name{letter-spacing:.005em}
+.empty{border:1px dashed rgba(116,145,181,.3);border-radius:10px;padding:18px}
+@media(max-width:900px){body{padding:12px}section{padding:13px}.layout{gap:12px}}
+@media(max-width:560px){body{padding:8px}.stats{gap:7px}.stat{padding:10px}.returns-grid{grid-template-columns:repeat(2,minmax(0,1fr))}th,td{padding:8px}.detail-grid{gap:7px}}
+
 </style>
  </head>
  <body>
@@ -1107,10 +1145,18 @@ footer
         }
         "><div class="news-title">${esc(lang==='ko'?n.title:(n.titleEn||n.title))}</div><p class="news-body">${esc(lang==='ko'?n.text:(n.textEn||n.text))}</p><div class="news-clue"><strong>${t('newsClue')}</strong><br>${esc(lang==='ko'?n.clue:(n.clueEn||n.clue))}</div><div class="news-meta"><span>${newsType(n.type)}</span><span>${dayLabel(n.day)}</span></div></article>`).join('');}
  function renderLeaderboard(){const people=[{name:state.player.name||t('playerDefault'),value:netWorth(state.player),isPlayer:true},...state.bots.map(b=>({name:b.name,value:portfolioValue(b),isPlayer:false}))].sort((a,b)=>b.value-a.value);$('leaderboard').innerHTML=people.map((p,i)=>`<div class="leader-row"><div><span class="rank">#${i+1}</span>${esc(p.name)} ${p.isPlayer?`<span class="positive">${t('you')}</span>`:''}</div><div class="leader-value">${money(p.value)}</div></div>`).join('');}
- function renderPortfolio(){const hs=Object.entries(state.player.holdings).filter(([,q])=>q>0).map(([ticker,qty])=>{const c=getCompany(ticker);return c?{ticker,qty,c,value:c.delisted?0:c.price*qty}:null;}).filter(Boolean).sort((a,b)=>b.value-a.value);if(!hs.length){$('portfolio').innerHTML=`<div class="empty">${t('noHoldings')}</div>`;return;}$('portfolio').innerHTML=`<div class="table-wrap" style="max-height:350px"><table><thead><tr><th>${t('company')}</th><th>${t('shares')}</th><th>${t('price')}</th><th>${t('positionValue')}</th></tr></thead><tbody>${hs.map(h=>`<tr data-portfolio-ticker="$ {
-            esc(h.ticker)
-        }
-        "><td><strong>${esc(h.ticker)}</strong><br><span class="company-name">${esc(h.c.name)}</span></td><td>${number(h.qty)}</td><td>${money(h.c.delisted?0:h.c.price)}</td><td>${money(h.value)}</td></tr>`).join('')}</tbody></table></div>`;}
+ function renderPortfolio(){
+  const hs=Object.entries(state.player.holdings)
+   .filter(([,q])=>q>0)
+   .map(([ticker,qty])=>{
+    const c=getCompany(ticker);
+    return c?{ticker,qty,c,value:c.delisted?0:c.price*qty,total:c.initialPrice>0?c.price/c.initialPrice-1:0}:null;
+   })
+   .filter(Boolean)
+   .sort((a,b)=>b.value-a.value);
+  if(!hs.length){$('portfolio').innerHTML=`<div class="empty">${t('noHoldings')}</div>`;return;}
+  $('portfolio').innerHTML=`<div class="table-wrap" style="max-height:350px"><table><thead><tr><th>${t('company')}</th><th>${t('shares')}</th><th>${t('price')}</th><th>${t('positionValue')}</th><th>${t('total')}</th></tr></thead><tbody>${hs.map(h=>`<tr data-portfolio-ticker="${esc(h.ticker)}"><td><strong>${esc(h.ticker)}</strong><br><span class="company-name">${esc(h.c.name)}</span></td><td>${number(h.qty)}</td><td>${money(h.c.delisted?0:h.c.price)}</td><td>${money(h.value)}</td><td class="${h.total>=0?'positive':'negative'}">${pct(h.total)}</td></tr>`).join('')}</tbody></table></div>`;
+ }
  function updateStaticLanguage(){document.documentElement.lang=lang;$('languageToggle').textContent=lang==='ko'?'English':'한국어';const ids={subtitle:'subtitle',noticeTitle:'notice',noticeText:'noticeText',playerLabel:'player',headlineLabel:'headline',dayLabel:'day',netWorthLabel:'netWorth',cashLabel:'cash',feeLabel:'fee',activeLabel:'active',timeTitle:'time',nextDay:'next',customDaysLabel:'custom',advanceCustom:'advance',auto:'autoStart',save:'save',normalReset:'normalReset',reset:'hardReset',timeHelp:'timeHelp',resetHelp:'resetHelp',loanTitle:'loan',loanBalanceLabel:'loanBalance',interestLabel:'interest',creditLabel:'credit',loanHelp:'loanHelp',loanAmountLabel:'amount',borrowButton:'borrow',repayButton:'repay',repayAllButton:'repayAll',marketTitle:'market',companyCol:'company',priceCol:'price',dailyCol:'daily',totalCol:'total',leaderboardTitle:'leaderboard',leaderboardHelp:'leaderHelp',detailsTitle:'details',selectCompanyHelp:'selectCompany',portfolioTitle:'portfolio',newsTitle:'news',newsHelp:'newsHelp',footerText:'footer'};for(const [id,k]of Object.entries(ids))if($(id))$(id).textContent=t(k);$('search').placeholder=t('search');const theme=$('theme'),old=theme.value;theme.innerHTML=`<option value="all">${t('allSectors')}</option>`+THEMES.map(x=>`<option value="$ {
             x[0]
         }
