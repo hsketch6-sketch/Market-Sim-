@@ -28,7 +28,7 @@ main{max-width:1600px;margin:auto;padding:18px;display:grid;gap:14px}
 .muted,.sub{color:var(--muted)}
 .small{font-size:12px}.tiny{font-size:11px}
 .grid{display:grid;gap:12px}
-.stats{grid-template-columns:repeat(6,minmax(0,1fr))}
+.stats{grid-template-columns:repeat(7,minmax(0,1fr))}
 .stat{padding:14px;background:var(--panel);border:1px solid var(--line);border-radius:10px;min-width:0}
 .stat .label{font-size:12px;color:var(--muted);margin-bottom:8px}
 .stat .value{font-size:clamp(16px,2vw,24px);font-weight:800;overflow-wrap:anywhere}
@@ -72,8 +72,54 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
 #nicknameOverlay{position:fixed;inset:0;background:#050910eF;z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
 .modal{width:min(420px,100%);padding:24px;background:var(--panel);border:1px solid var(--line);border-radius:14px}
 .modal h2{margin-top:0}
+@media(max-width:1200px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.layout{grid-template-columns:1fr}}
 @media(max-width:1000px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.layout{grid-template-columns:1fr}}
 @media(max-width:600px){.fund-controls{grid-template-columns:1fr 1fr}.fund-controls input{grid-column:1/-1}.fund-metrics{grid-template-columns:1fr 1fr}header{padding:11px;align-items:flex-start}.brand{font-size:18px}main{padding:10px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr}.stat{padding:11px}.panel{padding:12px}.header-right button{padding:7px}.company{padding:9px}}
+
+/* Broker-inspired clean trading UI */
+:root{color-scheme:light;--bg:#f4f6f8;--panel:#ffffff;--panel2:#f7f9fc;--line:#e3e7ed;--text:#191f28;--muted:#697586;--green:#0b9f76;--red:#e5484d;--blue:#3182f6;--yellow:#b7791f;--purple:#7657c8}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+header{background:#ffffffed;border-bottom:1px solid #e6eaf0;box-shadow:0 2px 12px #1a2a3a08}
+.brand-mark{background:#3182f6;color:#fff;box-shadow:none;border-radius:10px}
+.brand span{color:#3182f6}
+.panel,.stat{background:#fff;border-color:#e6eaf0;border-radius:15px;box-shadow:0 2px 8px #172b4d05}
+.stat .label,.muted,.sub,.pill,th{color:#697586}
+.pill{border-color:#e1e6ed;background:#f8fafc}
+button{background:#f5f7fa;color:#283342;border-color:#e0e5ec;border-radius:10px;font-weight:650}
+button:hover{filter:none;background:#edf2f8}
+.primary{background:#3182f6;border-color:#3182f6;color:#fff}
+.primary:hover{background:#216fe0}
+.buy{background:#3182f6;border-color:#3182f6;color:#fff}
+.buy:hover{background:#216fe0}
+.sell{background:#fff0f0;border-color:#ffd6d6;color:#d9363e}
+.sell:hover{background:#ffe4e4}
+.danger{background:#fff0f0;border-color:#ffd6d6;color:#d9363e}
+input,select{background:#fff;color:#191f28;border-color:#dfe4eb;border-radius:10px}
+input:focus,select:focus{border-color:#3182f6;box-shadow:0 0 0 3px #3182f61a}
+.market-state-headline{letter-spacing:-.8px}
+.market-state-chip{background:#f4f8ff;border-color:#d8e6ff;color:#2b67b1}
+.market-state-chip.boom,.market-state-chip.bull{background:#eafaf4;border-color:#bcebd9;color:#087f5b}
+.market-state-chip.crash,.market-state-chip.bear{background:#fff0f0;border-color:#ffd5d5;color:#d9363e}
+.market-state-chip.sideways{background:#f4f0ff;border-color:#e0d7ff;color:#7657c8}
+.company{background:#fff;border-color:transparent;border-radius:11px}
+.company:hover{background:#f7faff;border-color:#dce8fb}
+.company.selected{background:#eff6ff;border-color:#9bc4ff}
+.tag{background:#eef4ff;color:#3566a8;border-radius:5px}
+.metric-box,.news-item,.holding{background:#f8fafc;border-color:#e8edf3;border-radius:11px}
+.notice{background:#eff6ff;color:#355a8b;border:1px solid #dceaff}
+.warning{background:#fff8e7;color:#8a6215;border-color:#f6e5b7}
+th,td{border-bottom-color:#edf0f4}
+.trade-order-card{margin-top:14px;padding:14px;background:#f8fafc;border:1px solid #e6eaf0;border-radius:14px}
+.trade-order-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;font-weight:800}
+.trade-quick-label{font-size:12px;color:#697586;margin:12px 0 7px}
+.trade-percent-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.trade-percent-grid button{padding:9px 5px;background:#fff;border-color:#dfe5ed;color:#3c4858}
+.trade-percent-grid button:hover{background:#edf4ff;border-color:#a9caff;color:#1c65c9}
+.trade-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.trade-actions button{padding:12px;font-size:14px}
+.order-summary{display:flex;justify-content:space-between;gap:12px;margin-top:10px;font-size:12px;color:#697586}
+@media(max-width:600px){.trade-percent-grid button{font-size:12px;padding:9px 3px}.trade-actions button{padding:11px 5px}}
+
 </style>
 </head>
 <body>
@@ -116,6 +162,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
     <div class="stat"><div class="label" id="returnLabel">누적 수익률</div><div class="value" id="returnValue">0.00%</div><div class="extra" id="returnExtra">초기자산 기준</div></div>
     <div class="stat"><div class="label" id="debtLabel">대출 잔액</div><div class="value" id="debtValue">$0</div><div class="extra" id="debtExtra">연 8% 이자</div></div>
     <div class="stat"><div class="label" id="holdingLabel">보유 종목</div><div class="value" id="holdingValue">0</div><div class="extra" id="holdingExtra">500개 기업 거래 가능</div></div>
+    <div class="stat"><div class="label" id="sp500Label">가상 S&P 500</div><div class="value" id="sp500Value">1,000.00</div><div class="extra" id="sp500Extra">B&H 기준 수익률 +0.00%</div></div>
     <div class="stat"><div class="label" id="fomoLabel">FOMO 지수</div><div class="value" id="fomoValue">0 / 100</div><div class="fomo-bar"><div class="fomo-fill" id="fomoFill"></div></div><div class="extra" id="fomoExtra">시장 평균 대비 성과로 변동</div></div>
   </div>
 
@@ -288,6 +335,7 @@ const state = {
  news:[], bots:[], auto:false, chartRange:30, tradeHistory:[],
  fomo:0, fomoLockDays:0, fomoTriggeredToday:false, marketAvgReturn:0,
  regime:"normal", regimeDaysLeft:30, marketIndex:100, marketPeak:100,
+ sp500Index:1000, sp500InitialIndex:1000, sp500DailyReturn:0, sp500BaseDay:0,
  themeEvent:null, delistedCount:0, majorCrashDaysLeft:0, nextMajorCrashDay:0, majorCrashType:"", regimeAfterCrash:false, fund:{nav:100,initialNav:100,topPair:[],lastRebalanceYear:0,filterState:"NORMAL",marketPeak:100,marketLow:100,reboundBase:null},
  fundUnits:0, fundCost:0
 };
@@ -463,7 +511,7 @@ function makeCompanies(count=COMPANY_COUNT){
    const sharesOutstanding=Math.round(rand(25,500)*1e6),cap=price*sharesOutstanding;
    const psr=rand(.7,9),margin=rand(-.04,.24),revenue=cap/psr,earnings=revenue*margin,bookValue=cap/rand(.7,7);
    companies.push({name,ticker,price,previousClose:price,changePct:0,vol,quality:rand(-.00004,.00010),
-     sector:sectors[i%sectors.length],theme:sectors[i%sectors.length],sharesOutstanding,history:[price],dayChanges:[0],
+     sector:sectors[i%sectors.length],theme:sectors[i%sectors.length],sharesOutstanding,floatFactor:rand(.55,.98),history:[price],dayChanges:[0],
      baseDrift:rand(-.00005,.00025),delisted:false,distressDays:0,revenue,earnings,bookValue,equity:bookValue,
      roe:bookValue?earnings/bookValue:0,revenueGrowth:rand(-.12,.20),earningsGrowth:rand(-.20,.28),
      margin,financialHealth:rand(.35,.98),lastFundamentalDay:0});
@@ -471,6 +519,7 @@ function makeCompanies(count=COMPANY_COUNT){
  return companies;
 }
 function marketCap(c){return c.price*c.sharesOutstanding}
+function floatAdjustedMarketCap(c){return marketCap(c)*clamp(safeNum(c.floatFactor,1),.01,1)}
 function topTwoByMarketCap(){
  return state.companies.filter(c=>!c.delisted).slice().sort((a,b)=>marketCap(b)-marketCap(a)).slice(0,2).map(c=>c.ticker);
 }
@@ -482,7 +531,8 @@ function initFund(){
 function ensureCompanyFields(c){
  const defaults=makeCompanies(1)[0];
  for(const k of ["sector","theme"])if(!c[k])c[k]=defaults[k];
- for(const k of ["vol","quality","baseDrift","sharesOutstanding"])if(!Number.isFinite(Number(c[k])))c[k]=defaults[k];
+ for(const k of ["vol","quality","baseDrift","sharesOutstanding","floatFactor"])if(!Number.isFinite(Number(c[k])))c[k]=defaults[k];
+ c.floatFactor=clamp(Number(c.floatFactor),.01,1);
  c.sharesOutstanding=Math.max(1,Number(c.sharesOutstanding));
  c.price=Math.max(.05,safeNum(c.price,defaults.price));c.previousClose=safeNum(c.previousClose,c.price);c.changePct=safeNum(c.changePct);
  c.history=Array.isArray(c.history)&&c.history.length?c.history:[c.price];c.dayChanges=Array.isArray(c.dayChanges)?c.dayChanges:[0];
@@ -521,8 +571,9 @@ function resetFresh(){
  state.news=[];state.bots=initBots();state.tradeHistory=[];
  state.fomo=0;state.fomoLockDays=0;state.fomoTriggeredToday=false;state.marketAvgReturn=0;
  state.regime="normal";state.regimeDaysLeft=regimeDuration("normal");state.marketIndex=100;state.marketPeak=100;
+ state.sp500Index=1000;state.sp500InitialIndex=1000;state.sp500DailyReturn=0;state.sp500BaseDay=0;
  state.themeEvent=null;state.delistedCount=0;state.majorCrashDaysLeft=0;state.nextMajorCrashDay=Math.floor(rand(252,1261));state.majorCrashType="";state.regimeAfterCrash=false;state.fundUnits=0;state.fundCost=0;initFund();
- addNews("Market Sim opens for trading with 500 listed companies.","500개 기업이 상장된 가상 주식시장이 거래를 시작했습니다.","market");
+ addNews("Market Sim opens with 500 listed companies and a float-adjusted market-cap-weighted S&P 500-style index.","500개 기업으로 구성된 유동주식 조정 시가총액 가중 가상 S&P 500 지수가 시작됐습니다.","market");
  addNews("Fund 1 tracks the two largest companies by market capitalization, with a crash filter.","Fund 1은 시가총액 상위 2개 기업을 추종하며 시장 폭락 필터를 사용합니다.","fund");
  saveState();renderAll();
 }
@@ -535,7 +586,7 @@ function safeNum(x,fallback=0){
 }
 function saveState(){
  try{
-   const keys=["day","maxDays","cash","initialWealth","debt","positions","companies","selectedTicker","playerName","language","news","bots","tradeHistory","fomo","fomoLockDays","marketAvgReturn","regime","regimeDaysLeft","marketIndex","marketPeak","themeEvent","delistedCount","majorCrashDaysLeft","nextMajorCrashDay","majorCrashType","regimeAfterCrash","fund","fundUnits","fundCost"];
+   const keys=["day","maxDays","cash","initialWealth","debt","positions","companies","selectedTicker","playerName","language","news","bots","tradeHistory","fomo","fomoLockDays","marketAvgReturn","regime","regimeDaysLeft","marketIndex","marketPeak","sp500Index","sp500InitialIndex","sp500DailyReturn","sp500BaseDay","themeEvent","delistedCount","majorCrashDaysLeft","nextMajorCrashDay","majorCrashType","regimeAfterCrash","fund","fundUnits","fundCost"];
    const data={version:3};for(const k of keys)data[k]=state[k];
    localStorage.setItem(SAVE_KEY,JSON.stringify(data));
    const label=document.getElementById("saveLabel");if(label)label.textContent=t("autoSave");
@@ -564,6 +615,8 @@ function loadState(){
    state.regime=["normal","sideways","bull","bear","boom","crash"].includes(d.regime)?d.regime:"normal";
    state.regimeDaysLeft=Math.max(1,Math.floor(safeNum(d.regimeDaysLeft,regimeDuration(state.regime))));
    state.marketIndex=Math.max(.01,safeNum(d.marketIndex,100));state.marketPeak=Math.max(state.marketIndex,safeNum(d.marketPeak,state.marketIndex));
+   state.sp500Index=Math.max(.01,safeNum(d.sp500Index,1000));state.sp500InitialIndex=Math.max(.01,safeNum(d.sp500InitialIndex,1000));
+   state.sp500DailyReturn=safeNum(d.sp500DailyReturn,0);state.sp500BaseDay=Math.max(0,Math.floor(safeNum(d.sp500BaseDay,state.day)));
    state.themeEvent=d.themeEvent&&typeof d.themeEvent==="object"?d.themeEvent:null;state.delistedCount=Math.max(0,Math.floor(safeNum(d.delistedCount)));
    state.majorCrashDaysLeft=Math.max(0,Math.floor(safeNum(d.majorCrashDaysLeft)));state.nextMajorCrashDay=Math.max(state.day+1,Math.floor(safeNum(d.nextMajorCrashDay,state.day+Math.floor(rand(252,1261)))));state.majorCrashType=String(d.majorCrashType||"");state.regimeAfterCrash=!!d.regimeAfterCrash;
    state.fund=d.fund&&typeof d.fund==="object"?d.fund:{nav:100,initialNav:100,topPair:[],lastRebalanceYear:0,filterState:"NORMAL",marketPeak:state.marketIndex,marketLow:state.marketIndex,reboundBase:null};
@@ -761,6 +814,9 @@ function advanceOneDay(){
  }
  updateThemeEvent();
  const r=marketRegime(),drift=regimeDrift(r),volMult=regimeVol(r);
+ // S&P 500-style float-adjusted market-cap weights based on the previous close.
+ const sp500PrevCaps=new Map();let sp500PrevTotal=0;
+ for(const c of state.companies){if(c.delisted)continue;const cap=floatAdjustedMarketCap(c);if(cap>0){sp500PrevCaps.set(c.ticker,cap);sp500PrevTotal+=cap;}}
  for(const c of state.companies){
    c.previousClose=c.price;
    const noise=(Math.random()+Math.random()+Math.random()-1.5)*c.vol*.035*volMult;
@@ -781,12 +837,16 @@ function advanceOneDay(){
  const active=state.companies.filter(c=>c.price>=.75||c.financialHealth>.015);
  state.marketAvgReturn=active.length?active.reduce((s,c)=>s+c.changePct,0)/active.length:0;
  state.marketIndex=Math.max(.01,state.marketIndex*(1+state.marketAvgReturn/100));state.marketPeak=Math.max(state.marketPeak,state.marketIndex);
+ // Chain-linked price index: weighted constituent returns, with no artificial jump when a company is replaced.
+ if(sp500PrevTotal>0){let weightedReturn=0;for(const c of state.companies){const cap=sp500PrevCaps.get(c.ticker);if(cap&&Number.isFinite(c.changePct))weightedReturn+=(cap/sp500PrevTotal)*c.changePct;}state.sp500DailyReturn=weightedReturn;}
+ else state.sp500DailyReturn=state.marketAvgReturn;
+ state.sp500Index=Math.max(.01,state.sp500Index*(1+state.sp500DailyReturn/100));
  state.cash*=Math.pow(1+CASH_INTEREST,1/TRADING_DAYS_PER_YEAR);state.debt*=Math.pow(1+LOAN_RATE,1/TRADING_DAYS_PER_YEAR);
  runBots();updateFund();delistAndReplace();
  const assetsAfter=totalAssets(),playerDailyReturn=assetsBefore>0?(assetsAfter/assetsBefore-1)*100:0;
  if(!wasLocked&&!state.fomoTriggeredToday){
-   if(playerDailyReturn<state.marketAvgReturn)state.fomo=clamp(state.fomo+20,0,100);
-   else if(playerDailyReturn>state.marketAvgReturn)state.fomo=clamp(state.fomo-10,0,100);
+   if(playerDailyReturn<state.sp500DailyReturn)state.fomo=clamp(state.fomo+20,0,100);
+   else if(playerDailyReturn>state.sp500DailyReturn)state.fomo=clamp(state.fomo-10,0,100);
    if(state.fomo>=100)triggerFomo();
  }
  if(state.day%5===0){
@@ -930,7 +990,7 @@ function renderClock(){
  document.getElementById("dayLabel").textContent=`${t("period")} ${state.day+1} / ${state.maxDays}`;
  const r=marketRegime(),label=regimeLabel(r),chip=document.getElementById("regimeHeadlineChip");
  document.getElementById("marketStateHeadline").textContent=label;chip.textContent=r.toUpperCase();chip.className="market-state-chip "+regimeChip(r);
- const el=document.getElementById("regimePill");el.textContent=label+" · "+Math.max(0,state.regimeDaysLeft)+" "+(state.language==="en"?"days left":"일 남음");
+ const el=document.getElementById("regimePill");el.textContent=label;
  el.className="pill "+(["bull","boom"].includes(r)?"positive":["bear","crash"].includes(r)?"negative":"");
  document.getElementById("interestPill").textContent=t("interestNote");
  document.getElementById("companyCount").textContent=state.companies.length+(state.language==="en"?" active companies":"개 활성 기업");
@@ -951,11 +1011,15 @@ function renderStats(){
  document.getElementById("assetExtra").textContent=(state.language==="en"?"Equity after debt: ":"대출 차감 후 순자산: ")+money(assets);
  document.getElementById("returnExtra").textContent=(state.language==="en"?"Initial capital: ":"초기자산: ")+money(state.initialWealth);
  document.getElementById("debtExtra").textContent=t("interestNote");
- document.getElementById("holdingExtra").textContent=state.language==="en"?"500-company index-style universe":"500개 기업 유니버스";
+ document.getElementById("holdingExtra").textContent=state.language==="en"?"500-company index universe":"500개 기업 유니버스";
+ document.getElementById("sp500Label").textContent=state.language==="en"?"Virtual S&P 500":"가상 S&P 500";
+ document.getElementById("sp500Value").textContent=state.sp500Index.toLocaleString(state.language==="en"?"en-US":"ko-KR",{minimumFractionDigits:2,maximumFractionDigits:2});
+ const sp500TotalReturn=(state.sp500Index/state.sp500InitialIndex-1)*100;
+ document.getElementById("sp500Extra").textContent=state.language==="en"?`B&H ${pct(sp500TotalReturn)} · float-adjusted cap-weighted`:`B&H ${pct(sp500TotalReturn)} · 유동주식 조정 시총가중`;
  document.getElementById("fomoLabel").textContent=t("fomo");
  document.getElementById("fomoValue").textContent=`${Math.round(state.fomo)} / 100`;
  document.getElementById("fomoFill").style.width=`${clamp(state.fomo,0,100)}%`;
- document.getElementById("fomoExtra").textContent=state.fomoLockDays>0?t("fomoLocked"):(state.language==="en"?`${state.marketAvgReturn.toFixed(2)}% market average today`:`오늘 시장 평균 ${state.marketAvgReturn.toFixed(2)}%`);
+ document.getElementById("fomoExtra").textContent=state.fomoLockDays>0?t("fomoLocked"):(state.language==="en"?`vs S&P 500 B&H today: ${pct(state.sp500DailyReturn)}`:`오늘 S&P 500 B&H ${pct(state.sp500DailyReturn)}와 비교`);
  document.getElementById("fomoValue").className="value "+(state.fomo>=80?"negative":state.fomo>=40?"":"positive");
 }
 function renderCompanies(){
@@ -1021,17 +1085,38 @@ function renderDetail(){
     <div><div class="muted small">${t("pnl")}</div><strong class="${pnl>0?"positive":pnl<0?"negative":""}">${money(pnl)}</strong></div>
   </div>
   <div class="notice" style="margin-top:12px"><strong>${state.language==="en"?"Latest company news":"최근 기업 뉴스"}</strong><div style="margin-top:5px;line-height:1.5">${esc(newsText)}</div><div class="muted tiny" style="margin-top:6px">${state.language==="en"?"Theme status":"테마 상태"}: ${esc(theme)} · ${state.language==="en"?"Financial health":"재무 건전성"} ${(c.financialHealth*100).toFixed(0)}%</div></div>
-  <hr><div class="trade-grid">
-    <div class="full"><label class="small muted">${t("shares")}</label><input id="tradeQty" type="number" min="0.0001" step="0.0001" value="1"></div>
-    <button class="buy" onclick="tradeBuySelected()">${t("buy")} · ${t("priceLabel")}</button>
-    <button class="sell" onclick="tradeSellSelected()">${t("sell")}</button>
-    <button onclick="setTradeQty(${maxQty})" class="full">${t("maxBuy")}: ${maxQty.toLocaleString(undefined,{maximumFractionDigits:4})} ${t("shares")}</button>
+  <div class="trade-order-card">
+    <div class="trade-order-heading"><span>${state.language==="en"?"Order ticket":"주문하기"}</span><span class="muted tiny">${state.language==="en"?"Market order":"시장가 주문"}</span></div>
+    <div class="grid two">
+      <div><label class="small muted" for="tradeQty">${state.language==="en"?"Quantity (shares)":"주문 수량 (주)"}</label><input id="tradeQty" type="number" min="0.0001" step="0.0001" value="1" style="margin-top:6px"></div>
+      <div><label class="small muted">${state.language==="en"?"Estimated amount":"예상 주문 금액"}</label><div id="orderEstimate" style="font-size:16px;font-weight:800;margin-top:12px">${money(c.price)}</div></div>
+    </div>
+    <div class="trade-actions">
+      <button class="buy" onclick="tradeBuySelected()">${state.language==="en"?"Buy":"매수"}</button>
+      <button class="sell" onclick="tradeSellSelected()">${state.language==="en"?"Sell quantity":"수량 매도"}</button>
+    </div>
+    <div class="trade-quick-label">${state.language==="en"?"Quick sell · based on holdings":"빠른 매도 · 보유 수량 기준"}</div>
+    <div class="trade-percent-grid">
+      <button onclick="sellSelectedPercent(25)">${state.language==="en"?"Sell 25%":"25% 매도"}</button>
+      <button onclick="sellSelectedPercent(50)">${state.language==="en"?"Sell 50%":"50% 매도"}</button>
+      <button onclick="sellSelectedPercent(100)">${state.language==="en"?"Sell all":"전량 매도"}</button>
+    </div>
+    <div class="order-summary"><span>${t("maxBuy")}</span><button style="padding:4px 8px;font-size:11px" onclick="setTradeQty(${maxQty})">${maxQty.toLocaleString(undefined,{maximumFractionDigits:4})} ${t("shares")}</button></div>
   </div>
   <div class="muted tiny" style="margin-top:9px">${t("fee")}: 0.1% · ${t("quality")}: ${esc(c.sector)}</div>`;
+ const qtyInput=document.getElementById("tradeQty");if(qtyInput)qtyInput.addEventListener("input",updateOrderEstimate);updateOrderEstimate();
 }
-function setTradeQty(n){const el=document.getElementById("tradeQty");if(el)el.value=Math.max(0,n)}
+function setTradeQty(n){const el=document.getElementById("tradeQty");if(el){el.value=Math.max(0,n);updateOrderEstimate()}}
+function updateOrderEstimate(){const el=document.getElementById("tradeQty"),out=document.getElementById("orderEstimate"),c=companyByTicker(state.selectedTicker);if(el&&out&&c){const q=Math.max(0,Number(el.value)||0);out.textContent=money(q*c.price*(1+FEE_RATE))}}
 function tradeBuySelected(){const el=document.getElementById("tradeQty");if(el)buy(state.selectedTicker,el.value)}
 function tradeSellSelected(){const el=document.getElementById("tradeQty");if(el)sell(state.selectedTicker,el.value)}
+function sellSelectedPercent(percent){
+ const p=state.positions[state.selectedTicker];
+ if(!p||p.qty<=0){toast(t("noPosition"));return}
+ const qty=percent>=100?p.qty:Math.floor((p.qty*percent/100)*10000)/10000;
+ if(qty<=0){toast(t("invalid"));return}
+ sell(state.selectedTicker,qty);
+}
 
 function renderChart(){
  const c=companyByTicker(state.selectedTicker);
