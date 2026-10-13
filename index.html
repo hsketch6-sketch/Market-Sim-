@@ -35,7 +35,7 @@ main{max-width:1600px;margin:auto;padding:18px;display:grid;gap:14px}
 .stat .extra{margin-top:6px;font-size:12px;color:var(--muted)}
 .layout{grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);align-items:start}
 .two{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
-.market-banner{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.market-state-headline{font-size:clamp(23px,3vw,34px);font-weight:950;letter-spacing:-1px;line-height:1.1;margin:7px 0 9px}.market-state-sub{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.market-state-chip{font-size:12px;font-weight:800;letter-spacing:.4px;border:1px solid #3c526e;background:linear-gradient(135deg,#18283d,#172033);padding:7px 11px;border-radius:999px}.market-state-chip.boom,.market-state-chip.bull{border-color:#277b63;color:#7df0c2}.market-state-chip.crash,.market-state-chip.bear{border-color:#8a3d50;color:#ff9ba9}.market-state-chip.sideways{border-color:#5c4e92;color:#c9b9ff}.fomo-bar{height:7px;border-radius:99px;background:#253247;overflow:hidden;margin-top:8px}.fomo-fill{height:100%;width:0;background:linear-gradient(90deg,#43e0aa,#f3c969,#ff667c);transition:width .15s}.fund-controls{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:end}.fund-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.metric-box{padding:11px;background:#0c1420;border:1px solid #25344a;border-radius:9px;min-width:0}.metric-box .label{font-size:11px;color:var(--muted);margin-bottom:5px}.metric-box strong{font-size:16px;overflow-wrap:anywhere}
+.market-banner{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.market-state-headline{font-size:clamp(23px,3vw,34px);font-weight:950;letter-spacing:-1px;line-height:1.1;margin:7px 0 9px}.market-state-sub{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.market-state-chip{font-size:12px;font-weight:800;letter-spacing:.4px;border:1px solid #3c526e;background:linear-gradient(135deg,#18283d,#172033);padding:7px 11px;border-radius:999px}.market-state-chip.boom,.market-state-chip.bull{border-color:#277b63;color:#7df0c2}.market-state-chip.crash,.market-state-chip.bear{border-color:#8a3d50;color:#ff9ba9}.market-state-chip.sideways{border-color:#5c4e92;color:#c9b9ff}.fomo-bar{height:7px;border-radius:99px;background:#253247;overflow:hidden;margin-top:8px}.fomo-fill{height:100%;width:0;background:linear-gradient(90deg,#43e0aa,#f3c969,#ff667c);transition:width .15s}.metric-box{padding:11px;background:#f8fafc;border:1px solid #e8edf3;border-radius:11px;min-width:0}.metric-box .label{font-size:11px;color:var(--muted);margin-bottom:5px}.metric-box strong{font-size:16px;overflow-wrap:anywhere}
 .pill{border:1px solid var(--line);padding:5px 9px;border-radius:999px;color:var(--muted);font-size:12px}
 .positive{color:var(--green)!important}.negative{color:var(--red)!important}.neutral{color:var(--muted)}
 .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
@@ -70,11 +70,21 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
 .toast{position:fixed;right:18px;bottom:18px;z-index:50;background:#1b2b3e;border:1px solid #425975;border-radius:10px;padding:13px 16px;max-width:min(400px,calc(100vw - 36px));box-shadow:0 10px 40px #0008;display:none}
 footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
 #nicknameOverlay{position:fixed;inset:0;background:#050910eF;z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
+.overlay{position:fixed;inset:0;background:#17203366;z-index:99;display:none;align-items:center;justify-content:center;padding:18px;overflow:auto}
+.player-modal{width:min(900px,100%);max-height:90vh;overflow:auto}
+.player-info-button{background:#f4f8ff!important;border-color:#d9e7ff!important;color:#245eaa!important}
+.time-control{display:flex;align-items:end;gap:6px;flex-wrap:wrap;background:#f8fafc;border:1px solid #e6eaf0;border-radius:10px;padding:7px}
+.time-control label{font-size:11px;color:#697586;width:100%}
+.time-control input{width:100px;min-width:75px;padding:8px}
+.time-control button{white-space:nowrap}
+.metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:12px 0}
+.metric-grid .stat{padding:12px}
+@media(max-width:700px){.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.time-control{flex:1}.time-control input{width:100%}.player-modal{padding:14px}}
 .modal{width:min(420px,100%);padding:24px;background:var(--panel);border:1px solid var(--line);border-radius:14px}
 .modal h2{margin-top:0}
 @media(max-width:1200px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.layout{grid-template-columns:1fr}}
 @media(max-width:1000px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.layout{grid-template-columns:1fr}}
-@media(max-width:600px){.fund-controls{grid-template-columns:1fr 1fr}.fund-controls input{grid-column:1/-1}.fund-metrics{grid-template-columns:1fr 1fr}header{padding:11px;align-items:flex-start}.brand{font-size:18px}main{padding:10px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr}.stat{padding:11px}.panel{padding:12px}.header-right button{padding:7px}.company{padding:9px}}
+@media(max-width:600px){header{padding:11px;align-items:flex-start}.brand{font-size:18px}main{padding:10px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr}.stat{padding:11px}.panel{padding:12px}.header-right button{padding:7px}.company{padding:9px}}
 
 /* Broker-inspired clean trading UI */
 :root{color-scheme:light;--bg:#f4f6f8;--panel:#ffffff;--panel2:#f7f9fc;--line:#e3e7ed;--text:#191f28;--muted:#697586;--green:#0b9f76;--red:#e5484d;--blue:#3182f6;--yellow:#b7791f;--purple:#7657c8}
@@ -126,7 +136,7 @@ th,td{border-bottom-color:#edf0f4}
 <header>
   <div class="brand"><span class="brand-mark">M</span><div>MARKET<span>SIM</span><div class="tiny muted" style="letter-spacing:1.6px;font-weight:700">VIRTUAL EXCHANGE</div></div></div>
   <div class="header-right">
-    <span id="playerLabel" class="pill">플레이어</span>
+    <button id="playerLabel" class="pill player-info-button" onclick="showPlayerInfo()" title="포트폴리오 및 성과 지표">플레이어</button>
     <button id="langBtn" onclick="toggleLanguage()">EN</button>
     <button onclick="changeNickname()">닉네임</button>
   </div>
@@ -148,10 +158,11 @@ th,td{border-bottom-color:#edf0f4}
     <hr>
     <div class="row">
       <button class="primary" onclick="advanceDays(1)" id="nextDayBtn">하루 진행 ▶</button>
-      <button onclick="advanceDays(5)">5일 진행</button>
-      <button onclick="advanceDays(20)">20일 진행</button>
+      <button onclick="advanceDays(5)">5일</button>
+      <button onclick="advanceDays(20)">20일</button>
+      <div class="time-control"><label for="customAdvanceDays">원하는 거래일 진행</label><input id="customAdvanceDays" type="number" min="1" step="1" value="252"><button onclick="advanceCustomDays()">기간 진행 ▶</button></div>
       <button onclick="toggleAuto()" id="autoBtn">자동 진행 시작</button>
-      <button onclick="extendGame()">게임 기간 +5년</button>
+      <div class="time-control"><label for="extendYearsInput">게임 기간 연장(년)</label><input id="extendYearsInput" type="number" min="1" step="1" value="5"><button onclick="extendGameCustom()">기간 연장</button></div>
     </div>
     <p class="muted small" id="gameStatus" style="margin-bottom:0">가상 시장입니다. 거래 수수료는 매수·매도 각각 0.1%입니다.</p>
   </div>
@@ -166,21 +177,6 @@ th,td{border-bottom-color:#edf0f4}
     <div class="stat"><div class="label" id="fomoLabel">FOMO 지수</div><div class="value" id="fomoValue">0 / 100</div><div class="fomo-bar"><div class="fomo-fill" id="fomoFill"></div></div><div class="extra" id="fomoExtra">시장 평균 대비 성과로 변동</div></div>
   </div>
 
-  <section class="panel">
-    <div class="section-title"><h2 id="fundTitle">Fund 1 · S&P2 전략</h2><span class="pill" id="fundStatus">연간 시총 상위 2개 리밸런싱</span></div>
-    <div class="fund-metrics">
-      <div class="metric-box"><div class="label" id="fundNavLabel">펀드 기준가</div><strong id="fundNav">$100.00</strong></div>
-      <div class="metric-box"><div class="label" id="fundReturnLabel">펀드 누적 수익률</div><strong id="fundReturn">0.00%</strong></div>
-      <div class="metric-box"><div class="label" id="fundHoldingsLabel">현재 편입 종목</div><strong id="fundHoldings">—</strong></div>
-    </div>
-    <div class="notice" id="fundDescription" style="margin:12px 0">시가총액 상위 2개 기업에 동일 비중으로 투자합니다. 시장 폭락 필터가 발동하면 현금으로 대피합니다.</div>
-    <div class="fund-controls">
-      <div><label class="small muted" id="fundAmountLabel" for="fundAmount">투자 금액</label><input type="number" id="fundAmount" min="1" step="1000" value="10000"></div>
-      <button class="buy" onclick="buyFund()" id="fundBuyBtn">Fund 1 매수</button>
-      <button class="sell" onclick="sellFund()" id="fundSellBtn">Fund 1 매도</button>
-    </div>
-    <div class="muted small" id="fundPositionInfo" style="margin-top:10px">보유 펀드 수량: 0</div>
-  </section>
 
   <div class="grid layout">
     <section class="panel">
@@ -288,6 +284,15 @@ th,td{border-bottom-color:#edf0f4}
   </div>
 </div>
 
+
+<div id="playerInfoOverlay" class="overlay" onclick="if(event.target===this)closePlayerInfo()">
+  <div class="modal player-modal">
+    <div class="section-title"><h2 id="playerInfoTitle">플레이어 정보</h2><button onclick="closePlayerInfo()" aria-label="닫기">✕</button></div>
+    <div id="playerInfoBody"></div>
+    <div class="row" style="justify-content:flex-end;margin-top:14px"><button onclick="closePlayerInfo()">닫기</button></div>
+  </div>
+</div>
+
 <script>
 "use strict";
 
@@ -336,8 +341,7 @@ const state = {
  fomo:0, fomoLockDays:0, fomoTriggeredToday:false, marketAvgReturn:0,
  regime:"normal", regimeDaysLeft:30, marketIndex:100, marketPeak:100,
  sp500Index:1000, sp500InitialIndex:1000, sp500DailyReturn:0, sp500BaseDay:0,
- themeEvent:null, delistedCount:0, majorCrashDaysLeft:0, nextMajorCrashDay:0, majorCrashType:"", regimeAfterCrash:false, fund:{nav:100,initialNav:100,topPair:[],lastRebalanceYear:0,filterState:"NORMAL",marketPeak:100,marketLow:100,reboundBase:null},
- fundUnits:0, fundCost:0
+ themeEvent:null, delistedCount:0, majorCrashDaysLeft:0, nextMajorCrashDay:0, majorCrashType:"", regimeAfterCrash:false, wealthHistory:[], metricsHistoryStartDay:0
 };
 
 let autoTimer = null;
@@ -367,10 +371,6 @@ const TEXT = {
   marketBull:"상승장",marketBear:"하락장",marketFlat:"횡보장",
   marketNormal:"일반장",marketBoom:"초강세장",marketCrash:"폭락장",marketSideways:"초저변동 횡보장",
   fomo:"FOMO 지수",fomoExtra:"시장 평균 대비 성과로 변동",fomoLocked:"FOMO 강제 보유 중",fomoFree:"거래 자유 상태",
-  fundTitle:"Fund 1 · S&P2 전략",fundBuy:"Fund 1 매수",fundSell:"Fund 1 매도",fundAmount:"투자 금액",
-  fundNav:"펀드 기준가",fundReturn:"펀드 누적 수익률",fundHoldings:"현재 편입 종목",
-  fundDesc:"시가총액 상위 2개 기업에 동일 비중으로 투자합니다. 시장 폭락 필터가 발동하면 현금으로 대피합니다.",
-  fundNoCash:"펀드를 매수할 현금이 부족합니다.",fundNoUnits:"매도할 펀드 수량이 없습니다.",
   fomoRestricted:"FOMO 강제 보유 기간에는 개별 주식 거래가 제한됩니다.",
   delisted:"상장폐지",regime:"시장 국면",bubble:"테마 과열",themeReal:"실적 동반 테마",themeBubble:"과열 테마",
 
@@ -409,10 +409,6 @@ const TEXT = {
   marketBull:"Bull Market",marketBear:"Bear Market",marketFlat:"Sideways",
   marketNormal:"Normal Market",marketBoom:"Boom Market",marketCrash:"Market Crash",marketSideways:"Ultra-low-volatility Sideways",
   fomo:"FOMO Index",fomoExtra:"Moves with performance vs. market average",fomoLocked:"FOMO forced holding",fomoFree:"Trading unrestricted",
-  fundTitle:"Fund 1 · S&P2 Strategy",fundBuy:"Buy Fund 1",fundSell:"Sell Fund 1",fundAmount:"Investment Amount",
-  fundNav:"Fund NAV",fundReturn:"Fund Total Return",fundHoldings:"Current Constituents",
-  fundDesc:"Equal-weight the two largest companies by market cap. The market-crash filter moves the fund to cash during a confirmed crash.",
-  fundNoCash:"Not enough cash to buy the fund.",fundNoUnits:"No fund units to sell.",
   fomoRestricted:"Individual-stock trading is restricted during FOMO forced holding.",
   delisted:"Delisted",regime:"Market Regime",bubble:"Theme overheating",themeReal:"Fundamental-backed theme",themeBubble:"Speculative theme",
 
@@ -457,10 +453,9 @@ function holdingCost(ticker){return state.positions[ticker]?.cost||0}
 function marketValue(){
  return state.companies.reduce((sum,c)=>sum+holdingQty(c.ticker)*c.price,0);
 }
-function fundMarketValue(){return state.fundUnits*(state.fund?.nav||100)}
-function totalAssets(){return state.cash+marketValue()+fundMarketValue()-state.debt}
+function totalAssets(){return state.cash+marketValue()-state.debt}
 function totalReturn(){return state.initialWealth?((totalAssets()/state.initialWealth)-1)*100:0}
-function holdingCount(){return Object.values(state.positions).filter(p=>p.qty>0.000001).length+(state.fundUnits>0.000001?1:0)}
+function holdingCount(){return Object.values(state.positions).filter(p=>p.qty>0.000001).length}
 function marketRegime(){return state.regime||"normal"}
 function regimeLabel(r){
  const map={normal:t("marketNormal"),sideways:t("marketSideways"),bull:t("marketBull"),bear:t("marketBear"),boom:t("marketBoom"),crash:t("marketCrash")};
@@ -520,14 +515,6 @@ function makeCompanies(count=COMPANY_COUNT){
 }
 function marketCap(c){return c.price*c.sharesOutstanding}
 function floatAdjustedMarketCap(c){return marketCap(c)*clamp(safeNum(c.floatFactor,1),.01,1)}
-function topTwoByMarketCap(){
- return state.companies.filter(c=>!c.delisted).slice().sort((a,b)=>marketCap(b)-marketCap(a)).slice(0,2).map(c=>c.ticker);
-}
-function pairKey(pair){return (pair||[]).slice().sort().join("|")}
-function initFund(){
- state.fund={nav:100,initialNav:100,topPair:topTwoByMarketCap(),lastRebalanceYear:0,filterState:"NORMAL",marketPeak:state.marketIndex||100,marketLow:state.marketIndex||100,reboundBase:null};
- state.fundUnits=0;state.fundCost=0;
-}
 function ensureCompanyFields(c){
  const defaults=makeCompanies(1)[0];
  for(const k of ["sector","theme"])if(!c[k])c[k]=defaults[k];
@@ -572,9 +559,9 @@ function resetFresh(){
  state.fomo=0;state.fomoLockDays=0;state.fomoTriggeredToday=false;state.marketAvgReturn=0;
  state.regime="normal";state.regimeDaysLeft=regimeDuration("normal");state.marketIndex=100;state.marketPeak=100;
  state.sp500Index=1000;state.sp500InitialIndex=1000;state.sp500DailyReturn=0;state.sp500BaseDay=0;
- state.themeEvent=null;state.delistedCount=0;state.majorCrashDaysLeft=0;state.nextMajorCrashDay=Math.floor(rand(252,1261));state.majorCrashType="";state.regimeAfterCrash=false;state.fundUnits=0;state.fundCost=0;initFund();
+ state.themeEvent=null;state.delistedCount=0;state.majorCrashDaysLeft=0;state.nextMajorCrashDay=Math.floor(rand(252,1261));state.majorCrashType="";state.regimeAfterCrash=false;state.wealthHistory=[];state.metricsHistoryStartDay=0;
  addNews("Market Sim opens with 500 listed companies and a float-adjusted market-cap-weighted S&P 500-style index.","500개 기업으로 구성된 유동주식 조정 시가총액 가중 가상 S&P 500 지수가 시작됐습니다.","market");
- addNews("Fund 1 tracks the two largest companies by market capitalization, with a crash filter.","Fund 1은 시가총액 상위 2개 기업을 추종하며 시장 폭락 필터를 사용합니다.","fund");
+ state.wealthHistory=[{day:0,assets:START_CASH}];
  saveState();renderAll();
 }
 function addNews(en,ko,type="market",ticker=""){
@@ -586,7 +573,7 @@ function safeNum(x,fallback=0){
 }
 function saveState(){
  try{
-   const keys=["day","maxDays","cash","initialWealth","debt","positions","companies","selectedTicker","playerName","language","news","bots","tradeHistory","fomo","fomoLockDays","marketAvgReturn","regime","regimeDaysLeft","marketIndex","marketPeak","sp500Index","sp500InitialIndex","sp500DailyReturn","sp500BaseDay","themeEvent","delistedCount","majorCrashDaysLeft","nextMajorCrashDay","majorCrashType","regimeAfterCrash","fund","fundUnits","fundCost"];
+   const keys=["day","maxDays","cash","initialWealth","debt","positions","companies","selectedTicker","playerName","language","news","bots","tradeHistory","fomo","fomoLockDays","marketAvgReturn","regime","regimeDaysLeft","marketIndex","marketPeak","sp500Index","sp500InitialIndex","sp500DailyReturn","sp500BaseDay","themeEvent","delistedCount","majorCrashDaysLeft","nextMajorCrashDay","majorCrashType","regimeAfterCrash","wealthHistory","metricsHistoryStartDay"];
    const data={version:3};for(const k of keys)data[k]=state[k];
    localStorage.setItem(SAVE_KEY,JSON.stringify(data));
    const label=document.getElementById("saveLabel");if(label)label.textContent=t("autoSave");
@@ -619,19 +606,18 @@ function loadState(){
    state.sp500DailyReturn=safeNum(d.sp500DailyReturn,0);state.sp500BaseDay=Math.max(0,Math.floor(safeNum(d.sp500BaseDay,state.day)));
    state.themeEvent=d.themeEvent&&typeof d.themeEvent==="object"?d.themeEvent:null;state.delistedCount=Math.max(0,Math.floor(safeNum(d.delistedCount)));
    state.majorCrashDaysLeft=Math.max(0,Math.floor(safeNum(d.majorCrashDaysLeft)));state.nextMajorCrashDay=Math.max(state.day+1,Math.floor(safeNum(d.nextMajorCrashDay,state.day+Math.floor(rand(252,1261)))));state.majorCrashType=String(d.majorCrashType||"");state.regimeAfterCrash=!!d.regimeAfterCrash;
-   state.fund=d.fund&&typeof d.fund==="object"?d.fund:{nav:100,initialNav:100,topPair:[],lastRebalanceYear:0,filterState:"NORMAL",marketPeak:state.marketIndex,marketLow:state.marketIndex,reboundBase:null};
-   state.fund.nav=Math.max(.01,safeNum(state.fund.nav,100));state.fund.initialNav=Math.max(.01,safeNum(state.fund.initialNav,100));
-   if(!Array.isArray(state.fund.topPair)||state.fund.topPair.length!==2)state.fund.topPair=topTwoByMarketCap();
-   state.fund.lastRebalanceYear=Math.max(0,Math.floor(safeNum(state.fund.lastRebalanceYear)));
-   state.fund.filterState=["NORMAL","DECLINE","REBOUND","CRASH"].includes(state.fund.filterState)?state.fund.filterState:"NORMAL";
-   state.fund.marketPeak=Math.max(.01,safeNum(state.fund.marketPeak,state.marketIndex));state.fund.marketLow=Math.max(.01,safeNum(state.fund.marketLow,state.marketIndex));
-   state.fund.reboundBase=d.fund?.reboundBase==null?null:safeNum(d.fund.reboundBase);
-   state.fundUnits=Math.max(0,safeNum(d.fundUnits));state.fundCost=Math.max(0,safeNum(d.fundCost));
+   // Migration only: liquidate the removed legacy Fund 1 into cash when loading an older save.
+   const legacyFundNav=Math.max(.01,safeNum(d.fund?.nav,100));
+   const legacyFundUnits=Math.max(0,safeNum(d.fundUnits));
+   if(legacyFundUnits>0)state.cash+=legacyFundUnits*legacyFundNav;
    for(const [ticker,p] of Object.entries(state.positions)){
      if(!state.companies.some(c=>c.ticker===ticker)||!p||!Number.isFinite(Number(p.qty))||!Number.isFinite(Number(p.cost))){delete state.positions[ticker];continue}
      p.qty=Math.max(0,Number(p.qty));p.cost=Math.max(0,Number(p.cost));
    }
    for(const b of state.bots){if(!b.positions)b.positions={};if(!Number.isFinite(Number(b.cash)))b.cash=START_CASH;}
+   state.wealthHistory=Array.isArray(d.wealthHistory)?d.wealthHistory.filter(x=>x&&Number.isFinite(Number(x.assets))&&Number.isFinite(Number(x.day))).map(x=>({day:Math.max(0,Math.floor(Number(x.day))),assets:Number(x.assets)})):[];
+   state.metricsHistoryStartDay=Number.isFinite(Number(d.metricsHistoryStartDay))?Math.max(0,Math.floor(Number(d.metricsHistoryStartDay))):state.day;
+   if(!state.wealthHistory.length){state.wealthHistory=[{day:state.day,assets:Math.max(0,totalAssets())}];state.metricsHistoryStartDay=state.day;}
    saveState();
  }catch(e){console.error("Save could not be loaded:",e);resetFresh()}
 }
@@ -722,38 +708,6 @@ function updateThemeEvent(){
      real?`${sector} 테마가 실적 전망 개선과 함께 상승하고 있습니다.`:`${sector} 테마에 투기적 열기가 몰리고 있습니다. 밸류에이션이 실적보다 빠르게 상승 중.`,"theme");
  }
 }
-function updateFundFilter(){
- const f=state.fund,idx=state.marketIndex;
- if(f.filterState==="NORMAL"){
-   f.marketPeak=Math.max(f.marketPeak,idx);
-   if(idx<=f.marketPeak*.92){f.filterState="DECLINE";f.marketLow=idx;f.reboundBase=null;}
- }else if(f.filterState==="DECLINE"){
-   f.marketLow=Math.min(f.marketLow,idx);
-   if(idx>=f.marketLow*1.03){f.filterState="REBOUND";f.reboundBase=f.marketLow;}
-   if(idx>=f.marketPeak){f.filterState="NORMAL";f.marketPeak=idx;}
- }else if(f.filterState==="REBOUND"){
-   if(idx>=f.marketPeak){f.filterState="NORMAL";f.marketPeak=idx;f.marketLow=idx;f.reboundBase=null;}
-   else if(idx<(f.reboundBase||f.marketLow)*.995){f.filterState="CRASH";addNews("Fund 1's crash filter has moved the strategy to cash.","Fund 1의 폭락 필터가 발동해 전략이 현금으로 대피했습니다.","fund");}
- }else if(f.filterState==="CRASH"){
-   if(idx>=f.marketPeak){f.filterState="NORMAL";f.marketPeak=idx;f.marketLow=idx;f.reboundBase=null;addNews("Fund 1's crash filter confirms market recovery and re-enters the market.","Fund 1의 폭락 필터가 시장 회복을 확인해 재진입합니다.","fund");}
- }
-}
-function updateFund(){
- const f=state.fund,year=Math.floor(state.day/TRADING_DAYS_PER_YEAR);
- if(year!==f.lastRebalanceYear){
-   const next=topTwoByMarketCap();
-   if(pairKey(next)!==pairKey(f.topPair)){
-     f.topPair=next;addNews(`Fund 1 rebalanced into the new top-two market-cap pair: ${next.join(", ")}.`,`Fund 1이 시가총액 상위 2개 기업 조합으로 리밸런싱했습니다: ${next.join(", ")}.`,"fund");
-   }
-   f.lastRebalanceYear=year;
- }
- updateFundFilter();
- if(f.filterState==="CRASH")f.nav*=Math.pow(1+CASH_INTEREST,1/TRADING_DAYS_PER_YEAR);
- else{
-   const members=f.topPair.map(companyByTicker).filter(Boolean),daily=members.length?members.reduce((s,c)=>s+c.changePct/100,0)/2:0;
-   f.nav=Math.max(.01,f.nav*(1+daily));
- }
-}
 function delistAndReplace(){
  for(let i=0;i<state.companies.length;i++){
    const c=state.companies[i];
@@ -761,7 +715,7 @@ function delistAndReplace(){
    if(!(c.distressDays>=5||c.financialHealth<=.015||(c.financialHealth<.12&&Math.random()<.002)))continue;
    const ticker=c.ticker;delete state.positions[ticker];
    for(const b of state.bots)if(b.positions)delete b.positions[ticker];
-   state.fund.topPair=state.fund.topPair.filter(t=>t!==ticker);state.delistedCount++;
+   state.delistedCount++;
    addNews(`${c.name} (${ticker}) has been delisted after severe financial distress.`,`재무 악화로 ${c.name} (${ticker})가 상장폐지됐습니다. 보유 주식은 전액 손실 처리됩니다.`,"delisting",ticker);
    state.companies[i]=makeReplacement();
    if(state.selectedTicker===ticker)state.selectedTicker=state.companies[i].ticker;
@@ -842,11 +796,11 @@ function advanceOneDay(){
  else state.sp500DailyReturn=state.marketAvgReturn;
  state.sp500Index=Math.max(.01,state.sp500Index*(1+state.sp500DailyReturn/100));
  state.cash*=Math.pow(1+CASH_INTEREST,1/TRADING_DAYS_PER_YEAR);state.debt*=Math.pow(1+LOAN_RATE,1/TRADING_DAYS_PER_YEAR);
- runBots();updateFund();delistAndReplace();
+ runBots();delistAndReplace();
  const assetsAfter=totalAssets(),playerDailyReturn=assetsBefore>0?(assetsAfter/assetsBefore-1)*100:0;
  if(!wasLocked&&!state.fomoTriggeredToday){
-   if(playerDailyReturn<state.sp500DailyReturn)state.fomo=clamp(state.fomo+20,0,100);
-   else if(playerDailyReturn>state.sp500DailyReturn)state.fomo=clamp(state.fomo-10,0,100);
+   if(playerDailyReturn<state.sp500DailyReturn)state.fomo=clamp(state.fomo+2,0,100);
+   else if(playerDailyReturn>state.sp500DailyReturn)state.fomo=clamp(state.fomo-2,0,100);
    if(state.fomo>=100)triggerFomo();
  }
  if(state.day%5===0){
@@ -863,6 +817,9 @@ function advanceOneDay(){
    const h=headlines[Math.floor(Math.random()*headlines.length)];addNews(h[0],h[1],"company",c.ticker);
  }
  if(wasLocked){state.fomoLockDays=Math.max(0,state.fomoLockDays-1);if(state.fomoLockDays===0)state.fomo=0;}
+ const closingAssets=Math.max(0,totalAssets());
+ state.wealthHistory.push({day:state.day,assets:closingAssets});
+ if(state.wealthHistory.length>state.maxDays+2)state.wealthHistory.shift();
 }
 function runBots(){
  for(const bot of state.bots){
@@ -887,32 +844,28 @@ function runBots(){
  }
 }
 
-function buyFund(){
- if(state.fomoLockDays>0){toast(t("fomoRestricted"));return}
- const amount=Math.floor(Number(document.getElementById("fundAmount").value));
- if(!Number.isFinite(amount)||amount<=0){toast(t("invalid"));return}
- const spend=Math.min(amount,state.cash),fee=spend*FEE_RATE,units=(spend-fee)/state.fund.nav;
- if(spend<=0||units<=0){toast(t("fundNoCash"));return}
- state.cash-=spend;state.fundUnits+=units;state.fundCost+=spend;
- addNews(`${state.playerName} invested ${money(spend)} in Fund 1.`,`${state.playerName} 님이 Fund 1에 ${money(spend)}을 투자했습니다.`,"fund");
- saveState();renderAll();toast(t("buyDone"));
+function advanceCustomDays(){
+ const el=document.getElementById("customAdvanceDays");
+ const n=Math.floor(Number(el?.value));
+ if(!Number.isFinite(n)||n<1){toast(state.language==="en"?"Enter a positive number of trading days.":"1 이상의 거래일을 입력하세요.");return;}
+ advanceDays(Math.min(n,1000000));
 }
-function sellFund(){
- if(state.fomoLockDays>0){toast(t("fomoRestricted"));return}
- if(state.fundUnits<=0){toast(t("fundNoUnits"));return}
- const proceeds=state.fundUnits*state.fund.nav*(1-FEE_RATE);state.cash+=proceeds;state.fundUnits=0;state.fundCost=0;
- addNews(`${state.playerName} sold all Fund 1 units.`,`${state.playerName} 님이 Fund 1 보유분을 전량 매도했습니다.`,"fund");
- saveState();renderAll();toast(t("sellDone"));
-}
-function extendGame(){
- state.maxDays+=1260;saveState();renderAll();
- toast(state.language==="en"?"Game extended by 5 years.":"게임 기간이 5년 연장되었습니다.");
+function extendGameCustom(){
+ const el=document.getElementById("extendYearsInput");
+ const years=Math.floor(Number(el?.value));
+ if(!Number.isFinite(years)||years<1){toast(state.language==="en"?"Enter at least 1 year.":"1년 이상을 입력하세요.");return;}
+ const added=Math.min(years,100000)*TRADING_DAYS_PER_YEAR;
+ state.maxDays+=added;saveState();renderAll();
+ toast(state.language==="en"?`Game duration extended by ${years.toLocaleString()} years.`:`게임 기간을 ${years.toLocaleString()}년 연장했습니다.`);
 }
 function normalReset(){
  if(!confirm(t("confirmNormal")))return;
  stopAuto();
  state.day=0;
- // Deliberately preserve cash, positions, debt, prices and history.
+ // Preserve positions/prices, but start a fresh performance-measurement period at current equity.
+ state.initialWealth=Math.max(1,totalAssets());
+ state.wealthHistory=[{day:0,assets:Math.max(0,totalAssets())}];
+ state.metricsHistoryStartDay=0;
  addNews("The simulation clock was reset. Portfolio and prices were preserved.",
          "게임 시간을 초기화했습니다. 포트폴리오와 주가는 유지됩니다.","system");
  saveState();renderAll();
@@ -948,7 +901,7 @@ function renderAll(){
  applyLanguage();
  renderStats();renderCompanies();renderDetail();renderChart();
  renderPortfolio();renderLoan();renderLeaderboard();renderNews();
- renderClock();renderFund();
+ renderClock();
 }
 function applyLanguage(){
  document.documentElement.lang=state.language;
@@ -996,7 +949,7 @@ function renderClock(){
  document.getElementById("companyCount").textContent=state.companies.length+(state.language==="en"?" active companies":"개 활성 기업");
  document.getElementById("gameStatus").textContent=state.day>=state.maxDays?t("end"):
   (state.fomoLockDays>0?(state.language==="en"?`FOMO lock: ${state.fomoLockDays} trading days remain.`:`FOMO 강제 보유: 거래 제한 ${state.fomoLockDays}거래일 남음.`):
-   (state.language==="en"?"Simulated market. Fees: 0.1% per stock/fund transaction.":"가상 시장입니다. 주식·펀드 거래 수수료는 거래당 0.1%입니다."));
+   (state.language==="en"?"Simulated market. Stock trading fee: 0.1% per transaction.":"가상 시장입니다. 주식 거래 수수료는 거래당 0.1%입니다."));
  document.getElementById("nextDayBtn").disabled=state.day>=state.maxDays;
 }
 function renderStats(){
@@ -1019,7 +972,7 @@ function renderStats(){
  document.getElementById("fomoLabel").textContent=t("fomo");
  document.getElementById("fomoValue").textContent=`${Math.round(state.fomo)} / 100`;
  document.getElementById("fomoFill").style.width=`${clamp(state.fomo,0,100)}%`;
- document.getElementById("fomoExtra").textContent=state.fomoLockDays>0?t("fomoLocked"):(state.language==="en"?`vs S&P 500 B&H today: ${pct(state.sp500DailyReturn)}`:`오늘 S&P 500 B&H ${pct(state.sp500DailyReturn)}와 비교`);
+ document.getElementById("fomoExtra").textContent=state.fomoLockDays>0?t("fomoLocked"):(state.language==="en"?`vs S&P 500 B&H today: ${pct(state.sp500DailyReturn)} · FOMO changes by 2`:`오늘 S&P 500 B&H ${pct(state.sp500DailyReturn)}와 비교 · FOMO 매일 ±2`);
  document.getElementById("fomoValue").className="value "+(state.fomo>=80?"negative":state.fomo>=40?"":"positive");
 }
 function renderCompanies(){
@@ -1095,6 +1048,7 @@ function renderDetail(){
       <button class="buy" onclick="tradeBuySelected()">${state.language==="en"?"Buy":"매수"}</button>
       <button class="sell" onclick="tradeSellSelected()">${state.language==="en"?"Sell quantity":"수량 매도"}</button>
     </div>
+    <button class="buy" style="width:100%;margin-top:8px;padding:12px;font-weight:800" onclick="buyAllSelected()">${state.language==="en"?"Buy with all available cash":"전량 매수 · 현금 최대 사용"}</button>
     <div class="trade-quick-label">${state.language==="en"?"Quick sell · based on holdings":"빠른 매도 · 보유 수량 기준"}</div>
     <div class="trade-percent-grid">
       <button onclick="sellSelectedPercent(25)">${state.language==="en"?"Sell 25%":"25% 매도"}</button>
@@ -1109,6 +1063,13 @@ function renderDetail(){
 function setTradeQty(n){const el=document.getElementById("tradeQty");if(el){el.value=Math.max(0,n);updateOrderEstimate()}}
 function updateOrderEstimate(){const el=document.getElementById("tradeQty"),out=document.getElementById("orderEstimate"),c=companyByTicker(state.selectedTicker);if(el&&out&&c){const q=Math.max(0,Number(el.value)||0);out.textContent=money(q*c.price*(1+FEE_RATE))}}
 function tradeBuySelected(){const el=document.getElementById("tradeQty");if(el)buy(state.selectedTicker,el.value)}
+function buyAllSelected(){
+ const c=companyByTicker(state.selectedTicker);
+ if(!c||!Number.isFinite(c.price)||c.price<=0){toast(t("noCompany"));return}
+ const qty=Math.floor((state.cash/(c.price*(1+FEE_RATE)))*10000)/10000;
+ if(qty<=0){toast(t("insufficient"));return}
+ buy(state.selectedTicker,qty);
+}
 function tradeSellSelected(){const el=document.getElementById("tradeQty");if(el)sell(state.selectedTicker,el.value)}
 function sellSelectedPercent(percent){
  const p=state.positions[state.selectedTicker];
@@ -1176,34 +1137,19 @@ function renderChart(){
 }
 function renderPortfolio(){
  const entries=Object.entries(state.positions).filter(([ticker,p])=>p.qty>0.00001&&companyByTicker(ticker));
- const value=entries.reduce((s,[ticker,p])=>s+p.qty*companyByTicker(ticker).price,0)+fundMarketValue();
+ const value=entries.reduce((s,[ticker,p])=>s+p.qty*companyByTicker(ticker).price,0);
  document.getElementById("portfolioValue").textContent=money(value);
- if(!entries.length&&state.fundUnits<=0){document.getElementById("portfolio").innerHTML=`<div class="muted">${t("noHolding")}</div>`;return}
+ if(!entries.length){document.getElementById("portfolio").innerHTML=`<div class="muted">${t("noHolding")}</div>`;return}
  entries.sort((a,b)=>b[1].qty*companyByTicker(b[0]).price-a[1].qty*companyByTicker(a[0]).price);
  document.getElementById("portfolio").innerHTML=`<div class="table-wrap"><table>
  <thead><tr><th>${t("company")}</th><th class="num">${t("sharesHeld")}</th><th class="num">${t("value")}</th><th class="num">${t("pnl")}</th><th></th></tr></thead>
- <tbody>${state.fundUnits>0?`<tr><td><strong>FUND1</strong><div class="muted tiny">Fund 1 · S&P2</div></td><td class="num">${state.fundUnits.toLocaleString(undefined,{maximumFractionDigits:4})}</td><td class="num">${money(fundMarketValue())}</td><td class="num ${fundMarketValue()-state.fundCost>=0?"positive":"negative"}">${money(fundMarketValue()-state.fundCost)}</td><td><button class="sell" onclick="sellFund()">${t("sell")}</button></td></tr>`:""}${entries.map(([ticker,p])=>{
+ <tbody>${entries.map(([ticker,p])=>{
   const c=companyByTicker(ticker),v=p.qty*c.price,pnl=v-p.cost;
   return `<tr><td><strong>${esc(c.ticker)}</strong><div class="muted tiny">${esc(c.name)}</div></td>
   <td class="num">${p.qty.toLocaleString(undefined,{maximumFractionDigits:4})}</td>
   <td class="num">${money(v)}</td><td class="num ${pnl>=0?"positive":"negative"}">${money(pnl)}</td>
   <td><button class="sell" onclick="sell('${ticker}',${p.qty})">${t("sell")}</button></td></tr>`;
  }).join("")}</tbody></table></div>`;
-}
-function renderFund(){
- const f=state.fund,nav=f.nav||100,ret=(nav/(f.initialNav||100)-1)*100,members=(f.topPair||[]).map(companyByTicker).filter(Boolean);
- document.getElementById("fundTitle").textContent=t("fundTitle");document.getElementById("fundNavLabel").textContent=t("fundNav");
- document.getElementById("fundReturnLabel").textContent=t("fundReturn");document.getElementById("fundHoldingsLabel").textContent=t("fundHoldings");
- document.getElementById("fundAmountLabel").textContent=t("fundAmount");document.getElementById("fundBuyBtn").textContent=t("fundBuy");document.getElementById("fundSellBtn").textContent=t("fundSell");
- document.getElementById("fundNav").textContent=money(nav);const re=document.getElementById("fundReturn");re.textContent=pct(ret);re.className=ret>=0?"positive":"negative";
- document.getElementById("fundHoldings").textContent=members.length?members.map(c=>c.ticker).join(" / "):"—";
- document.getElementById("fundStatus").textContent=`${f.filterState} · ${state.language==="en"?"Annual rebalance":"연간 리밸런싱"}`;
- document.getElementById("fundDescription").textContent=state.language==="en"
-  ?`Equal-weight top 2 by market cap. Crash filter: ${f.filterState}. Next rebalance at the next annual boundary.`
-  :`시가총액 상위 2개 기업에 동일 비중으로 투자합니다. 현재 폭락 필터: ${f.filterState}. 연간 경계에서 상위 2개를 재선정합니다.`;
- document.getElementById("fundPositionInfo").textContent=state.language==="en"
-  ?`Your units: ${state.fundUnits.toFixed(4)} · Market value: ${money(fundMarketValue())} · Cost: ${money(state.fundCost)}`
-  :`보유 펀드 수량: ${state.fundUnits.toFixed(4)} · 평가액: ${money(fundMarketValue())} · 매입원금: ${money(state.fundCost)}`;
 }
 function renderLoan(){
  document.getElementById("loanBreakdown").innerHTML=
@@ -1237,6 +1183,56 @@ function renderNews(){
   <p>${esc(text||n.en||"")}</p></div>`;
  }).join("");
 }
+
+
+function calcPerformanceMetrics(){
+ const years=state.day/TRADING_DAYS_PER_YEAR;
+ const assets=Math.max(0,totalAssets());
+ let cagr=null;
+ if(years>0&&state.initialWealth>0)cagr=assets<=0?-100:(Math.pow(assets/state.initialWealth,1/years)-1)*100;
+ const curve=(state.wealthHistory||[]).filter(p=>p&&Number.isFinite(p.assets)).slice().sort((a,b)=>a.day-b.day);
+ let peak=0,mdd=0;
+ for(const p of curve){peak=Math.max(peak,p.assets);if(peak>0)mdd=Math.min(mdd,(p.assets/peak-1)*100);}
+ const daily=[];
+ for(let i=1;i<curve.length;i++){const prev=curve[i-1].assets,now=curve[i].assets;if(prev>0)daily.push(now/prev-1);}
+ let sharpe=null;
+ if(daily.length>=2){
+   const rf=Math.pow(1+CASH_INTEREST,1/TRADING_DAYS_PER_YEAR)-1;
+   const excess=daily.map(r=>r-rf),mean=excess.reduce((a,b)=>a+b,0)/excess.length;
+   const variance=excess.reduce((a,b)=>a+(b-mean)**2,0)/(excess.length-1);
+   const sd=Math.sqrt(variance);if(sd>0)sharpe=mean/sd*Math.sqrt(TRADING_DAYS_PER_YEAR);
+ }
+ const calmar=(cagr!==null&&mdd<0)?cagr/Math.abs(mdd):null;
+ return {assets,cagr,mdd,sharpe,calmar,curveDays:curve.length?curve[curve.length-1].day-curve[0].day:0,historyStart:state.metricsHistoryStartDay||0,years};
+}
+function showPlayerInfo(){
+ const m=calcPerformanceMetrics();
+ const holdings=Object.entries(state.positions).filter(([ticker,p])=>p.qty>0.000001&&companyByTicker(ticker)).map(([ticker,p])=>({ticker,c:companyByTicker(ticker),qty:p.qty,value:p.qty*companyByTicker(ticker).price,cost:p.cost})).sort((a,b)=>b.value-a.value);
+ const fmtMetric=x=>x===null||!Number.isFinite(x)?"—":`${x.toFixed(2)}%`;
+ const fmtRatio=x=>x===null||!Number.isFinite(x)?"—":x.toFixed(2);
+ const note=state.language==="en"
+  ?`Performance history: ${m.curveDays.toLocaleString()} recorded trading days. Sharpe uses a 2% annual risk-free rate. For saves created before this update, MDD and Sharpe begin from the migration date.`
+  :`성과 기록: ${m.curveDays.toLocaleString()}거래일. 샤프 비율은 연 2% 무위험 수익률을 가정합니다. 업데이트 전 세이브는 과거 일별 자산 기록이 없어 MDD·샤프 계산이 업데이트 시점부터 시작됩니다.`;
+ const head=state.language==="en"?"Portfolio":"포트폴리오";
+ const assetWord=state.language==="en"?"Total assets":"총자산";
+ const portfolioRows=holdings.length?`<div class="table-wrap"><table><thead><tr><th>${state.language==="en"?"Ticker":"티커"}</th><th>${state.language==="en"?"Company":"기업"}</th><th class="num">${state.language==="en"?"Shares":"보유 수량"}</th><th class="num">${state.language==="en"?"Market value":"평가액"}</th><th class="num">${state.language==="en"?"P/L":"평가손익"}</th></tr></thead><tbody>${holdings.map(h=>{const pnl=h.value-h.cost;return `<tr><td><strong>${esc(h.ticker)}</strong></td><td>${esc(h.c.name)}</td><td class="num">${h.qty.toLocaleString(undefined,{maximumFractionDigits:4})}</td><td class="num">${money(h.value)}</td><td class="num ${pnl>=0?"positive":"negative"}">${money(pnl)}</td></tr>`}).join("")}</tbody></table></div>`:`<div class="notice">${state.language==="en"?"No stocks are currently held.":"현재 보유 중인 주식이 없습니다."}</div>`;
+ document.getElementById("playerInfoTitle").textContent=`${state.playerName} · ${state.language==="en"?"Account overview":"계좌 정보"}`;
+ document.getElementById("playerInfoBody").innerHTML=`
+  <div class="metric-grid">
+   <div class="stat"><div class="label">${assetWord}</div><div class="value">${money(m.assets)}</div></div>
+   <div class="stat"><div class="label">CAGR</div><div class="value ${m.cagr>=0?"positive":"negative"}">${fmtMetric(m.cagr)}</div></div>
+   <div class="stat"><div class="label">MDD</div><div class="value ${m.mdd<0?"negative":"positive"}">${fmtMetric(m.mdd)}</div></div>
+   <div class="stat"><div class="label">${state.language==="en"?"Sharpe ratio":"샤프 비율"}</div><div class="value">${fmtRatio(m.sharpe)}</div></div>
+   <div class="stat"><div class="label">${state.language==="en"?"Calmar ratio":"칼마 비율"}</div><div class="value">${fmtRatio(m.calmar)}</div></div>
+   <div class="stat"><div class="label">${state.language==="en"?"Total return":"누적 수익률"}</div><div class="value ${(totalReturn()>=0)?"positive":"negative"}">${pct(totalReturn())}</div></div>
+   <div class="stat"><div class="label">${state.language==="en"?"Elapsed time":"경과 기간"}</div><div class="value">${(m.years).toFixed(2)} ${state.language==="en"?"years":"년"}</div></div>
+   <div class="stat"><div class="label">${state.language==="en"?"Holdings":"보유 종목"}</div><div class="value">${holdings.length}</div></div>
+  </div>
+  <h3 style="margin:16px 0 9px">${head}</h3>${portfolioRows}
+  <p class="muted small" style="line-height:1.5;margin-top:12px">${note}</p>`;
+ document.getElementById("playerInfoOverlay").style.display="flex";
+}
+function closePlayerInfo(){document.getElementById("playerInfoOverlay").style.display="none"}
 
 function toggleLanguage(){
  state.language=state.language==="ko"?"en":"ko";saveState();renderAll();
