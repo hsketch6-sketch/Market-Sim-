@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Market Sim</title>
 <style>
-:root{color-scheme:dark;--bg:#090d14;--panel:#111925;--panel2:#172231;--line:#263448;--text:#e7edf6;--muted:#91a1b6;--green:#43d9a3;--red:#ff667c;--blue:#6ea8ff;--yellow:#f3c969}
+:root{color-scheme:dark;--bg:#070b12;--panel:#101827;--panel2:#172438;--line:#293a52;--text:#eaf1fb;--muted:#94a6bd;--green:#43e0aa;--red:#ff667c;--blue:#75aaff;--yellow:#f3c969;--purple:#b49aff}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,"Segoe UI",Arial,sans-serif;font-size:14px}
 button,input,select{font:inherit}
@@ -19,8 +19,8 @@ button:disabled{opacity:.4;cursor:not-allowed}
 .danger{background:#48202a;border-color:#783340}
 input,select{width:100%;background:#0b121d;color:var(--text);border:1px solid var(--line);border-radius:7px;padding:9px;outline:none}
 input:focus,select:focus{border-color:var(--blue)}
-header{position:sticky;top:0;z-index:10;background:#0c121dee;backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:13px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px}
-.brand{font-weight:900;font-size:21px;letter-spacing:-1px}.brand span{color:var(--green)}
+header{position:sticky;top:0;z-index:10;background:#0b111dee;backdrop-filter:blur(14px);border-bottom:1px solid #2a3b54;padding:13px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px;box-shadow:0 8px 28px #0003}
+.brand{font-weight:950;font-size:22px;letter-spacing:-1.1px;display:flex;align-items:center;gap:9px}.brand span{color:var(--green)}.brand-mark{width:31px;height:31px;display:grid;place-items:center;border-radius:9px;background:linear-gradient(135deg,#43e0aa,#75aaff);color:#07111c;font-weight:1000;box-shadow:0 0 22px #43e0aa25}
 .header-right,.row,.actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 main{max-width:1600px;margin:auto;padding:18px;display:grid;gap:14px}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:15px;min-width:0}
@@ -28,14 +28,14 @@ main{max-width:1600px;margin:auto;padding:18px;display:grid;gap:14px}
 .muted,.sub{color:var(--muted)}
 .small{font-size:12px}.tiny{font-size:11px}
 .grid{display:grid;gap:12px}
-.stats{grid-template-columns:repeat(5,minmax(0,1fr))}
+.stats{grid-template-columns:repeat(6,minmax(0,1fr))}
 .stat{padding:14px;background:var(--panel);border:1px solid var(--line);border-radius:10px;min-width:0}
 .stat .label{font-size:12px;color:var(--muted);margin-bottom:8px}
 .stat .value{font-size:clamp(16px,2vw,24px);font-weight:800;overflow-wrap:anywhere}
 .stat .extra{margin-top:6px;font-size:12px;color:var(--muted)}
 .layout{grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);align-items:start}
 .two{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
-.market-banner{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.market-banner{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.market-state-headline{font-size:clamp(23px,3vw,34px);font-weight:950;letter-spacing:-1px;line-height:1.1;margin:7px 0 9px}.market-state-sub{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.market-state-chip{font-size:12px;font-weight:800;letter-spacing:.4px;border:1px solid #3c526e;background:linear-gradient(135deg,#18283d,#172033);padding:7px 11px;border-radius:999px}.market-state-chip.boom,.market-state-chip.bull{border-color:#277b63;color:#7df0c2}.market-state-chip.crash,.market-state-chip.bear{border-color:#8a3d50;color:#ff9ba9}.market-state-chip.sideways{border-color:#5c4e92;color:#c9b9ff}.fomo-bar{height:7px;border-radius:99px;background:#253247;overflow:hidden;margin-top:8px}.fomo-fill{height:100%;width:0;background:linear-gradient(90deg,#43e0aa,#f3c969,#ff667c);transition:width .15s}.fund-controls{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:end}.fund-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.metric-box{padding:11px;background:#0c1420;border:1px solid #25344a;border-radius:9px;min-width:0}.metric-box .label{font-size:11px;color:var(--muted);margin-bottom:5px}.metric-box strong{font-size:16px;overflow-wrap:anywhere}
 .pill{border:1px solid var(--line);padding:5px 9px;border-radius:999px;color:var(--muted);font-size:12px}
 .positive{color:var(--green)!important}.negative{color:var(--red)!important}.neutral{color:var(--muted)}
 .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
@@ -73,12 +73,12 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
 .modal{width:min(420px,100%);padding:24px;background:var(--panel);border:1px solid var(--line);border-radius:14px}
 .modal h2{margin-top:0}
 @media(max-width:1000px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.layout{grid-template-columns:1fr}}
-@media(max-width:600px){header{padding:11px;align-items:flex-start}.brand{font-size:18px}main{padding:10px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr}.stat{padding:11px}.panel{padding:12px}.header-right button{padding:7px}.company{padding:9px}}
+@media(max-width:600px){.fund-controls{grid-template-columns:1fr 1fr}.fund-controls input{grid-column:1/-1}.fund-metrics{grid-template-columns:1fr 1fr}header{padding:11px;align-items:flex-start}.brand{font-size:18px}main{padding:10px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr}.stat{padding:11px}.panel{padding:12px}.header-right button{padding:7px}.company{padding:9px}}
 </style>
 </head>
 <body>
 <header>
-  <div class="brand">MARKET<span>SIM</span></div>
+  <div class="brand"><span class="brand-mark">M</span><div>MARKET<span>SIM</span><div class="tiny muted" style="letter-spacing:1.6px;font-weight:700">VIRTUAL EXCHANGE</div></div></div>
   <div class="header-right">
     <span id="playerLabel" class="pill">플레이어</span>
     <button id="langBtn" onclick="toggleLanguage()">EN</button>
@@ -90,9 +90,9 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
   <div class="panel">
     <div class="market-banner">
       <div>
-        <div class="muted small" id="marketLabel">가상 주식시장</div>
-        <h2 style="font-size:19px;margin:5px 0" id="dateLabel">1년 차 · 1일</h2>
-        <div class="muted small" id="dayLabel">거래일 1 / 7560</div>
+        <div class="muted small" id="marketLabel">가상 주식시장 · S&P 500 스타일</div>
+        <div class="market-state-headline" id="marketStateHeadline">시장 국면 분석 중</div>
+        <div class="market-state-sub"><span class="market-state-chip" id="regimeHeadlineChip">NORMAL</span><span class="muted small" id="dateLabel">1년 차 · 1일</span><span class="muted small" id="dayLabel">거래일 1 / 7560</span></div>
       </div>
       <div class="row">
         <span class="pill" id="regimePill">시장 분석 중</span>
@@ -115,8 +115,25 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
     <div class="stat"><div class="label" id="assetLabel">총자산</div><div class="value" id="assetValue">$0</div><div class="extra" id="assetExtra">현금 + 주식 평가액</div></div>
     <div class="stat"><div class="label" id="returnLabel">누적 수익률</div><div class="value" id="returnValue">0.00%</div><div class="extra" id="returnExtra">초기자산 기준</div></div>
     <div class="stat"><div class="label" id="debtLabel">대출 잔액</div><div class="value" id="debtValue">$0</div><div class="extra" id="debtExtra">연 8% 이자</div></div>
-    <div class="stat"><div class="label" id="holdingLabel">보유 종목</div><div class="value" id="holdingValue">0</div><div class="extra" id="holdingExtra">100개 기업 거래 가능</div></div>
+    <div class="stat"><div class="label" id="holdingLabel">보유 종목</div><div class="value" id="holdingValue">0</div><div class="extra" id="holdingExtra">500개 기업 거래 가능</div></div>
+    <div class="stat"><div class="label" id="fomoLabel">FOMO 지수</div><div class="value" id="fomoValue">0 / 100</div><div class="fomo-bar"><div class="fomo-fill" id="fomoFill"></div></div><div class="extra" id="fomoExtra">시장 평균 대비 성과로 변동</div></div>
   </div>
+
+  <section class="panel">
+    <div class="section-title"><h2 id="fundTitle">Fund 1 · S&P2 전략</h2><span class="pill" id="fundStatus">연간 시총 상위 2개 리밸런싱</span></div>
+    <div class="fund-metrics">
+      <div class="metric-box"><div class="label" id="fundNavLabel">펀드 기준가</div><strong id="fundNav">$100.00</strong></div>
+      <div class="metric-box"><div class="label" id="fundReturnLabel">펀드 누적 수익률</div><strong id="fundReturn">0.00%</strong></div>
+      <div class="metric-box"><div class="label" id="fundHoldingsLabel">현재 편입 종목</div><strong id="fundHoldings">—</strong></div>
+    </div>
+    <div class="notice" id="fundDescription" style="margin:12px 0">시가총액 상위 2개 기업에 동일 비중으로 투자합니다. 시장 폭락 필터가 발동하면 현금으로 대피합니다.</div>
+    <div class="fund-controls">
+      <div><label class="small muted" id="fundAmountLabel" for="fundAmount">투자 금액</label><input type="number" id="fundAmount" min="1" step="1000" value="10000"></div>
+      <button class="buy" onclick="buyFund()" id="fundBuyBtn">Fund 1 매수</button>
+      <button class="sell" onclick="sellFund()" id="fundSellBtn">Fund 1 매도</button>
+    </div>
+    <div class="muted small" id="fundPositionInfo" style="margin-top:10px">보유 펀드 수량: 0</div>
+  </section>
 
   <div class="grid layout">
     <section class="panel">
@@ -209,7 +226,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
   </section>
 </main>
 
-<footer>MARKET SIM · Fictional market simulation · Not financial advice</footer>
+<footer>MARKET SIM · 500-company fictional exchange · Educational simulation, not financial advice</footer>
 <div class="toast" id="toast"></div>
 
 <div id="nicknameOverlay">
@@ -230,13 +247,16 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
 /* =========================
    MARKET SIM — single file
    ========================= */
-const SAVE_KEY = "marketSimSingleV2";
+const SAVE_KEY = "marketSimSingleV3";
+const OLD_SAVE_KEY = "marketSimSingleV2";
 const START_CASH = 100000;
 const INITIAL_DAYS = 7560;
 const FEE_RATE = 0.001;
 const CASH_INTEREST = 0.02;
 const LOAN_RATE = 0.08;
 const BOT_COUNT = 12;
+const COMPANY_COUNT = 500;
+const TRADING_DAYS_PER_YEAR = 252;
 
 const COMPANY_SEEDS = [
  ["Aster Technologies","ASTR",185,0.20],
@@ -262,10 +282,14 @@ const COMPANY_SEEDS = [
 ];
 
 const state = {
- version:2, day:0, maxDays:INITIAL_DAYS, cash:START_CASH,
+ version:3, day:0, maxDays:INITIAL_DAYS, cash:START_CASH,
  initialWealth:START_CASH, debt:0, positions:{}, companies:[],
  selectedTicker:"ASTR", playerName:"Player", language:"ko",
- news:[], bots:[], auto:false, chartRange:30, tradeHistory:[]
+ news:[], bots:[], auto:false, chartRange:30, tradeHistory:[],
+ fomo:0, fomoLockDays:0, fomoTriggeredToday:false, marketAvgReturn:0,
+ regime:"normal", regimeDaysLeft:30, marketIndex:100, marketPeak:100,
+ themeEvent:null, delistedCount:0, majorCrashDaysLeft:0, nextMajorCrashDay:0, majorCrashType:"", regimeAfterCrash:false, fund:{nav:100,initialNav:100,topPair:[],lastRebalanceYear:0,filterState:"NORMAL",marketPeak:100,marketLow:100,reboundBase:null},
+ fundUnits:0, fundCost:0
 };
 
 let autoTimer = null;
@@ -293,6 +317,15 @@ const TEXT = {
   insufficient:"현금이 부족합니다.",invalid:"올바른 수량을 입력하세요.",
   loanAmount:"대출 금액",takeLoan:"대출 받기",repay:"대출 상환",repayAll:"전액 상환",
   marketBull:"상승장",marketBear:"하락장",marketFlat:"횡보장",
+  marketNormal:"일반장",marketBoom:"초강세장",marketCrash:"폭락장",marketSideways:"초저변동 횡보장",
+  fomo:"FOMO 지수",fomoExtra:"시장 평균 대비 성과로 변동",fomoLocked:"FOMO 강제 보유 중",fomoFree:"거래 자유 상태",
+  fundTitle:"Fund 1 · S&P2 전략",fundBuy:"Fund 1 매수",fundSell:"Fund 1 매도",fundAmount:"투자 금액",
+  fundNav:"펀드 기준가",fundReturn:"펀드 누적 수익률",fundHoldings:"현재 편입 종목",
+  fundDesc:"시가총액 상위 2개 기업에 동일 비중으로 투자합니다. 시장 폭락 필터가 발동하면 현금으로 대피합니다.",
+  fundNoCash:"펀드를 매수할 현금이 부족합니다.",fundNoUnits:"매도할 펀드 수량이 없습니다.",
+  fomoRestricted:"FOMO 강제 보유 기간에는 개별 주식 거래가 제한됩니다.",
+  delisted:"상장폐지",regime:"시장 국면",bubble:"테마 과열",themeReal:"실적 동반 테마",themeBubble:"과열 테마",
+
   buyDone:"매수 완료",sellDone:"매도 완료",loanDone:"대출 완료",
   repayDone:"상환 완료",end:"게임 기간이 끝났습니다. 기간을 연장할 수 있습니다.",
   noPosition:"매도할 주식이 없습니다.",noDebt:"상환할 대출이 없습니다.",
@@ -326,6 +359,15 @@ const TEXT = {
   insufficient:"Not enough cash.",invalid:"Enter a valid quantity.",
   loanAmount:"Loan Amount",takeLoan:"Borrow",repay:"Repay Loan",repayAll:"Repay All",
   marketBull:"Bull Market",marketBear:"Bear Market",marketFlat:"Sideways",
+  marketNormal:"Normal Market",marketBoom:"Boom Market",marketCrash:"Market Crash",marketSideways:"Ultra-low-volatility Sideways",
+  fomo:"FOMO Index",fomoExtra:"Moves with performance vs. market average",fomoLocked:"FOMO forced holding",fomoFree:"Trading unrestricted",
+  fundTitle:"Fund 1 · S&P2 Strategy",fundBuy:"Buy Fund 1",fundSell:"Sell Fund 1",fundAmount:"Investment Amount",
+  fundNav:"Fund NAV",fundReturn:"Fund Total Return",fundHoldings:"Current Constituents",
+  fundDesc:"Equal-weight the two largest companies by market cap. The market-crash filter moves the fund to cash during a confirmed crash.",
+  fundNoCash:"Not enough cash to buy the fund.",fundNoUnits:"No fund units to sell.",
+  fomoRestricted:"Individual-stock trading is restricted during FOMO forced holding.",
+  delisted:"Delisted",regime:"Market Regime",bubble:"Theme overheating",themeReal:"Fundamental-backed theme",themeBubble:"Speculative theme",
+
   buyDone:"Purchase complete",sellDone:"Sale complete",loanDone:"Loan received",
   repayDone:"Repayment complete",end:"The game period has ended. You can extend it.",
   noPosition:"No shares to sell.",noDebt:"No debt to repay.",
@@ -367,46 +409,104 @@ function holdingCost(ticker){return state.positions[ticker]?.cost||0}
 function marketValue(){
  return state.companies.reduce((sum,c)=>sum+holdingQty(c.ticker)*c.price,0);
 }
-function totalAssets(){return state.cash+marketValue()-state.debt}
+function fundMarketValue(){return state.fundUnits*(state.fund?.nav||100)}
+function totalAssets(){return state.cash+marketValue()+fundMarketValue()-state.debt}
 function totalReturn(){return state.initialWealth?((totalAssets()/state.initialWealth)-1)*100:0}
-function holdingCount(){return Object.values(state.positions).filter(p=>p.qty>0.000001).length}
-function marketRegime(){
- const sample=state.companies.slice(0,20);
- const avg=sample.reduce((s,c)=>s+c.changePct,0)/(sample.length||1);
- if(avg>0.8)return "bull";
- if(avg< -0.8)return "bear";
- return "flat";
+function holdingCount(){return Object.values(state.positions).filter(p=>p.qty>0.000001).length+(state.fundUnits>0.000001?1:0)}
+function marketRegime(){return state.regime||"normal"}
+function regimeLabel(r){
+ const map={normal:t("marketNormal"),sideways:t("marketSideways"),bull:t("marketBull"),bear:t("marketBear"),boom:t("marketBoom"),crash:t("marketCrash")};
+ return map[r]||r;
 }
-
-function makeCompanies(){
- const suffixes=["Labs","Group","Works","Global","Holdings","Industries","Digital","Capital","Bio","Systems"];
- const prefixes=["Atlas","Beacon","Cinder","Delta","Ember","Falcon","Grove","Harbor","Indigo","Jade","Kinetic","Liberty","Monarch","Nexus","Opal","Prairie","Quartz","Ridge","Silver","Timber","Unity","Vertex","Willow","Zenith"];
+function regimeChip(r){return ["bull","boom"].includes(r)?"bull":["bear","crash"].includes(r)?"crash":r==="sideways"?"sideways":"normal"}
+function regimeDrift(r){return ({normal:0.00015,sideways:0.00002,bull:0.0405,bear:-0.0405,boom:0.10,crash:-0.10})[r]??0}
+function regimeVol(r){return ({normal:1,sideways:0.10,bull:0.75,bear:0.85,boom:1.15,crash:1.25})[r]??1}
+function pickRegime(){
+ const x=Math.random();
+ if(x<.025)return "boom";
+ if(x<.050)return "crash";
+ if(x<.245)return "bull";
+ if(x<.440)return "bear";
+ if(x<.585)return "sideways";
+ return "normal";
+}
+function regimeDuration(r){
+ if(r==="boom"||r==="crash")return Math.floor(rand(2,5));
+ if(r==="bull"||r==="bear")return Math.floor(rand(18,46));
+ if(r==="sideways")return Math.floor(rand(12,31));
+ return Math.floor(rand(18,48));
+}
+function changeRegime(force=false){
+ let next=pickRegime();
+ if(!force&&next===state.regime)next=next==="normal"?"bull":"normal";
+ state.regime=next;state.regimeDaysLeft=regimeDuration(next);
+ const en={normal:"The market returned to a normal trading regime.",sideways:"A quiet, ultra-low-volatility sideways market has begun.",bull:"A sustained bull market is underway.",bear:"A sustained bear market is underway.",boom:"A rare boom regime is driving unusually strong daily gains.",crash:"A rare crash regime is causing an extreme broad-market selloff."};
+ const ko={normal:"시장이 일반 국면에 진입했습니다.",sideways:"변동성이 극도로 낮은 횡보장이 시작됐습니다.",bull:"비교적 길게 이어질 상승장이 시작됐습니다.",bear:"비교적 길게 이어질 하락장이 시작됐습니다.",boom:"드물게 발생하는 초강세 국면입니다. 일평균 상승률이 매우 높습니다.",crash:"드물게 발생하는 폭락 국면입니다. 시장 전반에 강한 하락 압력이 발생합니다."};
+ addNews(en[next],ko[next],"regime");
+}
+function makeCompanies(count=COMPANY_COUNT){
+ const suffixes=["Labs","Group","Works","Global","Holdings","Industries","Digital","Capital","Bio","Systems","Dynamics","Networks","Robotics","Analytics","Energy","Medical","Cloud","Materials","Aerospace","Retail"];
+ const prefixes=["Atlas","Beacon","Cinder","Delta","Ember","Falcon","Grove","Harbor","Indigo","Jade","Kinetic","Liberty","Monarch","Nexus","Opal","Prairie","Quartz","Ridge","Silver","Timber","Unity","Vertex","Willow","Zenith","Aurora","Nova","Pioneer","Summit","Cobalt","Meridian","Frontier","Redwood","Quantum","Evergreen","Northstar","BluePeak","Aster","Lumen","Terra","Granite","Helio","Ionix","Juniper","Keystone","Orchid","Dawn","Vanguard","Sterling","Solstice","Pinnacle"];
  const sectors=["Technology","Semiconductors","Healthcare","Energy","Finance","Consumer","Industrials","Software","Materials","Aerospace"];
  const companies=[];
- for(let i=0;i<100;i++){
-   let seed=COMPANY_SEEDS[i];
-   let name,ticker,price,vol;
+ for(let i=0;i<count;i++){
+   let seed=COMPANY_SEEDS[i],name,ticker,price,vol;
    if(seed){[name,ticker,price,vol]=seed}
    else{
-     const a=prefixes[(i-20)%prefixes.length];
-     const b=suffixes[Math.floor((i-20)/prefixes.length)%suffixes.length];
+     const a=prefixes[Math.floor((i-20)/suffixes.length)%prefixes.length];
+     const b=suffixes[(i-20)%suffixes.length];
      name=a+" "+b;
-     ticker=(a.slice(0,2)+b.slice(0,2)).toUpperCase()+String(i+1).padStart(2,"0");
-     price=rand(18,240);
-     vol=rand(.14,.32);
+     ticker=(a.slice(0,2)+b.slice(0,2)).toUpperCase()+String(i+1).padStart(3,"0");
+     if(companies.some(c=>c.ticker===ticker))ticker=(a.slice(0,1)+b.slice(0,2)).toUpperCase()+String(i+1).padStart(3,"0");
+     price=rand(12,260);vol=rand(.12,.34);
    }
-   const quality=rand(-.00004,.00010);
-   companies.push({
-     name,ticker,price,previousClose:price,changePct:0,vol,quality,
-     sector:sectors[i%sectors.length],
-     sharesOutstanding:Math.round(rand(25,500)*1e6),
-     history:[price], dayChanges:[0],
-     baseDrift:rand(-.00005,.00025), delisted:false
-   });
+   const sharesOutstanding=Math.round(rand(25,500)*1e6),cap=price*sharesOutstanding;
+   const psr=rand(.7,9),margin=rand(-.04,.24),revenue=cap/psr,earnings=revenue*margin,bookValue=cap/rand(.7,7);
+   companies.push({name,ticker,price,previousClose:price,changePct:0,vol,quality:rand(-.00004,.00010),
+     sector:sectors[i%sectors.length],theme:sectors[i%sectors.length],sharesOutstanding,history:[price],dayChanges:[0],
+     baseDrift:rand(-.00005,.00025),delisted:false,distressDays:0,revenue,earnings,bookValue,equity:bookValue,
+     roe:bookValue?earnings/bookValue:0,revenueGrowth:rand(-.12,.20),earningsGrowth:rand(-.20,.28),
+     margin,financialHealth:rand(.35,.98),lastFundamentalDay:0});
  }
  return companies;
 }
-
+function marketCap(c){return c.price*c.sharesOutstanding}
+function topTwoByMarketCap(){
+ return state.companies.filter(c=>!c.delisted).slice().sort((a,b)=>marketCap(b)-marketCap(a)).slice(0,2).map(c=>c.ticker);
+}
+function pairKey(pair){return (pair||[]).slice().sort().join("|")}
+function initFund(){
+ state.fund={nav:100,initialNav:100,topPair:topTwoByMarketCap(),lastRebalanceYear:0,filterState:"NORMAL",marketPeak:state.marketIndex||100,marketLow:state.marketIndex||100,reboundBase:null};
+ state.fundUnits=0;state.fundCost=0;
+}
+function ensureCompanyFields(c){
+ const defaults=makeCompanies(1)[0];
+ for(const k of ["sector","theme"])if(!c[k])c[k]=defaults[k];
+ for(const k of ["vol","quality","baseDrift","sharesOutstanding"])if(!Number.isFinite(Number(c[k])))c[k]=defaults[k];
+ c.sharesOutstanding=Math.max(1,Number(c.sharesOutstanding));
+ c.price=Math.max(.05,safeNum(c.price,defaults.price));c.previousClose=safeNum(c.previousClose,c.price);c.changePct=safeNum(c.changePct);
+ c.history=Array.isArray(c.history)&&c.history.length?c.history:[c.price];c.dayChanges=Array.isArray(c.dayChanges)?c.dayChanges:[0];
+ c.revenue=Math.max(1,safeNum(c.revenue,marketCap(c)/rand(1,6)));c.earnings=safeNum(c.earnings,c.revenue*rand(-.02,.2));
+ c.bookValue=Math.max(1,safeNum(c.bookValue,marketCap(c)/rand(1,6)));c.equity=Math.max(1,safeNum(c.equity,c.bookValue));
+ c.roe=safeNum(c.roe,c.earnings/c.equity);c.margin=safeNum(c.margin,c.earnings/c.revenue);
+ c.revenueGrowth=safeNum(c.revenueGrowth,rand(-.1,.2));c.earningsGrowth=safeNum(c.earningsGrowth,rand(-.2,.3));
+ c.financialHealth=clamp(safeNum(c.financialHealth,rand(.3,.9)),0,1);c.distressDays=Math.max(0,Math.floor(safeNum(c.distressDays)));
+ c.lastFundamentalDay=Math.max(0,Math.floor(safeNum(c.lastFundamentalDay)));return c;
+}
+function makeReplacement(){
+ const index=state.day+state.delistedCount+Math.floor(rand(1,100000));
+ const prefixes=["Apex","Bright","Crest","Drift","Echo","Fluent","Golden","Horizon","Ion","Kepler","Lumina","Mosaic","Noble","Orbit","Pulse","Radiant","Sable","Trident","Vivid","Westlake"];
+ const suffixes=["AI","Bio","Cloud","Data","Energy","Health","Labs","Logic","Motors","Quantum","Retail","Security","Systems","Tech","Works"];
+ const sectors=["Technology","Semiconductors","Healthcare","Energy","Finance","Consumer","Industrials","Software","Materials","Aerospace"];
+ let name,ticker,tries=0;
+ do{const a=prefixes[Math.floor(Math.random()*prefixes.length)],b=suffixes[Math.floor(Math.random()*suffixes.length)];
+   name=a+" "+b;ticker=(a.slice(0,2)+b.slice(0,2)).toUpperCase()+String(index+tries).slice(-4);tries++;
+ }while(state.companies.some(c=>c.ticker===ticker)&&tries<500);
+ const c=makeCompanies(1)[0];c.name=name;c.ticker=ticker;c.sector=sectors[Math.floor(Math.random()*sectors.length)];c.theme=c.sector;
+ c.price=rand(15,180);c.previousClose=c.price;c.history=[c.price];c.dayChanges=[0];c.sharesOutstanding=Math.round(rand(30,600)*1e6);
+ const cap=marketCap(c);c.revenue=cap/rand(.8,7);c.margin=rand(-.04,.22);c.earnings=c.revenue*c.margin;c.bookValue=cap/rand(.8,6);c.equity=c.bookValue;c.roe=c.earnings/c.equity;
+ c.financialHealth=rand(.4,.99);c.distressDays=0;c.delisted=false;return c;
+}
 function initBots(){
  const names=["ValueFox","MomentumAI","BlueWhale","QuietOak","TrendPilot","QuantRaven","LongTerm","AlphaBot","RiskControl","DayTrader","IndexMind","SmallCap"];
  return names.map((name,i)=>({
@@ -415,12 +515,15 @@ function initBots(){
  }));
 }
 function resetFresh(){
- state.day=0;state.maxDays=INITIAL_DAYS;state.cash=START_CASH;
+ state.version=3;state.day=0;state.maxDays=INITIAL_DAYS;state.cash=START_CASH;
  state.initialWealth=START_CASH;state.debt=0;state.positions={};
- state.companies=makeCompanies();state.selectedTicker=state.companies[0].ticker;
+ state.companies=makeCompanies(COMPANY_COUNT);state.selectedTicker=state.companies[0].ticker;
  state.news=[];state.bots=initBots();state.tradeHistory=[];
- addNews("Market Sim opens for trading.","가상 주식시장이 거래를 시작했습니다.","market");
- addNews("Investors watch the first session closely.","투자자들이 첫 거래일을 주시하고 있습니다.","market");
+ state.fomo=0;state.fomoLockDays=0;state.fomoTriggeredToday=false;state.marketAvgReturn=0;
+ state.regime="normal";state.regimeDaysLeft=regimeDuration("normal");state.marketIndex=100;state.marketPeak=100;
+ state.themeEvent=null;state.delistedCount=0;state.majorCrashDaysLeft=0;state.nextMajorCrashDay=Math.floor(rand(252,1261));state.majorCrashType="";state.regimeAfterCrash=false;state.fundUnits=0;state.fundCost=0;initFund();
+ addNews("Market Sim opens for trading with 500 listed companies.","500개 기업이 상장된 가상 주식시장이 거래를 시작했습니다.","market");
+ addNews("Fund 1 tracks the two largest companies by market capitalization, with a crash filter.","Fund 1은 시가총액 상위 2개 기업을 추종하며 시장 폭락 필터를 사용합니다.","fund");
  saveState();renderAll();
 }
 function addNews(en,ko,type="market",ticker=""){
@@ -432,62 +535,61 @@ function safeNum(x,fallback=0){
 }
 function saveState(){
  try{
-   const data={
-     version:2,day:state.day,maxDays:state.maxDays,cash:state.cash,
-     initialWealth:state.initialWealth,debt:state.debt,positions:state.positions,
-     companies:state.companies,selectedTicker:state.selectedTicker,
-     playerName:state.playerName,language:state.language,news:state.news,
-     bots:state.bots,tradeHistory:state.tradeHistory
-   };
+   const keys=["day","maxDays","cash","initialWealth","debt","positions","companies","selectedTicker","playerName","language","news","bots","tradeHistory","fomo","fomoLockDays","marketAvgReturn","regime","regimeDaysLeft","marketIndex","marketPeak","themeEvent","delistedCount","majorCrashDaysLeft","nextMajorCrashDay","majorCrashType","regimeAfterCrash","fund","fundUnits","fundCost"];
+   const data={version:3};for(const k of keys)data[k]=state[k];
    localStorage.setItem(SAVE_KEY,JSON.stringify(data));
-   const label=document.getElementById("saveLabel");
-   if(label)label.textContent=t("autoSave");
+   const label=document.getElementById("saveLabel");if(label)label.textContent=t("autoSave");
  }catch(e){console.warn("Save failed",e)}
 }
 function loadState(){
  try{
-   const raw=localStorage.getItem(SAVE_KEY);
+   const raw=localStorage.getItem(SAVE_KEY)||localStorage.getItem(OLD_SAVE_KEY);
    if(!raw){resetFresh();return}
    const d=JSON.parse(raw);
-   if(!d||!Array.isArray(d.companies)||d.companies.length!==100)throw new Error("Invalid save");
+   if(!d||!Array.isArray(d.companies)||d.companies.length<20)throw new Error("Invalid save");
    state.day=Math.max(0,Math.floor(safeNum(d.day)));
    state.maxDays=Math.max(INITIAL_DAYS,Math.floor(safeNum(d.maxDays,INITIAL_DAYS)));
-   state.cash=Math.max(0,safeNum(d.cash,START_CASH));
-   state.initialWealth=Math.max(1,safeNum(d.initialWealth,START_CASH));
-   state.debt=Math.max(0,safeNum(d.debt));
-   state.positions=d.positions&&typeof d.positions==="object"?d.positions:{};
-   state.companies=d.companies;
-   state.selectedTicker=companyByTicker(d.selectedTicker)?d.selectedTicker:state.companies[0].ticker;
-   state.playerName=String(d.playerName||"Player").slice(0,20);
-   state.language=d.language==="en"?"en":"ko";
-   state.news=Array.isArray(d.news)?d.news:[];
-   state.bots=Array.isArray(d.bots)&&d.bots.length===BOT_COUNT?d.bots:initBots();
+   state.cash=Math.max(0,safeNum(d.cash,START_CASH));state.initialWealth=Math.max(1,safeNum(d.initialWealth,START_CASH));
+   state.debt=Math.max(0,safeNum(d.debt));state.positions=d.positions&&typeof d.positions==="object"?d.positions:{};
+   const oldCompanies=d.companies;
+   if(oldCompanies.length<COMPANY_COUNT)state.companies=oldCompanies.concat(makeCompanies(COMPANY_COUNT).slice(oldCompanies.length));
+   else state.companies=oldCompanies.slice(0,COMPANY_COUNT);
+   state.companies=state.companies.map(ensureCompanyFields);
+   state.selectedTicker=state.companies.some(c=>c.ticker===d.selectedTicker)?d.selectedTicker:state.companies[0].ticker;
+   state.playerName=String(d.playerName||"Player").slice(0,20);state.language=d.language==="en"?"en":"ko";
+   state.news=Array.isArray(d.news)?d.news:[];state.bots=Array.isArray(d.bots)&&d.bots.length===BOT_COUNT?d.bots:initBots();
    state.tradeHistory=Array.isArray(d.tradeHistory)?d.tradeHistory:[];
-   for(const c of state.companies){
-     if(!Array.isArray(c.history)||!c.history.length)c.history=[c.price];
-     c.price=Math.max(.01,safeNum(c.price,.01));
-     c.changePct=safeNum(c.changePct);
-     c.vol=clamp(safeNum(c.vol,.2),.05,.8);
-   }
+   state.fomo=clamp(safeNum(d.fomo),0,100);state.fomoLockDays=Math.max(0,Math.floor(safeNum(d.fomoLockDays)));
+   state.fomoTriggeredToday=false;state.marketAvgReturn=safeNum(d.marketAvgReturn);
+   state.regime=["normal","sideways","bull","bear","boom","crash"].includes(d.regime)?d.regime:"normal";
+   state.regimeDaysLeft=Math.max(1,Math.floor(safeNum(d.regimeDaysLeft,regimeDuration(state.regime))));
+   state.marketIndex=Math.max(.01,safeNum(d.marketIndex,100));state.marketPeak=Math.max(state.marketIndex,safeNum(d.marketPeak,state.marketIndex));
+   state.themeEvent=d.themeEvent&&typeof d.themeEvent==="object"?d.themeEvent:null;state.delistedCount=Math.max(0,Math.floor(safeNum(d.delistedCount)));
+   state.majorCrashDaysLeft=Math.max(0,Math.floor(safeNum(d.majorCrashDaysLeft)));state.nextMajorCrashDay=Math.max(state.day+1,Math.floor(safeNum(d.nextMajorCrashDay,state.day+Math.floor(rand(252,1261)))));state.majorCrashType=String(d.majorCrashType||"");state.regimeAfterCrash=!!d.regimeAfterCrash;
+   state.fund=d.fund&&typeof d.fund==="object"?d.fund:{nav:100,initialNav:100,topPair:[],lastRebalanceYear:0,filterState:"NORMAL",marketPeak:state.marketIndex,marketLow:state.marketIndex,reboundBase:null};
+   state.fund.nav=Math.max(.01,safeNum(state.fund.nav,100));state.fund.initialNav=Math.max(.01,safeNum(state.fund.initialNav,100));
+   if(!Array.isArray(state.fund.topPair)||state.fund.topPair.length!==2)state.fund.topPair=topTwoByMarketCap();
+   state.fund.lastRebalanceYear=Math.max(0,Math.floor(safeNum(state.fund.lastRebalanceYear)));
+   state.fund.filterState=["NORMAL","DECLINE","REBOUND","CRASH"].includes(state.fund.filterState)?state.fund.filterState:"NORMAL";
+   state.fund.marketPeak=Math.max(.01,safeNum(state.fund.marketPeak,state.marketIndex));state.fund.marketLow=Math.max(.01,safeNum(state.fund.marketLow,state.marketIndex));
+   state.fund.reboundBase=d.fund?.reboundBase==null?null:safeNum(d.fund.reboundBase);
+   state.fundUnits=Math.max(0,safeNum(d.fundUnits));state.fundCost=Math.max(0,safeNum(d.fundCost));
    for(const [ticker,p] of Object.entries(state.positions)){
-     if(!companyByTicker(ticker)||!p||!Number.isFinite(Number(p.qty))||!Number.isFinite(Number(p.cost))){
-       delete state.positions[ticker];continue;
-     }
+     if(!state.companies.some(c=>c.ticker===ticker)||!p||!Number.isFinite(Number(p.qty))||!Number.isFinite(Number(p.cost))){delete state.positions[ticker];continue}
      p.qty=Math.max(0,Number(p.qty));p.cost=Math.max(0,Number(p.cost));
    }
- }catch(e){
-   console.error("Save could not be loaded:",e);
-   resetFresh();
- }
+   for(const b of state.bots){if(!b.positions)b.positions={};if(!Number.isFinite(Number(b.cash)))b.cash=START_CASH;}
+   saveState();
+ }catch(e){console.error("Save could not be loaded:",e);resetFresh()}
 }
-
 function toast(msg){
  const el=document.getElementById("toast");
  el.textContent=msg;el.style.display="block";
  clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.style.display="none",2500);
 }
 
-function buy(ticker,qty){
+function buy(ticker,qty,internal=false){
+ if(state.fomoLockDays>0&&!internal){toast(t("fomoRestricted"));return}
  const c=companyByTicker(ticker);qty=Number(qty);
  if(!c||!Number.isFinite(qty)||qty<=0){toast(t("invalid"));return}
  qty=Math.floor(qty*10000)/10000;
@@ -500,7 +602,8 @@ function buy(ticker,qty){
  addNews(`${state.playerName} bought ${qty} shares of ${c.ticker}.`,`${state.playerName} 님이 ${c.ticker} ${qty}주를 매수했습니다.`,"trade",ticker);
  saveState();renderAll();toast(t("buyDone"));
 }
-function sell(ticker,qty){
+function sell(ticker,qty,internal=false){
+ if(state.fomoLockDays>0&&!internal){toast(t("fomoRestricted"));return}
  const c=companyByTicker(ticker);qty=Number(qty);
  const p=state.positions[ticker];
  if(!c||!p||p.qty<=0){toast(t("noPosition"));return}
@@ -536,56 +639,170 @@ function repayLoan(all=false){
 
 function advanceDays(n){
  if(state.day>=state.maxDays){toast(t("end"));return}
- n=Math.max(1,Math.floor(n));
- for(let i=0;i<n&&state.day<state.maxDays;i++)advanceOneDay();
+ n=Math.max(1,Math.floor(n));state.fomoTriggeredToday=false;
+ for(let i=0;i<n&&state.day<state.maxDays;i++){
+   advanceOneDay();
+   if(state.fomoTriggeredToday){
+     stopAuto();
+     toast(state.language==="en"?"FOMO reached 100. Forced buying has begun; trading is locked for 100 trading days.":"FOMO 지수가 100에 도달했습니다. 급등주 강제 매수가 실행됐고 100거래일 동안 거래가 제한됩니다.");
+     break;
+   }
+ }
  saveState();renderAll();
 }
+function updateThemeEvent(){
+ if(state.themeEvent){
+   state.themeEvent.daysLeft--;
+   if(state.themeEvent.daysLeft<=0){
+     if(state.themeEvent.kind==="bubble"){
+       state.themeEvent={sector:state.themeEvent.sector,kind:"burst",daysLeft:5,totalDays:5};
+       addNews(`The speculative ${state.themeEvent.sector} rally is unwinding sharply.`,`과열됐던 ${state.themeEvent.sector} 테마가 급격한 되돌림을 겪고 있습니다.`,"theme");
+     }else state.themeEvent=null;
+   }
+   return;
+ }
+ if(Math.random()<.012){
+   const sectors=[...new Set(state.companies.map(c=>c.sector))],sector=sectors[Math.floor(Math.random()*sectors.length)];
+   const real=Math.random()<.48,duration=Math.floor(rand(18,55));
+   state.themeEvent={sector,kind:real?"real":"bubble",daysLeft:duration,totalDays:duration};
+   addNews(real?`${sector} enters a fundamentals-backed boom as earnings expectations improve.`:`Speculative excitement is building around ${sector}; valuations are expanding faster than fundamentals.`,
+     real?`${sector} 테마가 실적 전망 개선과 함께 상승하고 있습니다.`:`${sector} 테마에 투기적 열기가 몰리고 있습니다. 밸류에이션이 실적보다 빠르게 상승 중.`,"theme");
+ }
+}
+function updateFundFilter(){
+ const f=state.fund,idx=state.marketIndex;
+ if(f.filterState==="NORMAL"){
+   f.marketPeak=Math.max(f.marketPeak,idx);
+   if(idx<=f.marketPeak*.92){f.filterState="DECLINE";f.marketLow=idx;f.reboundBase=null;}
+ }else if(f.filterState==="DECLINE"){
+   f.marketLow=Math.min(f.marketLow,idx);
+   if(idx>=f.marketLow*1.03){f.filterState="REBOUND";f.reboundBase=f.marketLow;}
+   if(idx>=f.marketPeak){f.filterState="NORMAL";f.marketPeak=idx;}
+ }else if(f.filterState==="REBOUND"){
+   if(idx>=f.marketPeak){f.filterState="NORMAL";f.marketPeak=idx;f.marketLow=idx;f.reboundBase=null;}
+   else if(idx<(f.reboundBase||f.marketLow)*.995){f.filterState="CRASH";addNews("Fund 1's crash filter has moved the strategy to cash.","Fund 1의 폭락 필터가 발동해 전략이 현금으로 대피했습니다.","fund");}
+ }else if(f.filterState==="CRASH"){
+   if(idx>=f.marketPeak){f.filterState="NORMAL";f.marketPeak=idx;f.marketLow=idx;f.reboundBase=null;addNews("Fund 1's crash filter confirms market recovery and re-enters the market.","Fund 1의 폭락 필터가 시장 회복을 확인해 재진입합니다.","fund");}
+ }
+}
+function updateFund(){
+ const f=state.fund,year=Math.floor(state.day/TRADING_DAYS_PER_YEAR);
+ if(year!==f.lastRebalanceYear){
+   const next=topTwoByMarketCap();
+   if(pairKey(next)!==pairKey(f.topPair)){
+     f.topPair=next;addNews(`Fund 1 rebalanced into the new top-two market-cap pair: ${next.join(", ")}.`,`Fund 1이 시가총액 상위 2개 기업 조합으로 리밸런싱했습니다: ${next.join(", ")}.`,"fund");
+   }
+   f.lastRebalanceYear=year;
+ }
+ updateFundFilter();
+ if(f.filterState==="CRASH")f.nav*=Math.pow(1+CASH_INTEREST,1/TRADING_DAYS_PER_YEAR);
+ else{
+   const members=f.topPair.map(companyByTicker).filter(Boolean),daily=members.length?members.reduce((s,c)=>s+c.changePct/100,0)/2:0;
+   f.nav=Math.max(.01,f.nav*(1+daily));
+ }
+}
+function delistAndReplace(){
+ for(let i=0;i<state.companies.length;i++){
+   const c=state.companies[i];
+   if(c.price<.75)c.distressDays++;else c.distressDays=Math.max(0,c.distressDays-1);
+   if(!(c.distressDays>=5||c.financialHealth<=.015||(c.financialHealth<.12&&Math.random()<.002)))continue;
+   const ticker=c.ticker;delete state.positions[ticker];
+   for(const b of state.bots)if(b.positions)delete b.positions[ticker];
+   state.fund.topPair=state.fund.topPair.filter(t=>t!==ticker);state.delistedCount++;
+   addNews(`${c.name} (${ticker}) has been delisted after severe financial distress.`,`재무 악화로 ${c.name} (${ticker})가 상장폐지됐습니다. 보유 주식은 전액 손실 처리됩니다.`,"delisting",ticker);
+   state.companies[i]=makeReplacement();
+   if(state.selectedTicker===ticker)state.selectedTicker=state.companies[i].ticker;
+ }
+}
+function updateFinancials(c){
+ if(state.day-c.lastFundamentalDay<63)return;
+ c.lastFundamentalDay=state.day;c.revenue=Math.max(1,c.revenue*(1+c.revenueGrowth));
+ c.margin=clamp(c.margin+rand(-.025,.025),-.18,.32);c.earnings=c.revenue*c.margin;c.earningsGrowth=rand(-.35,.45);
+ c.revenueGrowth=clamp(c.revenueGrowth+rand(-.04,.04),-.35,.45);c.bookValue=Math.max(1,c.bookValue+c.earnings*.35);
+ c.equity=Math.max(1,c.bookValue);c.roe=c.earnings/c.equity;
+ if(c.earnings<0)c.financialHealth=clamp(c.financialHealth-.035,0,1);else c.financialHealth=clamp(c.financialHealth+.012,0,1);
+ if(Math.random()<.025){
+   const positive=c.earnings>0&&c.revenueGrowth>0;
+   addNews(positive?`${c.name} reports improving earnings and revenue trends.`:`${c.name} reports financial pressure and uncertain demand.`,
+     positive?`${c.name}가 매출·이익 개선 흐름을 보였습니다.`:`${c.name}가 재무 부담과 불확실한 수요를 보고했습니다.`,"company",c.ticker);
+ }
+}
+function triggerFomo(){
+ const c=state.companies.filter(c=>!c.delisted).slice().sort((a,b)=>b.changePct-a.changePct)[0];
+ if(c&&state.cash>1){
+   const qty=Math.floor(state.cash/(c.price*(1+FEE_RATE))*10000)/10000;
+   if(qty>0){
+     const gross=c.price*qty,fee=gross*FEE_RATE,total=gross+fee;state.cash=Math.max(0,state.cash-total);
+     const p=state.positions[c.ticker]||{qty:0,cost:0};p.qty+=qty;p.cost+=total;state.positions[c.ticker]=p;
+     state.tradeHistory.unshift({day:state.day,ticker:c.ticker,side:"FOMO_BUY",qty,price:c.price,fee});
+     addNews(`FOMO forced the player to buy ${c.ticker}, the day's strongest riser, with nearly all available cash.`,`FOMO로 인해 오늘 가장 많이 오른 ${c.ticker} 주식을 현금 대부분으로 강제 매수했습니다.`,"fomo",c.ticker);
+   }
+ }
+ state.fomo=100;state.fomoLockDays=100;state.fomoTriggeredToday=true;
+}
 function advanceOneDay(){
- state.day++;
- const regime=marketRegime();
- let marketShock=rand(-.006,.006);
- if(Math.random()<.035)marketShock+=rand(-.045,.045);
- if(regime==="bull")marketShock+=.0004;
- if(regime==="bear")marketShock-=.0004;
-
+ const assetsBefore=totalAssets();
+ state.day++;state.fomoTriggeredToday=false;
+ const wasLocked=state.fomoLockDays>0;
+ if(state.majorCrashDaysLeft>0){
+   state.regime="crash";state.majorCrashDaysLeft--;
+   if(state.majorCrashDaysLeft===0)state.regimeAfterCrash=true;
+ }else if(state.regimeAfterCrash){
+   state.regimeAfterCrash=false;state.regime="normal";state.regimeDaysLeft=regimeDuration("normal");
+   addNews("Markets begin a volatile recovery phase after the major crisis.","대형 폭락 국면 이후 시장이 변동성 높은 회복 국면에 진입했습니다.","crisis");
+ }else if(state.day>=state.nextMajorCrashDay){
+   const types=["Dot-com valuation collapse","Credit and liquidity crisis","Global risk-off shock"];
+   state.majorCrashType=types[Math.floor(Math.random()*types.length)];
+   const duration=Math.floor(rand(5,11));state.majorCrashDaysLeft=duration-1;state.regime="crash";state.regimeAfterCrash=state.majorCrashDaysLeft===0;
+   state.nextMajorCrashDay=state.day+Math.floor(rand(252,1261));
+   addNews(`MAJOR CRISIS: ${state.majorCrashType}. A severe multi-day market crash has begun.`,`대형 위기 발생: ${state.majorCrashType}. 여러 거래일에 걸친 심각한 폭락장이 시작됐습니다.`,"crisis");
+ }else{
+   state.regimeDaysLeft--;if(state.regimeDaysLeft<=0)changeRegime();
+ }
+ updateThemeEvent();
+ const r=marketRegime(),drift=regimeDrift(r),volMult=regimeVol(r);
  for(const c of state.companies){
    c.previousClose=c.price;
-   const noise=(Math.random()+Math.random()+Math.random()-1.5)*c.vol*.035;
-   let ret=c.baseDrift+c.quality+marketShock*.45+noise;
-   if(Math.random()<.012)ret+=rand(-.08,.08);
-   ret=clamp(ret,-.35,.35);
-   c.price=Math.max(.5,c.price*(1+ret));
-   c.changePct=(c.price/c.previousClose-1)*100;
-   c.history.push(c.price);
-   c.dayChanges.push(c.changePct);
-   if(c.history.length>state.maxDays+1)c.history.shift();
-   if(c.dayChanges.length>state.maxDays+1)c.dayChanges.shift();
+   const noise=(Math.random()+Math.random()+Math.random()-1.5)*c.vol*.035*volMult;
+   let ret=c.baseDrift+c.quality+drift+noise;
+   if(state.themeEvent&&c.sector===state.themeEvent.sector){
+     if(state.themeEvent.kind==="real")ret+=.003;
+     else if(state.themeEvent.kind==="bubble")ret+=.009;
+     else if(state.themeEvent.kind==="burst")ret-=.035;
+   }
+   if(state.regime==="crash"&&state.majorCrashType==="Dot-com valuation collapse"&&["Technology","Semiconductors","Software"].includes(c.sector))ret-=.06;
+   if(Math.random()<.012)ret+=rand(-.08,.08)*volMult;
+   if(r==="sideways")ret=clamp(ret,-.003,.003);else ret=clamp(ret,-.35,.35);
+   c.price=Math.max(.05,c.price*(1+ret));c.changePct=(c.price/c.previousClose-1)*100;
+   c.history.push(c.price);c.dayChanges.push(c.changePct);
+   if(c.history.length>state.maxDays+1)c.history.shift();if(c.dayChanges.length>state.maxDays+1)c.dayChanges.shift();
+   updateFinancials(c);
  }
- // Cash interest and loan interest are calculated once per simulated trading day.
- state.cash*=Math.pow(1+CASH_INTEREST,1/252);
- state.debt*=Math.pow(1+LOAN_RATE,1/252);
-
- runBots();
-
+ const active=state.companies.filter(c=>c.price>=.75||c.financialHealth>.015);
+ state.marketAvgReturn=active.length?active.reduce((s,c)=>s+c.changePct,0)/active.length:0;
+ state.marketIndex=Math.max(.01,state.marketIndex*(1+state.marketAvgReturn/100));state.marketPeak=Math.max(state.marketPeak,state.marketIndex);
+ state.cash*=Math.pow(1+CASH_INTEREST,1/TRADING_DAYS_PER_YEAR);state.debt*=Math.pow(1+LOAN_RATE,1/TRADING_DAYS_PER_YEAR);
+ runBots();updateFund();delistAndReplace();
+ const assetsAfter=totalAssets(),playerDailyReturn=assetsBefore>0?(assetsAfter/assetsBefore-1)*100:0;
+ if(!wasLocked&&!state.fomoTriggeredToday){
+   if(playerDailyReturn<state.marketAvgReturn)state.fomo=clamp(state.fomo+20,0,100);
+   else if(playerDailyReturn>state.marketAvgReturn)state.fomo=clamp(state.fomo-10,0,100);
+   if(state.fomo>=100)triggerFomo();
+ }
  if(state.day%5===0){
-   const movers=[...state.companies].sort((a,b)=>b.changePct-a.changePct);
-   const up=movers[0],down=movers[movers.length-1];
-   addNews(`${up.name} rises ${up.changePct.toFixed(2)}% in today's session.`,
-           `오늘 ${up.name} 주가가 ${up.changePct.toFixed(2)}% 상승했습니다.`,"company",up.ticker);
-   if(down.changePct< -1.5)addNews(`${down.name} falls ${Math.abs(down.changePct).toFixed(2)}% as investors reassess risk.`,
-           `${down.name} 주가가 ${Math.abs(down.changePct).toFixed(2)}% 하락했습니다.`,"company",down.ticker);
+   const movers=[...state.companies].sort((a,b)=>b.changePct-a.changePct),up=movers[0],down=movers[movers.length-1];
+   if(up)addNews(`${up.name} rises ${up.changePct.toFixed(2)}% in today's session.`,`오늘 ${up.name} 주가가 ${up.changePct.toFixed(2)}% 상승했습니다.`,"company",up.ticker);
+   if(down&&down.changePct< -1.5)addNews(`${down.name} falls ${Math.abs(down.changePct).toFixed(2)}% as investors reassess risk.`,`${down.name} 주가가 ${Math.abs(down.changePct).toFixed(2)}% 하락했습니다.`,"company",down.ticker);
  }
  if(state.day%21===0){
    const c=state.companies[Math.floor(Math.random()*state.companies.length)];
-   const headlines=[
-     [`${c.name} announces a new product roadmap.`,`${c.name}가 새로운 제품 계획을 발표했습니다.`],
-     [`Analysts debate the outlook for ${c.name}.`,`${c.name}의 향후 전망을 두고 분석가들의 의견이 엇갈립니다.`],
-     [`${c.name} reports changing demand conditions.`,`${c.name}의 수요 환경에 변화가 나타났습니다.`],
-     [`Investors are watching ${c.name}'s next move.`,`${c.name}의 다음 행보에 투자자들의 관심이 쏠립니다.`]
-   ];
-   const h=headlines[Math.floor(Math.random()*headlines.length)];
-   addNews(h[0],h[1],"company",c.ticker);
+   const headlines=[[`${c.name} announces a new product roadmap.`,`${c.name}가 새로운 제품 계획을 발표했습니다.`],
+    [`Analysts debate the outlook for ${c.name}.`,`${c.name}의 향후 전망을 두고 분석가들의 의견이 엇갈립니다.`],
+    [`${c.name} reports changing demand conditions.`,`${c.name}의 수요 환경에 변화가 나타났습니다.`],
+    [`Investors are watching ${c.name}'s next move.`,`${c.name}의 다음 행보에 투자자들의 관심이 쏠립니다.`]];
+   const h=headlines[Math.floor(Math.random()*headlines.length)];addNews(h[0],h[1],"company",c.ticker);
  }
+ if(wasLocked){state.fomoLockDays=Math.max(0,state.fomoLockDays-1);if(state.fomoLockDays===0)state.fomo=0;}
 }
 function runBots(){
  for(const bot of state.bots){
@@ -610,6 +827,23 @@ function runBots(){
  }
 }
 
+function buyFund(){
+ if(state.fomoLockDays>0){toast(t("fomoRestricted"));return}
+ const amount=Math.floor(Number(document.getElementById("fundAmount").value));
+ if(!Number.isFinite(amount)||amount<=0){toast(t("invalid"));return}
+ const spend=Math.min(amount,state.cash),fee=spend*FEE_RATE,units=(spend-fee)/state.fund.nav;
+ if(spend<=0||units<=0){toast(t("fundNoCash"));return}
+ state.cash-=spend;state.fundUnits+=units;state.fundCost+=spend;
+ addNews(`${state.playerName} invested ${money(spend)} in Fund 1.`,`${state.playerName} 님이 Fund 1에 ${money(spend)}을 투자했습니다.`,"fund");
+ saveState();renderAll();toast(t("buyDone"));
+}
+function sellFund(){
+ if(state.fomoLockDays>0){toast(t("fomoRestricted"));return}
+ if(state.fundUnits<=0){toast(t("fundNoUnits"));return}
+ const proceeds=state.fundUnits*state.fund.nav*(1-FEE_RATE);state.cash+=proceeds;state.fundUnits=0;state.fundCost=0;
+ addNews(`${state.playerName} sold all Fund 1 units.`,`${state.playerName} 님이 Fund 1 보유분을 전량 매도했습니다.`,"fund");
+ saveState();renderAll();toast(t("sellDone"));
+}
 function extendGame(){
  state.maxDays+=1260;saveState();renderAll();
  toast(state.language==="en"?"Game extended by 5 years.":"게임 기간이 5년 연장되었습니다.");
@@ -654,7 +888,7 @@ function renderAll(){
  applyLanguage();
  renderStats();renderCompanies();renderDetail();renderChart();
  renderPortfolio();renderLoan();renderLeaderboard();renderNews();
- renderClock();
+ renderClock();renderFund();
 }
 function applyLanguage(){
  document.documentElement.lang=state.language;
@@ -691,18 +925,18 @@ function applyLanguage(){
   :"실제 체결 기록이 아닌 게임 내 가격 기록";
 }
 function renderClock(){
- const years=Math.floor(state.day/252)+1;
- const dayInYear=state.day%252+1;
+ const years=Math.floor(state.day/252)+1,dayInYear=state.day%252+1;
  document.getElementById("dateLabel").textContent=`${t("years")} ${years} · ${dayInYear}${state.language==="en"?"":"일"}`;
  document.getElementById("dayLabel").textContent=`${t("period")} ${state.day+1} / ${state.maxDays}`;
- const r=marketRegime();
- const el=document.getElementById("regimePill");
- el.textContent=r==="bull"?t("marketBull"):r==="bear"?t("marketBear"):t("marketFlat");
- el.className="pill "+(r==="bull"?"positive":r==="bear"?"negative":"");
+ const r=marketRegime(),label=regimeLabel(r),chip=document.getElementById("regimeHeadlineChip");
+ document.getElementById("marketStateHeadline").textContent=label;chip.textContent=r.toUpperCase();chip.className="market-state-chip "+regimeChip(r);
+ const el=document.getElementById("regimePill");el.textContent=label+" · "+Math.max(0,state.regimeDaysLeft)+" "+(state.language==="en"?"days left":"일 남음");
+ el.className="pill "+(["bull","boom"].includes(r)?"positive":["bear","crash"].includes(r)?"negative":"");
  document.getElementById("interestPill").textContent=t("interestNote");
- document.getElementById("companyCount").textContent=state.companies.length+(state.language==="en"?" companies":"개 기업");
+ document.getElementById("companyCount").textContent=state.companies.length+(state.language==="en"?" active companies":"개 활성 기업");
  document.getElementById("gameStatus").textContent=state.day>=state.maxDays?t("end"):
-  (state.language==="en"?"Simulated trading day. Fees: 0.1% per buy or sell.":"가상 거래일입니다. 매수·매도 각각 수수료 0.1%가 적용됩니다.");
+  (state.fomoLockDays>0?(state.language==="en"?`FOMO lock: ${state.fomoLockDays} trading days remain.`:`FOMO 강제 보유: 거래 제한 ${state.fomoLockDays}거래일 남음.`):
+   (state.language==="en"?"Simulated market. Fees: 0.1% per stock/fund transaction.":"가상 시장입니다. 주식·펀드 거래 수수료는 거래당 0.1%입니다."));
  document.getElementById("nextDayBtn").disabled=state.day>=state.maxDays;
 }
 function renderStats(){
@@ -717,7 +951,12 @@ function renderStats(){
  document.getElementById("assetExtra").textContent=(state.language==="en"?"Equity after debt: ":"대출 차감 후 순자산: ")+money(assets);
  document.getElementById("returnExtra").textContent=(state.language==="en"?"Initial capital: ":"초기자산: ")+money(state.initialWealth);
  document.getElementById("debtExtra").textContent=t("interestNote");
- document.getElementById("holdingExtra").textContent=state.language==="en"?"100 fictional companies":"100개 가상 기업";
+ document.getElementById("holdingExtra").textContent=state.language==="en"?"500-company index-style universe":"500개 기업 유니버스";
+ document.getElementById("fomoLabel").textContent=t("fomo");
+ document.getElementById("fomoValue").textContent=`${Math.round(state.fomo)} / 100`;
+ document.getElementById("fomoFill").style.width=`${clamp(state.fomo,0,100)}%`;
+ document.getElementById("fomoExtra").textContent=state.fomoLockDays>0?t("fomoLocked"):(state.language==="en"?`${state.marketAvgReturn.toFixed(2)}% market average today`:`오늘 시장 평균 ${state.marketAvgReturn.toFixed(2)}%`);
+ document.getElementById("fomoValue").className="value "+(state.fomo>=80?"negative":state.fomo>=40?"":"positive");
 }
 function renderCompanies(){
  const query=document.getElementById("searchInput").value.trim().toLowerCase();
@@ -745,7 +984,7 @@ function renderCompanies(){
    const held=holdingQty(c.ticker);
    return `<div class="company ${c.ticker===state.selectedTicker?"selected":""}" onclick="selectCompany('${c.ticker}')">
      <div><div class="company-name">${esc(c.name)} <span class="ticker">${esc(c.ticker)}</span></div>
-       <div class="tag">${esc(c.sector)}</div>${held>0?` <span class="tag">${t("sharesHeld")}: ${held.toLocaleString()}</span>`:""}
+       <div class="tag">${esc(c.sector)}</div> <span class="tag">${money(marketCap(c))}</span>${held>0?` <span class="tag">${t("sharesHeld")}: ${held.toLocaleString()}</span>`:""}
      </div><div><div class="company-price">${money(c.price)}</div>
        <div class="company-change ${changeClass}">${pct(c.changePct)}</div></div>
    </div>`;
@@ -759,24 +998,30 @@ function renderDetail(){
  const c=companyByTicker(state.selectedTicker);
  if(!c){document.getElementById("companyDetail").textContent=t("noCompany");return}
  document.getElementById("selectedTicker").textContent=c.ticker;
- const p=state.positions[c.ticker]||{qty:0,cost:0};
- const pnl=p.qty*c.price-p.cost;
- const changeClass=c.changePct>0?"positive":c.changePct<0?"negative":"neutral";
- const maxQty=Math.floor(state.cash/(c.price*(1+FEE_RATE))*10000)/10000;
+ const p=state.positions[c.ticker]||{qty:0,cost:0},pnl=p.qty*c.price-p.cost;
+ const changeClass=c.changePct>0?"positive":c.changePct<0?"negative":"neutral",maxQty=Math.floor(state.cash/(c.price*(1+FEE_RATE))*10000)/10000;
+ const cap=marketCap(c),per=c.earnings>0?cap/c.earnings:null,pbr=cap/Math.max(1,c.bookValue),psr=cap/Math.max(1,c.revenue),roe=c.equity?c.earnings/c.equity*100:0;
+ const related=state.news.find(n=>n.ticker===c.ticker&&n.type!=="trade");
+ const newsText=related?(state.language==="en"?related.en:related.ko):(state.language==="en"?"No recent company-specific news.":"최근 개별 기업 뉴스가 없습니다.");
+ const formatMultiple=x=>x===null||!Number.isFinite(x)?"N/M":x.toFixed(1)+"x";
+ const theme=state.themeEvent&&state.themeEvent.sector===c.sector?`${state.themeEvent.kind==="real"?t("themeReal"):state.themeEvent.kind==="bubble"?t("themeBubble"):t("bubble")} · ${state.themeEvent.daysLeft}d`:"—";
  document.getElementById("companyDetail").innerHTML=`
-  <div class="company-title">${esc(c.name)}</div>
-  <div class="muted small">${esc(c.ticker)} · ${esc(c.sector)}</div>
-  <div class="price-big">${money(c.price)}</div>
-  <div class="${changeClass}">${pct(c.changePct)} <span class="muted small">${t("dailyChange")}</span></div>
-  <hr>
+  <div class="company-title">${esc(c.name)}</div><div class="muted small">${esc(c.ticker)} · ${esc(c.sector)}</div>
+  <div class="price-big">${money(c.price)}</div><div class="${changeClass}">${pct(c.changePct)} <span class="muted small">${t("dailyChange")}</span></div><hr>
   <div class="grid two">
-    <div><div class="muted small">${t("marketCap")}</div><strong>${money(c.price*c.sharesOutstanding)}</strong></div>
+    <div><div class="muted small">${t("marketCap")}</div><strong>${money(cap)}</strong></div>
     <div><div class="muted small">${t("sharesHeld")}</div><strong>${p.qty.toLocaleString(undefined,{maximumFractionDigits:4})}</strong></div>
+    <div><div class="muted small">P/E · PER</div><strong>${formatMultiple(per)}</strong></div>
+    <div><div class="muted small">P/B · PBR</div><strong>${formatMultiple(pbr)}</strong></div>
+    <div><div class="muted small">P/S · PSR</div><strong>${formatMultiple(psr)}</strong></div>
+    <div><div class="muted small">ROE</div><strong class="${roe>=0?"positive":"negative"}">${roe.toFixed(1)}%</strong></div>
+    <div><div class="muted small">${state.language==="en"?"Revenue":"매출"}</div><strong>${money(c.revenue)}</strong></div>
+    <div><div class="muted small">${state.language==="en"?"Net income":"순이익"}</div><strong class="${c.earnings>=0?"positive":"negative"}">${money(c.earnings)}</strong></div>
     <div><div class="muted small">${t("avg")}</div><strong>${p.qty?money(p.cost/p.qty):"—"}</strong></div>
     <div><div class="muted small">${t("pnl")}</div><strong class="${pnl>0?"positive":pnl<0?"negative":""}">${money(pnl)}</strong></div>
   </div>
-  <hr>
-  <div class="trade-grid">
+  <div class="notice" style="margin-top:12px"><strong>${state.language==="en"?"Latest company news":"최근 기업 뉴스"}</strong><div style="margin-top:5px;line-height:1.5">${esc(newsText)}</div><div class="muted tiny" style="margin-top:6px">${state.language==="en"?"Theme status":"테마 상태"}: ${esc(theme)} · ${state.language==="en"?"Financial health":"재무 건전성"} ${(c.financialHealth*100).toFixed(0)}%</div></div>
+  <hr><div class="trade-grid">
     <div class="full"><label class="small muted">${t("shares")}</label><input id="tradeQty" type="number" min="0.0001" step="0.0001" value="1"></div>
     <button class="buy" onclick="tradeBuySelected()">${t("buy")} · ${t("priceLabel")}</button>
     <button class="sell" onclick="tradeSellSelected()">${t("sell")}</button>
@@ -846,19 +1091,34 @@ function renderChart(){
 }
 function renderPortfolio(){
  const entries=Object.entries(state.positions).filter(([ticker,p])=>p.qty>0.00001&&companyByTicker(ticker));
- const value=entries.reduce((s,[ticker,p])=>s+p.qty*companyByTicker(ticker).price,0);
+ const value=entries.reduce((s,[ticker,p])=>s+p.qty*companyByTicker(ticker).price,0)+fundMarketValue();
  document.getElementById("portfolioValue").textContent=money(value);
- if(!entries.length){document.getElementById("portfolio").innerHTML=`<div class="muted">${t("noHolding")}</div>`;return}
+ if(!entries.length&&state.fundUnits<=0){document.getElementById("portfolio").innerHTML=`<div class="muted">${t("noHolding")}</div>`;return}
  entries.sort((a,b)=>b[1].qty*companyByTicker(b[0]).price-a[1].qty*companyByTicker(a[0]).price);
  document.getElementById("portfolio").innerHTML=`<div class="table-wrap"><table>
  <thead><tr><th>${t("company")}</th><th class="num">${t("sharesHeld")}</th><th class="num">${t("value")}</th><th class="num">${t("pnl")}</th><th></th></tr></thead>
- <tbody>${entries.map(([ticker,p])=>{
+ <tbody>${state.fundUnits>0?`<tr><td><strong>FUND1</strong><div class="muted tiny">Fund 1 · S&P2</div></td><td class="num">${state.fundUnits.toLocaleString(undefined,{maximumFractionDigits:4})}</td><td class="num">${money(fundMarketValue())}</td><td class="num ${fundMarketValue()-state.fundCost>=0?"positive":"negative"}">${money(fundMarketValue()-state.fundCost)}</td><td><button class="sell" onclick="sellFund()">${t("sell")}</button></td></tr>`:""}${entries.map(([ticker,p])=>{
   const c=companyByTicker(ticker),v=p.qty*c.price,pnl=v-p.cost;
   return `<tr><td><strong>${esc(c.ticker)}</strong><div class="muted tiny">${esc(c.name)}</div></td>
   <td class="num">${p.qty.toLocaleString(undefined,{maximumFractionDigits:4})}</td>
   <td class="num">${money(v)}</td><td class="num ${pnl>=0?"positive":"negative"}">${money(pnl)}</td>
   <td><button class="sell" onclick="sell('${ticker}',${p.qty})">${t("sell")}</button></td></tr>`;
  }).join("")}</tbody></table></div>`;
+}
+function renderFund(){
+ const f=state.fund,nav=f.nav||100,ret=(nav/(f.initialNav||100)-1)*100,members=(f.topPair||[]).map(companyByTicker).filter(Boolean);
+ document.getElementById("fundTitle").textContent=t("fundTitle");document.getElementById("fundNavLabel").textContent=t("fundNav");
+ document.getElementById("fundReturnLabel").textContent=t("fundReturn");document.getElementById("fundHoldingsLabel").textContent=t("fundHoldings");
+ document.getElementById("fundAmountLabel").textContent=t("fundAmount");document.getElementById("fundBuyBtn").textContent=t("fundBuy");document.getElementById("fundSellBtn").textContent=t("fundSell");
+ document.getElementById("fundNav").textContent=money(nav);const re=document.getElementById("fundReturn");re.textContent=pct(ret);re.className=ret>=0?"positive":"negative";
+ document.getElementById("fundHoldings").textContent=members.length?members.map(c=>c.ticker).join(" / "):"—";
+ document.getElementById("fundStatus").textContent=`${f.filterState} · ${state.language==="en"?"Annual rebalance":"연간 리밸런싱"}`;
+ document.getElementById("fundDescription").textContent=state.language==="en"
+  ?`Equal-weight top 2 by market cap. Crash filter: ${f.filterState}. Next rebalance at the next annual boundary.`
+  :`시가총액 상위 2개 기업에 동일 비중으로 투자합니다. 현재 폭락 필터: ${f.filterState}. 연간 경계에서 상위 2개를 재선정합니다.`;
+ document.getElementById("fundPositionInfo").textContent=state.language==="en"
+  ?`Your units: ${state.fundUnits.toFixed(4)} · Market value: ${money(fundMarketValue())} · Cost: ${money(state.fundCost)}`
+  :`보유 펀드 수량: ${state.fundUnits.toFixed(4)} · 평가액: ${money(fundMarketValue())} · 매입원금: ${money(state.fundCost)}`;
 }
 function renderLoan(){
  document.getElementById("loanBreakdown").innerHTML=
@@ -921,7 +1181,7 @@ function importSave(event){
  reader.onload=()=>{
    try{
      const d=JSON.parse(reader.result);
-     if(!Array.isArray(d.companies)||d.companies.length!==100)throw new Error("Invalid save");
+     if(!Array.isArray(d.companies)||d.companies.length<20)throw new Error("Invalid save");
      localStorage.setItem(SAVE_KEY,JSON.stringify(d));
      loadState();renderAll();toast(t("importOk"));
    }catch(e){toast(t("errorFile"))}
